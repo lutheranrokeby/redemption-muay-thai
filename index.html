@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Redemption Muay Thai - React.js App</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Clean Athletic Typography Fonts (IronEdge Reference: Barlow Condensed & Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Barlow:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-container": "#b4b5b5",
+                        "on-tertiary-container": "#5a5959",
+                        "on-tertiary": "#313030",
+                        "surface-variant": "#353534",
+                        "surface-dim": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "on-primary": "#00363d",
+                        "error": "#ffb4ab",
+                        "charcoal-light": "#2D2D2D",
+                        "outline": "#849396",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "background": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "tertiary-container": "#d2d0cf",
+                        "on-primary-fixed": "#001f24",
+                        "primary-container": "#00e5ff",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "tertiary": "#efeceb",
+                        "surface-bright": "#3a3939",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1c1b1b",
+                        "inverse-surface": "#e5e2e1",
+                        "outline-variant": "#3b494c",
+                        "danger-red": "#FF3B30",
+                        "primary": "#c3f5ff",
+                        "electric-cyan-muted": "rgba(0, 229, 255, 0.15)",
+                        "secondary": "#c6c6c7",
+                        "on-primary-container": "#00626e",
+                        "on-background": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#00daf3",
+                        "on-surface-variant": "#bac9cc",
+                        "secondary-container": "#454747",
+                        "surface-tint": "#00daf3",
+                        "inverse-primary": "#006875",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed": "#e2e2e2",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "tertiary-fixed": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#9cf0ff",
+                        "surface": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "on-secondary": "#2f3131",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-secondary-fixed": "#1a1c1c"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "section-gap": "8rem",
+                        "gutter": "1.5rem",
+                        "grid-margin": "2rem",
+                        "stack-md": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "3rem"
+                    },
+                    fontFamily: {
+                        "label-mono": ["JetBrains Mono", "monospace"],
+                        "headline-lg": ["Barlow Condensed", "sans-serif"],
+                        "button-text": ["Barlow Condensed", "sans-serif"],
+                        "display-xl": ["Barlow Condensed", "sans-serif"],
+                        "body-lg": ["Barlow", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Barlow Condensed", "sans-serif"]
+                    },
+                    fontSize: {
+                        "label-mono": ["14px", { lineHeight: "100%", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "headline-lg": ["48px", { lineHeight: "110%", letterSpacing: "0.03em", fontWeight: "700" }],
+                        "button-text": ["18px", { lineHeight: "100%", letterSpacing: "0.06em", fontWeight: "700" }],
+                        "display-xl": ["96px", { lineHeight: "100%", letterSpacing: "0.03em", fontWeight: "800" }],
+                        "body-lg": ["20px", { lineHeight: "160%", fontWeight: "400" }],
+                        "headline-lg-mobile": ["36px", { lineHeight: "110%", letterSpacing: "0.03em", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "160%", fontWeight: "400" }],
+                        "display-xl-mobile": ["56px", { lineHeight: "100%", letterSpacing: "0.03em", fontWeight: "800" }],
+                        "headline-md": ["32px", { lineHeight: "120%", letterSpacing: "0.02em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        .clip-slant { clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 100%); }
+        .btn-clip { clip-path: polygon(0 0, 90% 0, 100% 20%, 100% 100%, 0 100%); }
+        .glass-card { background: rgba(45, 45, 45, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(132, 147, 150, 0.2); }
+        .edit-mode [contenteditable="true"] { outline: 2px dashed #00e5ff !important; outline-offset: 4px; cursor: text; border-radius: 4px; }
+        .edit-mode [contenteditable="true"]:focus { outline: 2px solid #00e5ff !important; background: rgba(0, 229, 255, 0.1); }
+        .img-edit-overlay { display: none; }
+        .edit-mode .img-container:hover .img-edit-overlay { display: flex; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

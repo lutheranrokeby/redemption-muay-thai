@@ -1,0 +1,260 @@
+{
+  "hero": {
+    "titleLine1": "Your Journey to",
+    "titleCyan": "Strength and Spirit",
+    "titleLine2": "Begins Here",
+    "bgImage": "https://lh3.googleusercontent.com/aida/AEtjO1XdbpgQenZm7Y0r3NT2UG7EXmvUSOzOtvbqC2LtsjBIHB_wInJ-EJDGs2aiGmvUYYVfUXUS32jp5lw2KnGQRjiNr66sF-a10QixZJs-7rGP0b5Gw6KKknzhoLZUBZf8lOS3qtuLcdcS1AkJD2c3aD2E_eLEOorHQgrhRpMWZcbvlvxAhvm97PN49G9IB1U7sRRXRT6XkKnLKfXsKTR2aHCupKva9v9mSnKb-9LZHBP6TpSYnOTiCnOV2uQQ",
+    "cta1Text": "Start Your Journey",
+    "cta1Url": "/contact",
+    "cta2Text": "Meet Our Coaches",
+    "cta2Url": "/coaches"
+  },
+  "welcome": {
+    "title": "The Way of Redemption",
+    "paragraph1": "Welcome to our premier Muay Thai gym on the stunning Sunshine Coast. At Redemption, we pride ourselves on providing top-notch training in the art of Muay Thai in a family-oriented environment with no room for egos.",
+    "paragraph2": "Since 2020, we have been dedicated to helping individuals of all ages and skill levels achieve their fitness goals while fostering a sense of community and support.",
+    "bento1Title": "No Ego",
+    "bento1Desc": "Train hard, stay humble. Everyone is family here.",
+    "bento2Title": "All Levels",
+    "bento2Desc": "From seasoned fighters to day-one beginners.",
+    "bento2Bg": "https://lh3.googleusercontent.com/aida-public/AB6AXuBVRhcSkQ_QN7ZMfsgo1pCHVFY02ZfMp0iTDxmQoTy-7IgzDxq7aHm3tDyep2gZUqcnfl8jyXT06Uw5B68rD_t2vo4FkHqEfdsVitNZY1bJVncZdYMLvrhKbOl_4NdCNb74AciHhPUezlqSsMsEfpZr6l2n0y4IgJdxhaCPyU3CJ_zSkLXtqWK2YlP4sf8SPDWgjXZNtmrJVpc_i19hq-OzVel50aGEIUJRBhUQQ6LEmlddz-l3IKpwRQ"
+  },
+  "classes": [
+    {
+      "id": "c1",
+      "tag": "ADULT PROG",
+      "title": "Adult Class",
+      "description": "Step into a community where passion for Muay Thai and personal growth collide. Build a strong foundation or refine your experienced skills.",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw"
+    },
+    {
+      "id": "c2",
+      "tag": "YOUTH PROG",
+      "title": "Youth Empowerment",
+      "description": "Build confidence, discipline, and physical fitness. A dynamic sport that combines striking with powerful tools for personal development.",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBBw2dGuuYBK5zitQxoD7AkB4TFK-t2EwUtKQInG9vA5D9tZQfNQhzrb4HuIl4EWLPsSW8EYsDiBDZbuRmBP8yAQfTqrsrPnaB5tMyap35f9cLjm1F3MKb1HsL3nrIqGan7BQbaayYFgbcZZjp3rRy_9PG9Xm_x2G3lfYAmCw-OtJjkmTV9Jus1fA4igAA6ptQmyI8m_P_UHjp0J3ZBNwBm83j1F3Gwr7siWbV0Ew2UyQ3GlfOlQusYNg"
+    },
+    {
+      "id": "c3",
+      "tag": "JUNIOR 5-11",
+      "title": "Junior Class",
+      "description": "Designed to introduce children aged 5 to 11 to the art of Muay Thai in a safe and supportive environment. Focus, respect, and confidence.",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuClTBD-kEUJ57LlG0l23g6aCuGncJASGbfuY5AOAvQGwHhfeAxJLqnEWc6rtRgR7eOtYoQzJEcZ5x1gYB1TcgOPaN_sH6ku_3_dAZ-oggGIeLhB6ZCL0ysu-Nl9XXmelyhHbcTGnuItWg4ROolsI5lphtQehOAUE12nby845BV-pMYyeJxoGuSNMDr7qcTUCrBe6khDb4UWmHzQ5EVZePFzUUa7dMbZEjKhpZsDDuUy0go4kOO6YfYx9A"
+    }
+  ],
+  "coach": {
+    "name": "Billy Coulter",
+    "subtitle": "Veteran & Champion",
+    "badge": "HEAD COACH",
+    "bio": "Billy Coulter is a seasoned Muay Thai veteran and the esteemed head coach of Redemption Muay Thai, a gym he proudly runs with his wife, Teagan. With 12 years of experience in the sport, Billy's journey began at age 20.",
+    "achievements": [
+      "4x WMC Queensland Champion (66.67kg)",
+      "2x IFMA Australian Champion (66.67kg)",
+      "Fought in Destiny, Eruption & Muay Thai League"
+    ],
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
+  },
+  "coachesList": [
+    {
+      "id": "coach-1",
+      "name": "Billy Coulter",
+      "subtitle": "Head Coach & Founder",
+      "badge": "HEAD COACH",
+      "bio": "Billy Coulter is a seasoned Muay Thai veteran and head coach of Redemption Muay Thai, running the gym alongside his wife Teagan. Beginning his martial arts journey at age 20, Billy has competed at the highest levels across Australia.",
+      "achievements": [
+        "4x WMC Queensland Champion (66.67kg)",
+        "2x IFMA Australian Champion (66.67kg)",
+        "Fought in Destiny, Eruption & Muay Thai League"
+      ],
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
+    },
+    {
+      "id": "coach-2",
+      "name": "Teagan Coulter",
+      "subtitle": "Co-Owner & Conditioning Coach",
+      "badge": "COACH & OWNER",
+      "bio": "Teagan runs Redemption Muay Thai alongside Billy, specializing in fitness conditioning, youth empowerment, and gym operations with a passion for community building.",
+      "achievements": [
+        "Head Youth Program Director",
+        "Functional Fitness & Conditioning Specialist",
+        "8+ Years Gym Management Experience"
+      ],
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBBw2dGuuYBK5zitQxoD7AkB4TFK-t2EwUtKQInG9vA5D9tZQfNQhzrb4HuIl4EWLPsSW8EYsDiBDZbuRmBP8yAQfTqrsrPnaB5tMyap35f9cLjm1F3MKb1HsL3nrIqGan7BQbaayYFgbcZZjp3rRy_9PG9Xm_x2G3lfYAmCw-OtJjkmTV9Jus1fA4igAA6ptQmyI8m_P_UHjp0J3ZBNwBm83j1F3Gwr7siWbV0Ew2UyQ3GlfOlQusYNg"
+    }
+  ],
+  "timetableData": [
+    {
+      "id": "t1",
+      "time": "06:00 AM",
+      "day": "Monday",
+      "className": "Morning Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t2",
+      "time": "06:00 AM",
+      "day": "Wednesday",
+      "className": "Morning Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t3",
+      "time": "06:00 AM",
+      "day": "Friday",
+      "className": "Morning Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t4",
+      "time": "04:15 PM",
+      "day": "Monday",
+      "className": "Junior Class (5-11)",
+      "level": "Juniors"
+    },
+    {
+      "id": "t5",
+      "time": "04:15 PM",
+      "day": "Tuesday",
+      "className": "Junior Class (5-11)",
+      "level": "Juniors"
+    },
+    {
+      "id": "t6",
+      "time": "04:15 PM",
+      "day": "Wednesday",
+      "className": "Junior Class (5-11)",
+      "level": "Juniors"
+    },
+    {
+      "id": "t7",
+      "time": "04:15 PM",
+      "day": "Thursday",
+      "className": "Junior Class (5-11)",
+      "level": "Juniors"
+    },
+    {
+      "id": "t8",
+      "time": "05:15 PM",
+      "day": "Monday",
+      "className": "Youth Empowerment",
+      "level": "Teens"
+    },
+    {
+      "id": "t9",
+      "time": "05:15 PM",
+      "day": "Wednesday",
+      "className": "Youth Empowerment",
+      "level": "Teens"
+    },
+    {
+      "id": "t10",
+      "time": "06:15 PM",
+      "day": "Monday",
+      "className": "Adult Muay Thai",
+      "level": "Adults"
+    },
+    {
+      "id": "t11",
+      "time": "06:15 PM",
+      "day": "Tuesday",
+      "className": "Adult Muay Thai",
+      "level": "Adults"
+    },
+    {
+      "id": "t12",
+      "time": "06:15 PM",
+      "day": "Wednesday",
+      "className": "Adult Muay Thai",
+      "level": "Adults"
+    },
+    {
+      "id": "t13",
+      "time": "06:15 PM",
+      "day": "Thursday",
+      "className": "Adult Muay Thai",
+      "level": "Adults"
+    },
+    {
+      "id": "t14",
+      "time": "06:15 PM",
+      "day": "Friday",
+      "className": "Sparring & Clinch",
+      "level": "Advanced"
+    },
+    {
+      "id": "t15",
+      "time": "08:00 AM",
+      "day": "Saturday",
+      "className": "Open Mat & Fighter Prep",
+      "level": "All Levels"
+    },
+    {
+      "time": "6am-7am",
+      "day": "Saturday",
+      "className": "THAI FUCK YEAH",
+      "level": "All Levels",
+      "id": "t-1787623116802"
+    },
+    {
+      "id": "t-1787623393997-wx8w",
+      "time": "06:00 AM - 07:15 AM",
+      "startTime": "06:00",
+      "endTime": "07:15",
+      "day": "Monday",
+      "className": "Morning Muay Thai",
+      "level": "ALL MOTHERFUCKING LEVELS"
+    },
+    {
+      "id": "t-1787623393997-sugq",
+      "time": "06:00 AM - 07:15 AM",
+      "startTime": "06:00",
+      "endTime": "07:15",
+      "day": "Tuesday",
+      "className": "Morning Muay Thai",
+      "level": "ALL MOTHERFUCKING LEVELS"
+    },
+    {
+      "id": "t-1787623393997-n0ne",
+      "time": "06:00 AM - 07:15 AM",
+      "startTime": "06:00",
+      "endTime": "07:15",
+      "day": "Wednesday",
+      "className": "Morning Muay Thai",
+      "level": "ALL MOTHERFUCKING LEVELS"
+    },
+    {
+      "id": "t-1787623393997-rb2u",
+      "time": "06:00 AM - 07:15 AM",
+      "startTime": "06:00",
+      "endTime": "07:15",
+      "day": "Thursday",
+      "className": "Morning Muay Thai",
+      "level": "ALL MOTHERFUCKING LEVELS"
+    },
+    {
+      "id": "t-1787623393997-0ku3",
+      "time": "06:00 AM - 07:15 AM",
+      "startTime": "06:00",
+      "endTime": "07:15",
+      "day": "Friday",
+      "className": "Morning Muay Thai",
+      "level": "ALL MOTHERFUCKING LEVELS"
+    }
+  ],
+  "contactInfo": {
+    "title": "Get In Touch",
+    "subtitle": "Join the Redemption Muay Thai Family on the Sunshine Coast.",
+    "address": "Warana, Sunshine Coast QLD 4575",
+    "phone": "0400 000 000",
+    "email": "info@redemptionmuaythai.com",
+    "openingHours": "Mon-Fri: 6:00am - 8:00pm | Sat: 8:00am - 12:00pm | Sun: Closed"
+  },
+  "footer": {
+    "motto": "DISCIPLINE IS FREEDOM.",
+    "location": "Warana, Sunshine Coast QLD",
+    "phone": "0400 000 000",
+    "email": "info@redemptionmuaythai.com",
+    "instagram": "https://instagram.com",
+    "facebook": "https://facebook.com"
+  }
+}

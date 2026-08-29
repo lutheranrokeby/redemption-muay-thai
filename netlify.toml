@@ -1,0 +1,10 @@
+# Netlify Deployment Configuration for Redemption Muay Thai
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Client-Side SPA Redirects for React Router (/coaches, /classes, /timetable, /contact, /admin)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
