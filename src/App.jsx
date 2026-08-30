@@ -5,6 +5,7 @@ import ClassesPage from './pages/ClassesPage';
 import TimetablePage from './pages/TimetablePage';
 import ContactPage from './pages/ContactPage';
 import AdminBar from './components/AdminBar';
+import BusinessSettingsModal from './components/BusinessSettingsModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
     return sessionStorage.getItem('admin_auth') === 'true';
   });
   const [password, setPassword] = useState('admin123');
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const path = window.location.pathname;
 
@@ -43,6 +45,30 @@ export default function App() {
         [field]: value
       }
     }));
+  };
+
+  // Global Business Settings Handler
+  const handleSaveBusinessSettings = (settings) => {
+    setContentData(prev => ({
+      ...prev,
+      contactInfo: {
+        ...(prev.contactInfo || {}),
+        address: settings.location,
+        phone: settings.phone,
+        email: settings.email,
+        openingHours: settings.openingHours
+      },
+      footer: {
+        ...(prev.footer || {}),
+        location: settings.location,
+        phone: settings.phone,
+        email: settings.email,
+        instagram: settings.instagram,
+        facebook: settings.facebook,
+        youtube: settings.youtube
+      }
+    }));
+    alert('✅ Business Settings updated throughout the site! Click "Save & Publish Changes" to save permanently.');
   };
 
   const handleImageUpload = async (e, section, field) => {
@@ -241,7 +267,7 @@ export default function App() {
     try {
       const res = await saveSiteContent(contentData);
       if (res.success) {
-        alert('🎉 Changes saved & published successfully! (Netlify Build Triggered if configured)');
+        alert('🎉 Changes saved & published successfully!');
       }
     } catch (err) {
       alert('Failed to save changes');
@@ -349,7 +375,20 @@ export default function App() {
 
       {renderCurrentPage()}
 
-      {isAdmin && isAuthenticated && <AdminBar onSave={handleSave} />}
+      {isAdmin && isAuthenticated && (
+        <AdminBar 
+          onSave={handleSave} 
+          onOpenSettings={() => setShowSettingsModal(true)} 
+        />
+      )}
+
+      {showSettingsModal && (
+        <BusinessSettingsModal 
+          data={contentData}
+          onSaveSettings={handleSaveBusinessSettings}
+          onClose={() => setShowSettingsModal(false)}
+        />
+      )}
     </div>
   );
 }
