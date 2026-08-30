@@ -1,13 +1,15 @@
 // Supabase Client & Netlify Integration Helper
+import defaultContent from '../../content.json';
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const NETLIFY_BUILD_HOOK_URL = import.meta.env.VITE_NETLIFY_BUILD_HOOK_URL || '';
 
 export const isSupabaseConfigured = () => {
-  return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+  return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.startsWith('http'));
 };
 
-// Fetch site content (from Supabase if configured, or Express API fallback)
+// Fetch site content (from Supabase if configured, or defaultContent fallback)
 export const getSiteContent = async () => {
   if (isSupabaseConfigured()) {
     try {
@@ -17,41 +19,55 @@ export const getSiteContent = async () => {
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
-      const data = await res.json();
-      if (data && data[0] && data[0].data) {
-        return data[0].data;
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0 && data[0].data) {
+          return data[0].data;
+        }
       }
     } catch (err) {
-      console.warn('Supabase fetch failed, falling back to local API', err);
+      console.warn('Supabase fetch failed, falling back to default content', err);
     }
   }
 
-  // Fallback to Express server API / content.json
-  const res = await fetch('/api/content');
-  return await res.json();
+  // Fallback to Express local endpoint if running locally, otherwise return defaultContent
+  try {
+    const res = await fetch('/api/content');
+    const contentType = res.headers.get('content-type');
+    if (res.ok && contentType && contentType.includes('application/json')) {
+      return await res.json();
+    }
+  } catch (err) {
+    // Ignore fallback fetch error on serverless environments
+  }
+
+  // Default Bundled Fallback (Prevents stuck loader on Netlify)
+  return defaultContent;
 };
 
 // Save site content & trigger Netlify Build Hook (Option B)
 export const saveSiteContent = async (contentData) => {
   let savedLocally = false;
 
-  // 1. Save to Express local API / content.json
+  // 1. Try local Express API if running node server.js
   try {
     const res = await fetch('/api/content', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(contentData)
     });
-    const result = await res.json();
-    if (result.success) savedLocally = true;
+    if (res.ok) {
+      const result = await res.json();
+      if (result.success) savedLocally = true;
+    }
   } catch (err) {
-    console.warn('Local API save fallback', err);
+    // Local API not present on Netlify
   }
 
-  // 2. Save to Supabase Database if configured
+  // 2. Save to Supabase Database
   if (isSupabaseConfigured()) {
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.main_content`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.main_content`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_ANON_KEY,
@@ -65,12 +81,15 @@ export const saveSiteContent = async (contentData) => {
           updated_at: new Date().toISOString()
         })
       });
+      if (!res.ok) {
+        console.error('Supabase save error status:', res.status);
+      }
     } catch (err) {
       console.error('Failed to save to Supabase', err);
     }
   }
 
-  // 3. Option B: Trigger Netlify Build Webhook if configured
+  // 3. Option B: Trigger Netlify Build Webhook
   if (NETLIFY_BUILD_HOOK_URL) {
     try {
       await fetch(NETLIFY_BUILD_HOOK_URL, { method: 'POST' });
@@ -102,11 +121,11 @@ export const uploadImageFile = async (file) => {
         return { success: true, url: publicUrl };
       }
     } catch (err) {
-      console.warn('Supabase storage upload failed, falling back to local endpoint', err);
+      console.warn('Supabase storage upload failed', err);
     }
   }
 
-  // Fallback to Express multer local endpoint
+  // Fallback to local multer upload
   const formData = new FormData();
   formData.append('image', file);
   const res = await fetch('/api/upload', { method: 'POST', body: formData });
