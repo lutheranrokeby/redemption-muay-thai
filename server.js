@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const CONTENT_PATH = path.join(__dirname, 'content.json');
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
+const ADMIN_PASSWORD = process.env.VITE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin123';
 
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -68,7 +69,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 // API 4: Admin Password Auth
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
-  if (password === 'admin123') {
+  if (password === ADMIN_PASSWORD) {
     res.json({ success: true, token: 'admin-authenticated-token' });
   } else {
     res.status(401).json({ error: 'Incorrect Admin Password' });
@@ -80,6 +81,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Redemption Muay Thai Site Running!`);
   console.log(`👉 Visitor Site: http://localhost:${PORT}`);
   console.log(`✏️ Admin Portal:  http://localhost:${PORT}/admin`);
-  console.log(`🔑 Password:     admin123`);
+  console.log(`🔑 Password Env: VITE_ADMIN_PASSWORD`);
   console.log(`==================================================`);
 });

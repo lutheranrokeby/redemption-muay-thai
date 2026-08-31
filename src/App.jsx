@@ -248,11 +248,12 @@ export default function App() {
       return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in your .env file or Netlify environment variables.');
     }
     
+    // Strict comparison ONLY against ADMIN_PASSWORD
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
     } else {
-      alert('Incorrect password. Please check VITE_ADMIN_PASSWORD environment variable and try again.');
+      alert('Incorrect password. Password must match VITE_ADMIN_PASSWORD environment variable.');
     }
   };
 
