@@ -8,8 +8,9 @@ import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
-// Strictly require VITE_ADMIN_PASSWORD environment variable (no fallback)
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
+// Strictly require VITE_ADMIN_PASSWORD environment variable, trimming whitespace and quotes
+const rawEnvPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
+const ADMIN_PASSWORD = rawEnvPass.replace(/^["']|["']$/g, '').trim();
 
 export default function App() {
   const [contentData, setContentData] = useState(null);
@@ -245,15 +246,16 @@ export default function App() {
     if (e) e.preventDefault();
 
     if (!ADMIN_PASSWORD) {
-      return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in your .env file or Netlify environment variables.');
+      return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in Netlify Environment Variables and trigger a clear-cache redeploy.');
     }
-    
-    // Strict comparison ONLY against ADMIN_PASSWORD
-    if (password === ADMIN_PASSWORD) {
+
+    const inputPass = password.trim();
+
+    if (inputPass === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
     } else {
-      alert('Incorrect password. Password must match VITE_ADMIN_PASSWORD environment variable.');
+      alert('Incorrect password. Password must match your VITE_ADMIN_PASSWORD environment variable.');
     }
   };
 
@@ -356,8 +358,8 @@ export default function App() {
             {!ADMIN_PASSWORD ? (
               <div className="bg-danger-red/20 border border-danger-red p-4 rounded text-xs text-white space-y-2">
                 <p className="font-bold text-danger-red">⚠️ Missing Environment Variable</p>
-                <p>The <code className="bg-black/60 px-1 py-0.5 rounded text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable is not defined.</p>
-                <p className="text-[11px] text-on-surface-variant">Add <code className="text-white">VITE_ADMIN_PASSWORD=your_password</code> in your local <code className="text-white">.env</code> file or Netlify environment variables.</p>
+                <p>The <code className="bg-black/60 px-1 py-0.5 rounded text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable was not detected during build time.</p>
+                <p className="text-[11px] text-on-surface-variant">Add <code className="text-white">VITE_ADMIN_PASSWORD=your_password</code> in Netlify Environment Variables and click <strong>Trigger Deploy</strong> $\rightarrow$ <strong>Clear cache and deploy site</strong>.</p>
               </div>
             ) : (
               <div>
