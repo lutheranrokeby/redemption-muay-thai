@@ -8,8 +8,8 @@ import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
-// Get custom admin password from environment variable (or default to 'admin123')
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+// Strictly require VITE_ADMIN_PASSWORD environment variable (no fallback)
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
 
 export default function App() {
   const [contentData, setContentData] = useState(null);
@@ -241,31 +241,18 @@ export default function App() {
     }));
   };
 
-  const handleLoginSubmit = async (e) => {
+  const handleLoginSubmit = (e) => {
     if (e) e.preventDefault();
+
+    if (!ADMIN_PASSWORD) {
+      return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in your .env file or Netlify environment variables.');
+    }
     
-    // Check against environment variable ADMIN_PASSWORD (or backend API)
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
     } else {
-      // Try local Express server login endpoint fallback
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
-        });
-        const data = await res.json();
-        if (data.success) {
-          setIsAuthenticated(true);
-          sessionStorage.setItem('admin_auth', 'true');
-          return;
-        }
-      } catch (err) {
-        // Ignored on serverless
-      }
-      alert('Incorrect password. Please try again.');
+      alert('Incorrect password. Please check VITE_ADMIN_PASSWORD environment variable and try again.');
     }
   };
 
@@ -364,23 +351,35 @@ export default function App() {
               <h3 className="font-headline-md uppercase text-primary text-2xl">React Admin Portal</h3>
               <p className="text-xs text-on-surface-variant mt-1">Authenticating for Redemption Muay Thai CMS</p>
             </div>
-            <div>
-              <label className="block font-label-mono text-xs text-primary-container mb-2 uppercase">Admin Password</label>
-              <input 
-                type="password" 
-                autoFocus
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password..." 
-                className="w-full bg-background border border-outline-variant text-white p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
-              />
-              <p className="text-[10px] text-on-surface-variant mt-1.5">Default Password: <code className="text-primary">admin123</code></p>
-            </div>
+            
+            {!ADMIN_PASSWORD ? (
+              <div className="bg-danger-red/20 border border-danger-red p-4 rounded text-xs text-white space-y-2">
+                <p className="font-bold text-danger-red">⚠️ Missing Environment Variable</p>
+                <p>The <code className="bg-black/60 px-1 py-0.5 rounded text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable is not defined.</p>
+                <p className="text-[11px] text-on-surface-variant">Add <code className="text-white">VITE_ADMIN_PASSWORD=your_password</code> in your local <code className="text-white">.env</code> file or Netlify environment variables.</p>
+              </div>
+            ) : (
+              <div>
+                <label className="block font-label-mono text-xs text-primary-container mb-2 uppercase">Admin Password</label>
+                <input 
+                  type="password" 
+                  autoFocus
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter admin password..." 
+                  className="w-full bg-background border border-outline-variant text-white p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
+                />
+                <p className="text-[10px] text-on-surface-variant mt-1.5">Authenticated via <code className="text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable.</p>
+              </div>
+            )}
+
             <div className="flex justify-end gap-3 pt-2">
               <a href="/" className="px-4 py-2 text-xs text-on-surface-variant uppercase flex items-center">Return to Site</a>
-              <button type="submit" className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 text-sm uppercase tracking-widest font-bold">
-                Unlock CMS Editor
-              </button>
+              {ADMIN_PASSWORD && (
+                <button type="submit" className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 text-sm uppercase tracking-widest font-bold">
+                  Unlock CMS Editor
+                </button>
+              )}
             </div>
           </form>
         </div>
