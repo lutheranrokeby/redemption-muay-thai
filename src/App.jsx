@@ -8,13 +8,16 @@ import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
+// Get custom admin password from environment variable (or default to 'admin123')
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+
 export default function App() {
   const [contentData, setContentData] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('admin_auth') === 'true';
   });
-  const [password, setPassword] = useState('admin123');
+  const [password, setPassword] = useState('');
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const path = window.location.pathname;
@@ -238,22 +241,31 @@ export default function App() {
     }));
   };
 
-  const handleLoginSubmit = async () => {
-    try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setIsAuthenticated(true);
-        sessionStorage.setItem('admin_auth', 'true');
-      } else {
-        alert(data.error);
+  const handleLoginSubmit = async (e) => {
+    if (e) e.preventDefault();
+    
+    // Check against environment variable ADMIN_PASSWORD (or backend API)
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin_auth', 'true');
+    } else {
+      // Try local Express server login endpoint fallback
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          setIsAuthenticated(true);
+          sessionStorage.setItem('admin_auth', 'true');
+          return;
+        }
+      } catch (err) {
+        // Ignored on serverless
       }
-    } catch (err) {
-      alert('Login request failed');
+      alert('Incorrect password. Please try again.');
     }
   };
 
@@ -347,7 +359,7 @@ export default function App() {
     <div className={isAdmin && isAuthenticated ? 'edit-mode' : ''}>
       {isAdmin && !isAuthenticated && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-4">
-          <div className="bg-surface-container-low border border-primary-container rounded-lg p-8 max-w-md w-full shadow-2xl space-y-6">
+          <form onSubmit={handleLoginSubmit} className="bg-surface-container-low border border-primary-container rounded-lg p-8 max-w-md w-full shadow-2xl space-y-6">
             <div className="border-b border-outline-variant pb-4">
               <h3 className="font-headline-md uppercase text-primary text-2xl">React Admin Portal</h3>
               <p className="text-xs text-on-surface-variant mt-1">Authenticating for Redemption Muay Thai CMS</p>
@@ -356,20 +368,21 @@ export default function App() {
               <label className="block font-label-mono text-xs text-primary-container mb-2 uppercase">Admin Password</label>
               <input 
                 type="password" 
+                autoFocus
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password" 
+                placeholder="Enter admin password..." 
                 className="w-full bg-background border border-outline-variant text-white p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
               />
-              <p className="text-[10px] text-on-surface-variant mt-1">Default Password: <code className="text-primary">admin123</code></p>
+              <p className="text-[10px] text-on-surface-variant mt-1.5">Default Password: <code className="text-primary">admin123</code></p>
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <a href="/" className="px-4 py-2 text-xs text-on-surface-variant uppercase flex items-center">Return to Site</a>
-              <button onClick={handleLoginSubmit} className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 text-sm uppercase tracking-widest">
+              <button type="submit" className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 text-sm uppercase tracking-widest font-bold">
                 Unlock CMS Editor
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 
