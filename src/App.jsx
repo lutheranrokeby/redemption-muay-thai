@@ -28,6 +28,9 @@ export default function App() {
   useEffect(() => {
     if (path.startsWith('/admin')) {
       setIsAdmin(true);
+      sessionStorage.setItem('admin_session', 'true');
+    } else if (sessionStorage.getItem('admin_session') === 'true' && sessionStorage.getItem('admin_auth') === 'true') {
+      setIsAdmin(true);
     } else {
       setIsAdmin(false);
     }
@@ -256,6 +259,7 @@ export default function App() {
     if (inputPass === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
+      sessionStorage.setItem('admin_session', 'true');
     } else {
       alert('Incorrect password. Password must match your VITE_ADMIN_PASSWORD environment variable.');
     }
@@ -264,6 +268,7 @@ export default function App() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('admin_auth');
+    sessionStorage.removeItem('admin_session');
     window.location.href = '/';
   };
 

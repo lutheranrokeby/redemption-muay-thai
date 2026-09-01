@@ -8,6 +8,12 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
   const bookingMode = data.trialBookingMode || 'modal'; // 'modal' or 'link'
   const logoUrl = data.logoImage || data.logo || '';
 
+  const getHref = (urlPath) => {
+    if (!isAdmin) return urlPath;
+    if (urlPath === '/') return '/admin';
+    return urlPath.startsWith('/admin') ? urlPath : `/admin${urlPath}`;
+  };
+
   const handleBookingClick = (e) => {
     if (bookingMode === 'modal') {
       e.preventDefault();
@@ -131,7 +137,7 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
           
           {/* Logo Image or Brand Typography */}
           <div className="relative space-y-2">
-            <a href="/" className="inline-block">
+            <a href={getHref('/')} className="inline-block">
               {logoUrl ? (
                 <img 
                   src={logoUrl} 
@@ -234,11 +240,11 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
             >{data.navTitle || "NAVIGATION"}</span>
           </h4>
           <ul className="space-y-2 text-sm font-body-md text-on-surface-variant">
-            <li><a href="/" className="hover:text-primary transition-colors">Home</a></li>
-            <li><a href="/coaches" className="hover:text-primary transition-colors">Meet The Coaches</a></li>
-            <li><a href="/classes" className="hover:text-primary transition-colors">All Classes</a></li>
-            <li><a href="/timetable" className="hover:text-primary transition-colors">Weekly Timetable</a></li>
-            <li><a href="/contact" className="hover:text-primary transition-colors">Contact Us</a></li>
+            <li><a href={getHref('/')} className="hover:text-primary transition-colors">Home</a></li>
+            <li><a href={getHref('/coaches')} className="hover:text-primary transition-colors">Meet The Coaches</a></li>
+            <li><a href={getHref('/classes')} className="hover:text-primary transition-colors">All Classes</a></li>
+            <li><a href={getHref('/timetable')} className="hover:text-primary transition-colors">Weekly Timetable</a></li>
+            <li><a href={getHref('/contact')} className="hover:text-primary transition-colors">Contact Us</a></li>
           </ul>
         </div>
 

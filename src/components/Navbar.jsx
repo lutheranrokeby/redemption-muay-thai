@@ -11,6 +11,12 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
     { label: 'Contact', href: '/contact' },
   ];
 
+  const getHref = (urlPath) => {
+    if (!isAdmin) return urlPath;
+    if (urlPath === '/') return '/admin';
+    return urlPath.startsWith('/admin') ? urlPath : `/admin${urlPath}`;
+  };
+
   const logoUrl = data?.logoImage || data?.footer?.logoImage || '';
   const defaultBookingUrl = 'https://link.msgsndr.com/widget/booking/SA4A67tEfgN64XYvmrWC';
   const bookingUrl = data?.trialBookingUrl || data?.footer?.trialBookingUrl || defaultBookingUrl;
@@ -32,7 +38,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
         
         {/* Brand Logo Image or Typography */}
         <div className="flex items-center gap-3 relative img-container">
-          <a href="/" className="flex items-center gap-2">
+          <a href={getHref('/')} className="flex items-center gap-2">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
@@ -64,7 +70,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           {navLinks.map((link) => (
             <a 
               key={link.label}
-              href={link.href} 
+              href={getHref(link.href)} 
               className="text-on-surface hover:text-primary-container transition-colors py-2 relative group"
             >
               {link.label}
@@ -104,7 +110,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           {navLinks.map((link) => (
             <a 
               key={link.label}
-              href={link.href}
+              href={getHref(link.href)}
               onClick={() => setMobileMenuOpen(false)}
               className="block text-on-surface hover:text-primary-container transition-colors py-2 border-b border-outline-variant/40"
             >
