@@ -283,8 +283,34 @@ export default function App() {
     }
   };
 
+  // High-Contrast Athletic Redemption Muay Thai Loading Screen
   if (!contentData) {
-    return <div className="min-h-screen bg-background text-white flex items-center justify-center font-label-mono">Loading React Application...</div>;
+    return (
+      <div className="min-h-screen bg-[#131313] text-white flex flex-col items-center justify-center p-6 space-y-6 select-none">
+        
+        {/* Brand Typography Header */}
+        <div className="text-center space-y-2">
+          <h1 className="font-headline-lg text-4xl sm:text-6xl italic tracking-widest uppercase text-white font-extrabold">
+            REDEMPTION <span className="text-primary-container not-italic">MUAY THAI</span>
+          </h1>
+          <p className="font-label-mono text-xs text-on-surface-variant uppercase tracking-widest">
+            Sunshine Coast, QLD • Premier Striking Facility
+          </p>
+        </div>
+
+        {/* Glowing Electric Cyan Loading Bar */}
+        <div className="w-64 sm:w-80 h-2 bg-surface-container-high rounded-full overflow-hidden border border-outline-variant/60 shadow-xl relative">
+          <div className="h-full bg-primary-container rounded-full animate-pulse w-full origin-left transition-all duration-500"></div>
+        </div>
+
+        {/* Loading Tag */}
+        <div className="flex items-center gap-2 text-xs font-label-mono text-primary-container uppercase font-bold tracking-widest pt-2">
+          <span className="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+          <span>Loading Site Content...</span>
+        </div>
+
+      </div>
+    );
   }
 
   const renderCurrentPage = () => {
