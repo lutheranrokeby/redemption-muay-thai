@@ -1,130 +1,128 @@
 import React, { useState } from 'react';
 
-export default function Navbar({ isAdmin, onLogout }) {
+export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmin }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const currentPath = window.location.pathname;
 
-  const getRoute = (basePath) => {
-    if (isAdmin) {
-      return basePath === '/' ? '/admin' : `/admin${basePath}`;
-    }
-    return basePath;
-  };
+  const navLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'Coaches', href: '/coaches' },
+    { label: 'Classes', href: '/classes' },
+    { label: 'Timetable', href: '/timetable' },
+    { label: 'Contact', href: '/contact' },
+  ];
 
-  const isCurrent = (basePath) => {
-    const target = getRoute(basePath);
-    if (basePath === '/') {
-      return currentPath === '/' || currentPath === '/admin';
+  const logoUrl = data?.logoImage || data?.footer?.logoImage || '';
+  const defaultBookingUrl = 'https://link.msgsndr.com/widget/booking/SA4A67tEfgN64XYvmrWC';
+  const bookingUrl = data?.trialBookingUrl || data?.footer?.trialBookingUrl || defaultBookingUrl;
+  const bookingMode = data?.trialBookingMode || data?.footer?.trialBookingMode || 'modal';
+
+  const handleFreePassClick = (e) => {
+    if (bookingMode === 'modal') {
+      e.preventDefault();
+      setMobileMenuOpen(false);
+      if (onOpenBookingModal) {
+        onOpenBookingModal();
+      }
     }
-    return currentPath === target;
   };
 
   return (
-    <nav className="bg-background/90 dark:bg-background/90 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant dark:border-outline-variant shadow-[4px_4px_0px_0px_rgba(0,229,255,0.3)]">
-      <div className="flex justify-between items-center px-grid-margin py-4 max-w-full mx-auto">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-md border-b border-outline-variant/60 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-grid-margin h-20 flex items-center justify-between">
         
-        {/* Brand Logo */}
-        <a className="font-headline-lg text-2xl sm:text-3xl text-primary italic tracking-widest uppercase flex items-center gap-2" href={getRoute('/')}>
-          REDEMPTION {isAdmin ? '[ADMIN]' : ''}
-        </a>
-
-        {/* Desktop Links (Hidden on Mobile) */}
-        <div className="hidden md:flex gap-8 items-center">
-          <a className={`font-button-text text-button-text uppercase tracking-widest transition-colors ${isCurrent('/') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface hover:text-primary'}`} href={getRoute('/')}>Home</a>
-          <a className={`font-button-text text-button-text uppercase tracking-widest transition-colors ${isCurrent('/coaches') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface hover:text-primary'}`} href={getRoute('/coaches')}>Coaches</a>
-          <a className={`font-button-text text-button-text uppercase tracking-widest transition-colors ${isCurrent('/classes') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface hover:text-primary'}`} href={getRoute('/classes')}>Classes</a>
-          <a className={`font-button-text text-button-text uppercase tracking-widest transition-colors ${isCurrent('/timetable') ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface hover:text-primary'}`} href={getRoute('/timetable')}>Schedule</a>
-        </div>
-
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-4">
-          <a href={getRoute('/contact')} className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase tracking-widest hover:bg-white transition-colors">
-            CONTACT
+        {/* Brand Logo Image or Typography */}
+        <div className="flex items-center gap-3 relative img-container">
+          <a href="/" className="flex items-center gap-2">
+            {logoUrl ? (
+              <img 
+                src={logoUrl} 
+                alt="Redemption Muay Thai Logo" 
+                className="h-10 sm:h-12 w-auto object-contain"
+              />
+            ) : (
+              <span className="font-headline-lg text-2xl sm:text-3xl italic tracking-widest uppercase text-white font-bold">
+                REDEMPTION <span className="text-primary-container not-italic">MUAY THAI</span>
+              </span>
+            )}
           </a>
+
           {isAdmin && (
-            <button 
-              onClick={onLogout}
-              className="border border-outline-variant text-on-surface-variant font-button-text px-3 py-2 text-xs uppercase hover:text-white transition-colors rounded"
-            >
-              Exit Admin
-            </button>
+            <label className="btn-clip bg-primary-container text-black font-button-text px-2.5 py-1 uppercase cursor-pointer hover:bg-white transition-colors text-[11px] font-bold inline-flex items-center gap-1 shadow-md">
+              📷 Logo
+              <input 
+                type="file" 
+                className="hidden" 
+                accept="image/*" 
+                onChange={(e) => onImageUpload && onImageUpload(e, 'footer', 'logoImage')} 
+              />
+            </label>
           )}
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
-        <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden flex items-center justify-center p-2 text-primary-container focus:outline-none"
-          aria-label="Toggle Navigation Menu"
-        >
-          <span className="material-symbols-outlined text-3xl">
-            {mobileMenuOpen ? 'close' : 'menu'}
-          </span>
-        </button>
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center space-x-8 font-button-text uppercase tracking-widest text-sm font-bold">
+          {navLinks.map((link) => (
+            <a 
+              key={link.label}
+              href={link.href} 
+              className="text-on-surface hover:text-primary-container transition-colors py-2 relative group"
+            >
+              {link.label}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-container group-hover:w-full transition-all duration-300"></span>
+            </a>
+          ))}
+          
+          <a 
+            href={bookingUrl}
+            target={bookingMode === 'link' ? '_blank' : '_self'}
+            rel="noreferrer"
+            onClick={handleFreePassClick}
+            className="btn-clip bg-primary-container text-black px-6 py-2.5 uppercase tracking-widest hover:bg-white transition-colors text-xs font-bold shadow-lg cursor-pointer"
+          >
+            FREE PASS
+          </a>
+        </div>
+
+        {/* Mobile Hamburger Button */}
+        <div className="md:hidden flex items-center gap-2">
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-white hover:text-primary-container focus:outline-none"
+            aria-label="Toggle Navigation Menu"
+          >
+            <span className="material-symbols-outlined text-3xl">
+              {mobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+        </div>
 
       </div>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-background/95 border-b border-primary-container/40 backdrop-blur-xl px-grid-margin py-6 space-y-4 animate-in slide-in-from-top-4 duration-300">
-          <div className="flex flex-col space-y-3 font-headline-md text-xl uppercase tracking-wider">
+        <div className="md:hidden bg-surface-container-low border-b border-outline-variant px-6 py-6 space-y-4 font-button-text uppercase tracking-widest text-base font-bold shadow-2xl">
+          {navLinks.map((link) => (
             <a 
-              href={getRoute('/')} 
+              key={link.label}
+              href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`py-2 border-b border-outline-variant/40 ${isCurrent('/') ? 'text-primary-container font-bold pl-2 border-l-4 border-l-primary-container' : 'text-on-surface'}`}
+              className="block text-on-surface hover:text-primary-container transition-colors py-2 border-b border-outline-variant/40"
             >
-              Home
+              {link.label}
             </a>
-            <a 
-              href={getRoute('/coaches')} 
-              onClick={() => setMobileMenuOpen(false)}
-              className={`py-2 border-b border-outline-variant/40 ${isCurrent('/coaches') ? 'text-primary-container font-bold pl-2 border-l-4 border-l-primary-container' : 'text-on-surface'}`}
-            >
-              Coaches
-            </a>
-            <a 
-              href={getRoute('/classes')} 
-              onClick={() => setMobileMenuOpen(false)}
-              className={`py-2 border-b border-outline-variant/40 ${isCurrent('/classes') ? 'text-primary-container font-bold pl-2 border-l-4 border-l-primary-container' : 'text-on-surface'}`}
-            >
-              Classes
-            </a>
-            <a 
-              href={getRoute('/timetable')} 
-              onClick={() => setMobileMenuOpen(false)}
-              className={`py-2 border-b border-outline-variant/40 ${isCurrent('/timetable') ? 'text-primary-container font-bold pl-2 border-l-4 border-l-primary-container' : 'text-on-surface'}`}
-            >
-              Schedule
-            </a>
-            <a 
-              href={getRoute('/contact')} 
-              onClick={() => setMobileMenuOpen(false)}
-              className={`py-2 border-b border-outline-variant/40 ${isCurrent('/contact') ? 'text-primary-container font-bold pl-2 border-l-4 border-l-primary-container' : 'text-on-surface'}`}
-            >
-              Contact Us
-            </a>
-          </div>
-
-          <div className="pt-2 flex flex-col gap-3">
-            <a 
-              href={getRoute('/contact')} 
-              onClick={() => setMobileMenuOpen(false)}
-              className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase tracking-widest text-center font-bold"
-            >
-              CONTACT GYM
-            </a>
-            
-            {isAdmin && (
-              <button 
-                onClick={() => { setMobileMenuOpen(false); onLogout(); }}
-                className="w-full border border-outline-variant text-on-surface-variant font-button-text py-2.5 text-xs uppercase text-center rounded"
-              >
-                Exit Admin Mode
-              </button>
-            )}
-          </div>
+          ))}
+          <a 
+            href={bookingUrl}
+            target={bookingMode === 'link' ? '_blank' : '_self'}
+            rel="noreferrer"
+            onClick={handleFreePassClick}
+            className="block text-center btn-clip bg-primary-container text-black py-3 uppercase tracking-widest font-bold text-sm shadow-xl mt-4 cursor-pointer"
+          >
+            FREE PASS
+          </a>
         </div>
       )}
+
     </nav>
   );
 }

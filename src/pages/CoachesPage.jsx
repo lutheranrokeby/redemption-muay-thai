@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachChange, onImageUpload, isAdmin }) {
+export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachChange, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCoach, setNewCoach] = useState({
     name: '',
@@ -40,9 +40,17 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
     onCoachChange(coachIndex, 'achievements', newAch);
   };
 
+  const handleHeaderChange = (field, value) => {
+    if (onPageFieldChange) {
+      onPageFieldChange('coachesPage', field, value);
+    }
+  };
+
+  const pageMeta = data?.coachesPage || {};
+
   return (
     <div className="min-h-screen bg-background text-on-surface font-body-md">
-      <Navbar isAdmin={isAdmin} />
+      <Navbar data={data?.footer} onImageUpload={onImageUpload} onOpenBookingModal={onOpenBookingModal} isAdmin={isAdmin} />
 
       <main className="pt-28 sm:pt-36 pb-16 md:pb-section-gap px-4 sm:px-grid-margin max-w-7xl mx-auto">
         
@@ -53,27 +61,63 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
           <div className="lg:col-span-4 lg:sticky lg:top-36 space-y-8">
             
             <div className="space-y-4 border-l-4 border-l-primary-container pl-4 sm:pl-6">
-              <span className="font-label-mono text-xs text-primary-container uppercase tracking-widest font-bold">
-                CHAMPIONSHIP LINEAGE
+              <span 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => handleHeaderChange('tagline', e.target.innerText)}
+                className="font-label-mono text-xs text-primary-container uppercase tracking-widest font-bold block"
+              >
+                {pageMeta.tagline || "CHAMPIONSHIP LINEAGE"}
               </span>
+
               <h1 className="font-display-xl text-4xl sm:text-6xl uppercase text-white leading-none tracking-tight">
-                Meet Our <br/>
-                <span className="text-primary-container">Coaches</span>
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('title', e.target.innerText)}
+                >{pageMeta.title || "Meet Our Coaches"}</span>
               </h1>
-              <p className="text-on-surface-variant font-body-lg text-base sm:text-lg leading-relaxed pt-2">
-                Our coaching team brings decades of championship ring experience, technical mastery, and passion for community building to the Sunshine Coast.
+
+              <p 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => handleHeaderChange('intro', e.target.innerText)}
+                className="text-on-surface-variant font-body-lg text-base sm:text-lg leading-relaxed pt-2"
+              >
+                {pageMeta.intro || "Our coaching team brings decades of championship ring experience, technical mastery, and passion for community building to the Sunshine Coast."}
               </p>
             </div>
 
             {/* Athletic Stats Badges */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="bg-surface-container-low border border-outline-variant p-4 rounded text-left space-y-1">
-                <span className="font-display-xl text-3xl text-primary-container font-bold">12+</span>
-                <span className="block font-label-mono text-[11px] text-on-surface-variant uppercase">Years Ring Experience</span>
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('stat1Val', e.target.innerText)}
+                  className="font-display-xl text-3xl text-primary-container font-bold block"
+                >{pageMeta.stat1Val || "12+"}</span>
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('stat1Lbl', e.target.innerText)}
+                  className="block font-label-mono text-[11px] text-on-surface-variant uppercase"
+                >{pageMeta.stat1Lbl || "Years Ring Experience"}</span>
               </div>
+
               <div className="bg-surface-container-low border border-outline-variant p-4 rounded text-left space-y-1">
-                <span className="font-display-xl text-3xl text-primary-container font-bold">6x</span>
-                <span className="block font-label-mono text-[11px] text-on-surface-variant uppercase">WMC & IFMA Belts</span>
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('stat2Val', e.target.innerText)}
+                  className="font-display-xl text-3xl text-primary-container font-bold block"
+                >{pageMeta.stat2Val || "6x"}</span>
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('stat2Lbl', e.target.innerText)}
+                  className="block font-label-mono text-[11px] text-on-surface-variant uppercase"
+                >{pageMeta.stat2Lbl || "WMC & IFMA Belts"}</span>
               </div>
             </div>
 
@@ -89,12 +133,32 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
               </div>
             )}
 
-            {/* CTA Box */}
-            <div className="bg-surface-container-high border border-outline-variant rounded p-6 space-y-3 hidden lg:block">
-              <h4 className="font-headline-md text-xl uppercase text-white">Ready To Train?</h4>
-              <p className="text-xs text-on-surface-variant">Private 1-on-1 sessions and group classes available 6 days a week.</p>
-              <a href="/contact" className="inline-block font-label-mono text-xs text-primary-container uppercase font-bold hover:underline">
-                Book Trial Class →
+            {/* Sidebar CTA Box (100% Inline Editable) */}
+            <div className="bg-surface-container-high border border-outline-variant rounded-xl p-6 space-y-3 hidden lg:block">
+              <h4 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => handleHeaderChange('ctaTitle', e.target.innerText)}
+                className="font-headline-md text-xl uppercase text-white"
+              >{pageMeta.ctaTitle || "Ready To Train?"}</h4>
+
+              <p 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => handleHeaderChange('ctaDesc', e.target.innerText)}
+                className="text-xs text-on-surface-variant leading-relaxed"
+              >{pageMeta.ctaDesc || "Private 1-on-1 sessions and group classes available 6 days a week."}</p>
+
+              <a 
+                href="#" 
+                onClick={(e) => { e.preventDefault(); if (onOpenBookingModal) onOpenBookingModal(); }}
+                className="inline-block font-label-mono text-xs text-primary-container uppercase font-bold hover:underline pt-1 cursor-pointer"
+              >
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('ctaBtnText', e.target.innerText)}
+                >{pageMeta.ctaBtnText || "Book Trial Class →"}</span>
               </a>
             </div>
 
@@ -218,8 +282,16 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
                     </div>
 
                     <div className="pt-2">
-                      <a href="/contact" className="inline-block btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase tracking-widest hover:bg-white transition-colors text-xs sm:text-sm font-bold">
-                        Train With {coach.name.split(' ')[0]} →
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); if (onOpenBookingModal) onOpenBookingModal(); }}
+                        className="inline-block btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase tracking-widest hover:bg-white transition-colors text-xs sm:text-sm font-bold cursor-pointer"
+                      >
+                        <span 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => onCoachChange(index, 'ctaText', e.target.innerText)}
+                        >{coach.ctaText || `Train With ${coach.name ? coach.name.split(' ')[0] : 'Coach'} →`}</span>
                       </a>
                     </div>
 
@@ -269,7 +341,7 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
         </div>
       )}
 
-      <Footer data={data?.footer} isAdmin={isAdmin} />
+      <Footer data={data?.footer} onChange={onPageFieldChange ? (sec, fld, val) => onPageFieldChange(sec, fld, val) : null} onImageUpload={onImageUpload} onOpenBookingModal={onOpenBookingModal} isAdmin={isAdmin} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import TimetablePage from './pages/TimetablePage';
 import ContactPage from './pages/ContactPage';
 import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
+import TrialBookingModal from './components/TrialBookingModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
 // Strictly require VITE_ADMIN_PASSWORD environment variable, trimming whitespace and quotes
@@ -20,6 +21,7 @@ export default function App() {
   });
   const [password, setPassword] = useState('');
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showTrialModal, setShowTrialModal] = useState(false);
 
   const path = window.location.pathname;
 
@@ -45,7 +47,7 @@ export default function App() {
     setContentData(prev => ({
       ...prev,
       [section]: {
-        ...prev[section],
+        ...(prev[section] || {}),
         [field]: value
       }
     }));
@@ -282,6 +284,7 @@ export default function App() {
 
   const renderCurrentPage = () => {
     const adminMode = isAdmin && isAuthenticated;
+    const openModal = () => setShowTrialModal(true);
 
     if (path === '/coaches' || path === '/admin/coaches') {
       return (
@@ -290,7 +293,9 @@ export default function App() {
           onAddCoach={handleAddCoach}
           onDeleteCoach={handleDeleteCoach}
           onCoachChange={handleCoachChange}
-          onImageUpload={handleCoachImageUpload}
+          onImageUpload={handleImageUpload}
+          onPageFieldChange={handleFieldChange}
+          onOpenBookingModal={openModal}
           isAdmin={adminMode}
         />
       );
@@ -304,6 +309,9 @@ export default function App() {
           onDeleteClass={handleDeleteClass}
           onClassChange={handleClassChange}
           onClassImageUpload={handleClassImageUpload}
+          onPageFieldChange={handleFieldChange}
+          onImageUpload={handleImageUpload}
+          onOpenBookingModal={openModal}
           isAdmin={adminMode}
         />
       );
@@ -316,6 +324,9 @@ export default function App() {
           onAddSlot={handleAddSlot}
           onDeleteSlot={handleDeleteSlot}
           onSlotChange={handleSlotChange}
+          onPageFieldChange={handleFieldChange}
+          onImageUpload={handleImageUpload}
+          onOpenBookingModal={openModal}
           isAdmin={adminMode}
         />
       );
@@ -326,6 +337,9 @@ export default function App() {
         <ContactPage 
           data={contentData}
           onContactChange={handleContactChange}
+          onPageFieldChange={handleFieldChange}
+          onImageUpload={handleImageUpload}
+          onOpenBookingModal={openModal}
           isAdmin={adminMode}
         />
       );
@@ -340,6 +354,7 @@ export default function App() {
         onClassImageUpload={handleClassImageUpload}
         onAddBentoCard={handleAddBentoCard}
         onDeleteBentoCard={handleDeleteBentoCard}
+        onOpenBookingModal={openModal}
         isAdmin={adminMode}
       />
     );
@@ -389,6 +404,12 @@ export default function App() {
       )}
 
       {renderCurrentPage()}
+
+      {/* Global Mobile & Desktop Optimized Trial Booking Modal */}
+      <TrialBookingModal 
+        isOpen={showTrialModal} 
+        onClose={() => setShowTrialModal(false)} 
+      />
 
       {isAdmin && isAuthenticated && (
         <AdminBar 

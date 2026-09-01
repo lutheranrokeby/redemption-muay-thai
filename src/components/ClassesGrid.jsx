@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ClassesGrid({ data, onClassChange, onClassImageUpload, isAdmin }) {
+export default function ClassesGrid({ data, onClassChange, onClassImageUpload, onDeleteClass, isAdmin }) {
   if (!data) return null;
 
   return (
@@ -9,7 +9,11 @@ export default function ClassesGrid({ data, onClassChange, onClassImageUpload, i
         
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <span className="font-label-mono text-xs text-primary-container uppercase tracking-widest font-bold">
+          <span 
+            contentEditable={isAdmin}
+            suppressContentEditableWarning={true}
+            className="font-label-mono text-xs text-primary-container uppercase tracking-widest font-bold block"
+          >
             TRAINING PROGRAMS
           </span>
           <h2 className="font-display-xl text-4xl sm:text-6xl uppercase text-white tracking-tight">
@@ -27,8 +31,8 @@ export default function ClassesGrid({ data, onClassChange, onClassImageUpload, i
               
               {isAdmin && (
                 <button 
-                  onClick={() => onDeleteClass(index)}
-                  className="absolute top-2 left-2 bg-danger-red text-white text-[10px] font-label-mono px-2 py-1 rounded z-30"
+                  onClick={() => onDeleteClass && onDeleteClass(index)}
+                  className="absolute top-2 left-2 bg-danger-red text-white text-[10px] font-label-mono px-2 py-1 rounded z-30 shadow-md"
                 >
                   🗑️ Delete
                 </button>
@@ -72,7 +76,12 @@ export default function ClassesGrid({ data, onClassChange, onClassImageUpload, i
                 >{item.description}</p>
 
                 <a href="/timetable" className="inline-flex items-center gap-2 font-label-mono text-xs text-primary-container uppercase font-bold hover:text-white transition-colors pt-2">
-                  View Timetable Schedule <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onClassChange(index, 'ctaText', e.target.innerText)}
+                  >{item.ctaText || "View Timetable Schedule"}</span>
+                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </a>
               </div>
             </div>

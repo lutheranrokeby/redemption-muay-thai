@@ -9,6 +9,11 @@ dist/
 .env.local
 .env.production
 
+# Uploaded large media files
+public/uploads/*.mp4
+public/uploads/*.mov
+public/uploads/*.webm
+
 # Logs & temp files
 *.log
 npm-debug.log*

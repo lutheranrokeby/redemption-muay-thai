@@ -15,10 +15,13 @@ export default function CoachSpotlight({ data, onChange, onImageUpload, isAdmin 
         {/* BESPOKE ATHLETIC SPOTLIGHT CONTAINER */}
         <div className="relative bg-gradient-to-br from-surface-container-low via-surface-dim to-surface-container-lowest border-2 border-outline-variant/80 rounded-3xl p-6 sm:p-12 lg:p-16 shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
           
-          {/* Huge Background Typography Watermark */}
-          <span className="absolute -bottom-6 -right-6 text-8xl sm:text-[14rem] font-display-xl uppercase text-white/[0.03] select-none pointer-events-none leading-none tracking-tighter">
-            COACH
-          </span>
+          {/* Background Typography Watermark */}
+          <span 
+            contentEditable={isAdmin}
+            suppressContentEditableWarning={true}
+            onBlur={(e) => onChange('coach', 'watermark', e.target.innerText)}
+            className="absolute -bottom-6 -right-6 text-8xl sm:text-[14rem] font-display-xl uppercase text-white/[0.03] select-none pointer-events-none leading-none tracking-tighter"
+          >{data.watermark || "COACH"}</span>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             
@@ -42,8 +45,13 @@ export default function CoachSpotlight({ data, onChange, onImageUpload, isAdmin 
                 {/* Vertical Athletic Brand Tag */}
                 <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2 bg-black/90 backdrop-blur-md px-4 py-2 rounded-lg border border-primary-container/50">
                   <span className="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
-                  <span className="font-label-mono text-xs font-bold uppercase text-primary-container tracking-wider">
-                    HEAD COACH & FOUNDER
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'badge', e.target.innerText)}
+                    className="font-label-mono text-xs font-bold uppercase text-primary-container tracking-wider"
+                  >
+                    {data.badge || "HEAD COACH & FOUNDER"}
                   </span>
                 </div>
 
@@ -68,10 +76,10 @@ export default function CoachSpotlight({ data, onChange, onImageUpload, isAdmin 
                   <span 
                     contentEditable={isAdmin}
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => onChange('coach', 'badge', e.target.innerText)}
+                    onBlur={(e) => onChange('coach', 'tagline', e.target.innerText)}
                     className="font-label-mono text-xs uppercase tracking-widest text-primary-container font-bold"
                   >
-                    {data.badge || "ESTABLISHED 2020"}
+                    {data.tagline || "ESTABLISHED 2020"}
                   </span>
                 </div>
 
@@ -98,26 +106,63 @@ export default function CoachSpotlight({ data, onChange, onImageUpload, isAdmin 
                 className="text-on-surface-variant font-body-lg text-base sm:text-lg leading-relaxed max-w-2xl"
               >{data.bio}</p>
 
-              {/* Athletic Stat Badges Grid */}
+              {/* Athletic Stat Badges Grid (100% Inline Editable) */}
               <div className="grid grid-cols-3 gap-3 pt-2">
                 <div className="bg-background/80 border border-outline-variant p-3.5 rounded-xl text-center space-y-1 backdrop-blur-md">
-                  <span className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block">4x</span>
-                  <span className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block">WMC State Belts</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat1Val', e.target.innerText)}
+                    className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block"
+                  >{data.stat1Val || "4x"}</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat1Lbl', e.target.innerText)}
+                    className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block"
+                  >{data.stat1Lbl || "WMC State Belts"}</span>
                 </div>
+
                 <div className="bg-background/80 border border-outline-variant p-3.5 rounded-xl text-center space-y-1 backdrop-blur-md">
-                  <span className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block">2x</span>
-                  <span className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block">IFMA Australian Titles</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat2Val', e.target.innerText)}
+                    className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block"
+                  >{data.stat2Val || "2x"}</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat2Lbl', e.target.innerText)}
+                    className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block"
+                  >{data.stat2Lbl || "IFMA Australian Titles"}</span>
                 </div>
+
                 <div className="bg-background/80 border border-outline-variant p-3.5 rounded-xl text-center space-y-1 backdrop-blur-md">
-                  <span className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block">12+</span>
-                  <span className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block">Years Experience</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat3Val', e.target.innerText)}
+                    className="font-display-xl text-2xl sm:text-3xl text-primary-container font-bold block"
+                  >{data.stat3Val || "12+"}</span>
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'stat3Lbl', e.target.innerText)}
+                    className="font-label-mono text-[10px] sm:text-xs text-on-surface-variant uppercase font-bold block"
+                  >{data.stat3Lbl || "Years Experience"}</span>
                 </div>
               </div>
 
               {/* Metallic Championship Accolades List */}
               <div className="space-y-3 pt-2">
-                <span className="block font-label-mono text-xs uppercase text-on-surface-variant font-bold tracking-wider">
-                  CHAMPIONSHIP ACCOMPLISHMENTS
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => onChange('coach', 'accoladesTitle', e.target.innerText)}
+                  className="block font-label-mono text-xs uppercase text-on-surface-variant font-bold tracking-wider"
+                >
+                  {data.accoladesTitle || "CHAMPIONSHIP ACCOMPLISHMENTS"}
                 </span>
                 
                 <div className="flex flex-wrap gap-2.5">
@@ -147,13 +192,22 @@ export default function CoachSpotlight({ data, onChange, onImageUpload, isAdmin 
                   href="/contact" 
                   className="btn-clip bg-primary-container text-black font-button-text px-8 py-4 uppercase tracking-widest hover:bg-white transition-all transform hover:-translate-y-0.5 text-center font-bold text-sm sm:text-base shadow-xl"
                 >
-                  Train With {data.name ? data.name.split(' ')[0] : 'Billy'} →
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'cta1Text', e.target.innerText)}
+                  >{data.cta1Text || `Train With ${data.name ? data.name.split(' ')[0] : 'Billy'} →`}</span>
                 </a>
+
                 <a 
                   href="/coaches" 
                   className="border-2 border-outline-variant text-on-surface hover:text-primary-container font-button-text px-6 py-4 uppercase tracking-widest hover:border-primary-container transition-all text-center font-bold text-sm sm:text-base rounded-lg"
                 >
-                  Meet All Coaches →
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => onChange('coach', 'cta2Text', e.target.innerText)}
+                  >{data.cta2Text || "Meet All Coaches →"}</span>
                 </a>
               </div>
 

@@ -1,25 +1,98 @@
 import React from 'react';
 
+// Helper to determine if a URL points to a video file
+const isVideoUrl = (url) => {
+  if (!url) return false;
+  const cleanUrl = url.split('?')[0].toLowerCase();
+  return cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.endsWith('.mov') || cleanUrl.includes('video');
+};
+
 export default function Hero({ data, onChange, onImageUpload, isAdmin }) {
   if (!data) return null;
 
+  const desktopMedia = data.bgImage || data.bgMediaDesktop || '';
+  const mobileMedia = data.bgMediaMobile || desktopMedia;
+
+  const isDesktopVideo = isVideoUrl(desktopMedia);
+  const isMobileVideo = isVideoUrl(mobileMedia);
+
   return (
     <header className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden">
+      
+      {/* Dedicated High-Z-Index Admin Media Change Controls (Desktop & Mobile) */}
+      {isAdmin && (
+        <div className="absolute top-28 right-4 sm:right-8 z-30 flex flex-col sm:flex-row gap-2">
+          <label className="btn-clip bg-primary-container text-black font-button-text px-4 py-2.5 uppercase cursor-pointer hover:bg-white shadow-2xl text-xs font-bold border-2 border-black inline-flex items-center gap-1.5">
+            <span>🖥️</span> Desktop Media (Photo/Video)
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*,video/*" 
+              onChange={(e) => onImageUpload(e, 'hero', 'bgImage')} 
+            />
+          </label>
+
+          <label className="btn-clip bg-surface-container-high text-primary-container font-button-text px-4 py-2.5 uppercase cursor-pointer hover:bg-white hover:text-black transition-colors shadow-2xl text-xs font-bold border-2 border-primary-container/60 inline-flex items-center gap-1.5">
+            <span>📱</span> Mobile Media (Photo/Video)
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*,video/*" 
+              onChange={(e) => onImageUpload(e, 'hero', 'bgMediaMobile')} 
+            />
+          </label>
+        </div>
+      )}
+
       {/* Absolute Background Container */}
-      <div className="absolute inset-0 z-0 bg-surface-dim img-container">
-        <img className="w-full h-full object-cover opacity-40 mix-blend-luminosity" src={data.bgImage} alt="Hero Background"/>
+      <div className="absolute inset-0 z-0 bg-surface-dim">
         
-        {isAdmin && (
-          <div className="img-edit-overlay absolute inset-0 bg-black/60 items-center justify-center z-20 flex p-4">
-            <label className="btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase cursor-pointer hover:bg-white shadow-2xl text-xs sm:text-sm font-bold">
-              📷 Change Hero Background Photo
-              <input type="file" className="hidden" accept="image/*" onChange={(e) => onImageUpload(e, 'hero', 'bgImage')} />
-            </label>
-          </div>
-        )}
+        {/* DESKTOP BACKGROUND MEDIA (Hidden on mobile if separate mobile media is present) */}
+        <div className="hidden md:block w-full h-full">
+          {isDesktopVideo ? (
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              key={desktopMedia}
+              className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+            >
+              <source src={desktopMedia} />
+            </video>
+          ) : (
+            <img 
+              className="w-full h-full object-cover opacity-40 mix-blend-luminosity" 
+              src={desktopMedia} 
+              alt="Hero Background Desktop"
+            />
+          )}
+        </div>
+
+        {/* MOBILE BACKGROUND MEDIA (Shown on screens < 768px) */}
+        <div className="block md:hidden w-full h-full">
+          {isMobileVideo ? (
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              key={mobileMedia}
+              className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+            >
+              <source src={mobileMedia} />
+            </video>
+          ) : (
+            <img 
+              className="w-full h-full object-cover opacity-40 mix-blend-luminosity" 
+              src={mobileMedia} 
+              alt="Hero Background Mobile"
+            />
+          )}
+        </div>
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none"></div>
       </div>
 
       {/* Foreground Content */}

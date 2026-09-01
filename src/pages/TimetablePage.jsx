@@ -41,7 +41,7 @@ const getSortableMinutes = (slot) => {
   return 0;
 };
 
-export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotChange, isAdmin }) {
+export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotChange, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
   const [selectedDayFilter, setSelectedDayFilter] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   
@@ -109,7 +109,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
 
   return (
     <div className="min-h-screen bg-background text-on-surface font-body-md">
-      <Navbar isAdmin={isAdmin} />
+      <Navbar data={data?.footer} onImageUpload={onImageUpload} onOpenBookingModal={onOpenBookingModal} isAdmin={isAdmin} />
 
       <main className="pt-28 sm:pt-32 pb-16 md:pb-section-gap px-4 sm:px-grid-margin max-w-7xl mx-auto space-y-8 sm:space-y-12">
         
@@ -119,7 +119,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
             Weekly <span className="text-primary-container">Timetable</span>
           </h1>
           <p className="text-on-surface-variant font-body-lg text-sm sm:text-base max-w-2xl mx-auto">
-            View our daily session times Monday through Sunday.
+            View our daily session times Monday through Sunday. Select any day to filter your schedule.
           </p>
 
           {/* Day Filter Pills */}
@@ -149,10 +149,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
           )}
         </div>
 
-        {/* ========================================================================= */}
-        {/* 1. MOBILE-ONLY NO-SCROLL COMPACT CARD VIEW (< sm: 0px to 639px)           */}
-        {/* Fits 100% inside screen width with zero horizontal scrolling              */}
-        {/* ========================================================================= */}
+        {/* 1. MOBILE NO-SCROLL CARD VIEW (< sm) */}
         <div className="block sm:hidden space-y-3">
           {sortedSlots.length > 0 ? (
             sortedSlots.map((slot, index) => (
@@ -219,9 +216,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
           )}
         </div>
 
-        {/* ========================================================================= */}
-        {/* 2. DESKTOP & TABLET HIGH-CONTRAST TABLE VIEW (≥ sm: 640px and wider)       */}
-        {/* ========================================================================= */}
+        {/* 2. DESKTOP & TABLET TABLE VIEW (≥ sm) */}
         <div className="hidden sm:block overflow-x-auto bg-surface-container-low border border-outline-variant rounded-lg p-6 shadow-2xl">
           <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
@@ -381,7 +376,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
         </div>
       )}
 
-      <Footer data={data?.footer} isAdmin={isAdmin} />
+      <Footer data={data?.footer} onChange={onPageFieldChange ? (sec, fld, val) => onPageFieldChange(sec, fld, val) : null} onImageUpload={onImageUpload} onOpenBookingModal={onOpenBookingModal} isAdmin={isAdmin} />
     </div>
   );
 }
