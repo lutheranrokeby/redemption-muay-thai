@@ -1,25 +1,12 @@
 import React, { useState } from 'react';
+import { NAV_LINKS, DEFAULT_BOOKING_URL } from '../constants/navigation';
+import { getAdminHref } from '../utils/urlHelper';
 
 export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmin }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'Coaches', href: '/coaches' },
-    { label: 'Classes', href: '/classes' },
-    { label: 'Timetable', href: '/timetable' },
-    { label: 'Contact', href: '/contact' },
-  ];
-
-  const getHref = (urlPath) => {
-    if (!isAdmin) return urlPath;
-    if (urlPath === '/') return '/admin';
-    return urlPath.startsWith('/admin') ? urlPath : `/admin${urlPath}`;
-  };
-
   const logoUrl = data?.logoImage || data?.footer?.logoImage || '';
-  const defaultBookingUrl = 'https://link.msgsndr.com/widget/booking/SA4A67tEfgN64XYvmrWC';
-  const bookingUrl = data?.trialBookingUrl || data?.footer?.trialBookingUrl || defaultBookingUrl;
+  const bookingUrl = data?.trialBookingUrl || data?.footer?.trialBookingUrl || DEFAULT_BOOKING_URL;
   const bookingMode = data?.trialBookingMode || data?.footer?.trialBookingMode || 'modal';
 
   const handleFreePassClick = (e) => {
@@ -33,16 +20,16 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-md border-b border-outline-variant/60 shadow-2xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-grid-margin h-20 flex items-center justify-between">
+    <header className="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-md border-b border-outline-variant/60 shadow-2xl">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-grid-margin h-20 flex items-center justify-between" aria-label="Main Navigation">
         
         {/* Brand Logo Image or Typography */}
         <div className="flex items-center gap-3 relative img-container">
-          <a href={getHref('/')} className="flex items-center gap-2">
+          <a href={getAdminHref('/', isAdmin)} className="flex items-center gap-2" aria-label="Redemption Muay Thai Home">
             {logoUrl ? (
               <img 
                 src={logoUrl} 
-                alt="Redemption Muay Thai Logo" 
+                alt="Redemption Muay Thai Brand Logo" 
                 className="h-10 sm:h-12 w-auto object-contain"
               />
             ) : (
@@ -66,11 +53,11 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
         </div>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center space-x-8 font-button-text uppercase tracking-widest text-sm font-bold">
-          {navLinks.map((link) => (
+        <div className="hidden md:flex items-center space-x-7 font-button-text uppercase tracking-widest text-sm font-bold">
+          {NAV_LINKS.map((link) => (
             <a 
               key={link.label}
-              href={getHref(link.href)} 
+              href={getAdminHref(link.href, isAdmin)} 
               className="text-on-surface hover:text-primary-container transition-colors py-2 relative group"
             >
               {link.label}
@@ -81,7 +68,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           <a 
             href={bookingUrl}
             target={bookingMode === 'link' ? '_blank' : '_self'}
-            rel="noreferrer"
+            rel={bookingMode === 'link' ? 'noopener noreferrer' : undefined}
             onClick={handleFreePassClick}
             className="btn-clip bg-primary-container text-black px-6 py-2.5 uppercase tracking-widest hover:bg-white transition-colors text-xs font-bold shadow-lg cursor-pointer"
           >
@@ -94,7 +81,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-white hover:text-primary-container focus:outline-none"
-            aria-label="Toggle Navigation Menu"
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             <span className="material-symbols-outlined text-3xl">
               {mobileMenuOpen ? 'close' : 'menu'}
@@ -102,15 +89,15 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           </button>
         </div>
 
-      </div>
+      </nav>
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-surface-container-low border-b border-outline-variant px-6 py-6 space-y-4 font-button-text uppercase tracking-widest text-base font-bold shadow-2xl">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <a 
               key={link.label}
-              href={getHref(link.href)}
+              href={getAdminHref(link.href, isAdmin)}
               onClick={() => setMobileMenuOpen(false)}
               className="block text-on-surface hover:text-primary-container transition-colors py-2 border-b border-outline-variant/40"
             >
@@ -120,7 +107,7 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
           <a 
             href={bookingUrl}
             target={bookingMode === 'link' ? '_blank' : '_self'}
-            rel="noreferrer"
+            rel={bookingMode === 'link' ? 'noopener noreferrer' : undefined}
             onClick={handleFreePassClick}
             className="block text-center btn-clip bg-primary-container text-black py-3 uppercase tracking-widest font-bold text-sm shadow-xl mt-4 cursor-pointer"
           >
@@ -129,6 +116,6 @@ export default function Navbar({ data, onImageUpload, onOpenBookingModal, isAdmi
         </div>
       )}
 
-    </nav>
+    </header>
   );
 }

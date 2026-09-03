@@ -61,7 +61,7 @@
       "name": "Billy Coulter",
       "subtitle": "Head Coach & Founder",
       "badge": "HEAD COACH",
-      "bio": "Billy Coulter is a seasoned Muay Thai veteran and head coach of Redemption Muay Thai, running the gym alongside his wife Teagan. Beginning his martial arts journey at age 20, Billy has competed at the highest levels across Australia.",
+      "bio": "Billy Coulter is a seasoned Muay Thai veteran and the esteemed head coach of Redemption Muay Thai. With 12 years of striking experience, Billy has dedicated his career to building champions and fostering a supportive gym environment.",
       "achievements": [
         "4x WMC Queensland Champion (66.67kg)",
         "2x IFMA Australian Champion (66.67kg)",
@@ -72,186 +72,188 @@
     {
       "id": "coach-2",
       "name": "Teagan Coulter",
-      "subtitle": "Co-Owner & Conditioning Coach",
-      "badge": "COACH & OWNER",
-      "bio": "Teagan runs Redemption Muay Thai alongside Billy, specializing in fitness conditioning, youth empowerment, and gym operations with a passion for community building.",
+      "subtitle": "Co-Owner & Assistant Coach",
+      "badge": "COACH",
+      "bio": "Teagan co-runs Redemption Muay Thai alongside Billy, bringing energy, technical precision, and passion to our junior and adult conditioning programs.",
       "achievements": [
-        "Head Youth Program Director",
-        "Functional Fitness & Conditioning Specialist",
-        "8+ Years Gym Management Experience"
+        "Co-Founder of Redemption Muay Thai",
+        "Junior Program Director",
+        "Strength & Conditioning Specialist"
       ],
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBBw2dGuuYBK5zitQxoD7AkB4TFK-t2EwUtKQInG9vA5D9tZQfNQhzrb4HuIl4EWLPsSW8EYsDiBDZbuRmBP8yAQfTqrsrPnaB5tMyap35f9cLjm1F3MKb1HsL3nrIqGan7BQbaayYFgbcZZjp3rRy_9PG9Xm_x2G3lfYAmCw-OtJjkmTV9Jus1fA4igAA6ptQmyI8m_P_UHjp0J3ZBNwBm83j1F3Gwr7siWbV0Ew2UyQ3GlfOlQusYNg"
-    },
-    {
-      "name": "Tommy",
-      "subtitle": "LOL",
-      "badge": "Muay Thai Coach",
-      "bio": "sadasdsa",
-      "achievements": [
-        "4x WMC State Champion",
-        "10+ Years Ring Experience"
-      ],
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw",
-      "id": "coach-1788130885743"
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw"
     }
   ],
   "timetableData": [
     {
       "id": "t1",
-      "time": "06:00 AM",
       "day": "Monday",
-      "className": "Morning Muay Thai",
+      "startTime": "06:00",
+      "endTime": "07:00",
+      "time": "6:00 AM - 7:00 AM",
+      "className": "Adult Muay Thai",
       "level": "All Levels"
     },
     {
       "id": "t2",
-      "time": "06:00 AM",
-      "day": "Wednesday",
-      "className": "Morning Muay Thai",
-      "level": "All Levels"
+      "day": "Monday",
+      "startTime": "16:30",
+      "endTime": "17:15",
+      "time": "4:30 PM - 5:15 PM",
+      "className": "Junior Muay Thai (5-11 yrs)",
+      "level": "Juniors"
     },
     {
       "id": "t3",
-      "time": "06:00 AM",
-      "day": "Friday",
-      "className": "Morning Muay Thai",
+      "day": "Monday",
+      "startTime": "17:30",
+      "endTime": "18:45",
+      "time": "5:30 PM - 6:45 PM",
+      "className": "Adult Muay Thai",
       "level": "All Levels"
     },
     {
       "id": "t4",
-      "time": "04:15 PM",
-      "day": "Monday",
-      "className": "Junior Class (5-11)",
-      "level": "Juniors"
+      "day": "Tuesday",
+      "startTime": "06:00",
+      "endTime": "07:00",
+      "time": "6:00 AM - 7:00 AM",
+      "className": "Adult Muay Thai",
+      "level": "All Levels"
     },
     {
       "id": "t5",
-      "time": "04:15 PM",
       "day": "Tuesday",
-      "className": "Junior Class (5-11)",
-      "level": "Juniors"
-    },
-    {
-      "id": "t6",
-      "time": "04:15 PM",
-      "day": "Wednesday",
-      "className": "Junior Class (5-11)",
-      "level": "Juniors"
-    },
-    {
-      "id": "t7",
-      "time": "04:15 PM",
-      "day": "Thursday",
-      "className": "Junior Class (5-11)",
-      "level": "Juniors"
-    },
-    {
-      "id": "t8",
-      "time": "05:15 PM",
-      "day": "Monday",
+      "startTime": "17:00",
+      "endTime": "18:00",
+      "time": "5:00 PM - 6:00 PM",
       "className": "Youth Empowerment",
       "level": "Teens"
     },
     {
-      "id": "t9",
-      "time": "05:15 PM",
+      "id": "t6",
       "day": "Wednesday",
+      "startTime": "06:00",
+      "endTime": "07:00",
+      "time": "6:00 AM - 7:00 AM",
+      "className": "Adult Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t7",
+      "day": "Wednesday",
+      "startTime": "17:30",
+      "endTime": "18:45",
+      "time": "5:30 PM - 6:45 PM",
+      "className": "Adult Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t8",
+      "day": "Thursday",
+      "startTime": "06:00",
+      "endTime": "07:00",
+      "time": "6:00 AM - 7:00 AM",
+      "className": "Adult Muay Thai",
+      "level": "All Levels"
+    },
+    {
+      "id": "t9",
+      "day": "Thursday",
+      "startTime": "17:00",
+      "endTime": "18:00",
+      "time": "5:00 PM - 6:00 PM",
       "className": "Youth Empowerment",
       "level": "Teens"
     },
     {
       "id": "t10",
-      "time": "06:15 PM",
-      "day": "Monday",
-      "className": "Adult Muay Thai",
-      "level": "Adults"
-    },
-    {
-      "id": "t11",
-      "time": "06:15 PM",
-      "day": "Tuesday",
-      "className": "Adult Muay Thai",
-      "level": "Adults"
-    },
-    {
-      "id": "t12",
-      "time": "06:15 PM",
-      "day": "Wednesday",
-      "className": "Adult Muay Thai",
-      "level": "Adults"
-    },
-    {
-      "id": "t13",
-      "time": "06:15 PM",
-      "day": "Thursday",
-      "className": "Adult Muay Thai",
-      "level": "Adults"
-    },
-    {
-      "id": "t14",
-      "time": "06:15 PM",
       "day": "Friday",
-      "className": "Sparring & Clinch",
-      "level": "Advanced"
-    },
-    {
-      "id": "t15",
-      "time": "08:00 AM",
-      "day": "Saturday",
-      "className": "Open Mat & Fighter Prep",
+      "startTime": "06:00",
+      "endTime": "07:00",
+      "time": "6:00 AM - 7:00 AM",
+      "className": "Adult Muay Thai",
       "level": "All Levels"
     },
     {
-      "time": "6am-7am",
-      "day": "Saturday",
-      "className": "THAI FUCK YEAH",
-      "level": "All Levels",
-      "id": "t-1787623116802"
-    },
-    {
-      "id": "t-1787623393997-wx8w",
-      "time": "06:00 AM - 07:15 AM",
-      "startTime": "06:00",
-      "endTime": "07:15",
-      "day": "Monday",
-      "className": "Morning Muay Thai",
-      "level": "ALL MOTHERFUCKING LEVELS"
-    },
-    {
-      "id": "t-1787623393997-sugq",
-      "time": "06:00 AM - 07:15 AM",
-      "startTime": "06:00",
-      "endTime": "07:15",
-      "day": "Tuesday",
-      "className": "Morning Muay Thai",
-      "level": "ALL MOTHERFUCKING LEVELS"
-    },
-    {
-      "id": "t-1787623393997-n0ne",
-      "time": "06:00 AM - 07:15 AM",
-      "startTime": "06:00",
-      "endTime": "07:15",
-      "day": "Wednesday",
-      "className": "Morning Muay Thai",
-      "level": "ALL MOTHERFUCKING LEVELS"
-    },
-    {
-      "id": "t-1787623393997-rb2u",
-      "time": "06:00 AM - 07:15 AM",
-      "startTime": "06:00",
-      "endTime": "07:15",
-      "day": "Thursday",
-      "className": "Morning Muay Thai",
-      "level": "ALL MOTHERFUCKING LEVELS"
-    },
-    {
-      "id": "t-1787623393997-0ku3",
-      "time": "06:00 AM - 07:15 AM",
-      "startTime": "06:00",
-      "endTime": "07:15",
+      "id": "t11",
       "day": "Friday",
-      "className": "Morning Muay Thai",
-      "level": "ALL MOTHERFUCKING LEVELS"
+      "startTime": "17:30",
+      "endTime": "18:45",
+      "time": "5:30 PM - 6:45 PM",
+      "className": "Sparring & Clinch",
+      "level": "Advanced / Inter"
+    },
+    {
+      "id": "t12",
+      "day": "Saturday",
+      "startTime": "08:00",
+      "endTime": "09:30",
+      "time": "8:00 AM - 9:30 AM",
+      "className": "Open Mat & Fighter Prep",
+      "level": "All Levels"
+    }
+  ],
+  "membershipsPage": {
+    "tagline": "FLEXIBLE TRAINING PLANS",
+    "title": "Membership Options",
+    "subtitle": "No lock-in contracts. Choose the weekly training plan that fits your goals and schedule.",
+    "faqTitle": "FREQUENTLY ASKED QUESTIONS",
+    "ctaTitle": "HAVE QUESTIONS ABOUT OUR MEMBERSHIPS?",
+    "ctaDesc": "Reach out to our coaching staff or drop in for a free trial class to find the best plan for you.",
+    "ctaBtnText": "Claim Free Trial Class →"
+  },
+  "memberships": [
+    {
+      "id": "m1",
+      "title": "2 SESSIONS / WEEK",
+      "price": "$39",
+      "interval": "per week",
+      "badge": "STARTER",
+      "featured": false,
+      "description": "Ideal for beginners or those supplementing other physical training.",
+      "features": [
+        "2 sessions per week",
+        "Full access to striking technique",
+        "Flexible morning or evening choice",
+        "No lock-in contracts"
+      ],
+      "ctaText": "SELECT 2-SESSION PLAN",
+      "ctaUrl": "/contact"
+    },
+    {
+      "id": "m2",
+      "title": "UNLIMITED PASS",
+      "price": "$55",
+      "interval": "per week",
+      "badge": "MOST POPULAR",
+      "featured": true,
+      "description": "Unrestricted access to all adult classes, fighter prep & open mat sessions.",
+      "features": [
+        "UNLIMITED sessions per week",
+        "Access to all Muay Thai & Conditioning",
+        "Saturday Open Mat & Fighter Prep",
+        "Priority coach feedback & sparring",
+        "No lock-in contracts"
+      ],
+      "ctaText": "GET UNLIMITED PASS",
+      "ctaUrl": "/contact"
+    },
+    {
+      "id": "m3",
+      "title": "3 SESSIONS / WEEK",
+      "price": "$49",
+      "interval": "per week",
+      "badge": "BALANCED",
+      "featured": false,
+      "description": "Perfect balance of consistency, recovery, and technical growth.",
+      "features": [
+        "3 sessions per week",
+        "Choice of morning or evening classes",
+        "Technique, padwork & conditioning",
+        "No lock-in contracts"
+      ],
+      "ctaText": "SELECT 3-SESSION PLAN",
+      "ctaUrl": "/contact"
     }
   ],
   "contactInfo": {

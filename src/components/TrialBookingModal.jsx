@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { sanitizeEditText } from '../utils/urlHelper';
 
-export default function TrialBookingModal({ isOpen, onClose }) {
+export default function TrialBookingModal({ isOpen, onClose, data, onChange, isAdmin }) {
   const [iframeLoading, setIframeLoading] = useState(true);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    // Reset iframe loading state when opened
     setIframeLoading(true);
 
     const scriptId = 'ghl-group-script';
@@ -22,6 +21,9 @@ export default function TrialBookingModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
+  const modalTitle = data?.footer?.trialModalTitle || data?.trialModalTitle || "Book Your Free Trial Class";
+  const modalDesc = data?.footer?.trialModalDesc || data?.trialModalDesc || "Book in a free trial class yourself, you can book up to 30 minutes before a class. We'll see you there!";
+
   return (
     <div className="fixed inset-0 z-[250] overflow-hidden">
       
@@ -35,17 +37,33 @@ export default function TrialBookingModal({ isOpen, onClose }) {
       <div className="fixed inset-0 md:inset-y-0 md:left-auto md:right-0 z-[260] w-full md:max-w-2xl lg:max-w-3xl bg-surface-container-low border-l-0 md:border-l-2 md:border-outline-variant flex flex-col h-full shadow-2xl transition-transform duration-300">
         
         {/* Drawer Header */}
-        <div className="bg-surface-container-high border-b border-outline-variant px-4 py-4 sm:px-6 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
-            <h3 className="font-headline-md text-xl sm:text-2xl uppercase text-white tracking-wide">
-              Book Your <span className="text-primary-container">Free Trial Class</span>
-            </h3>
+        <div className="bg-surface-container-high border-b border-outline-variant px-4 py-4 sm:px-6 flex items-start justify-between gap-4 shrink-0">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse shrink-0"></span>
+              <h3 className="font-headline-md text-xl sm:text-2xl uppercase text-white tracking-wide">
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => onChange && onChange('footer', 'trialModalTitle', sanitizeEditText(e.target.innerText))}
+                >{modalTitle}</span>
+              </h3>
+            </div>
+
+            {/* Sub-header Description */}
+            <p 
+              contentEditable={isAdmin}
+              suppressContentEditableWarning={true}
+              onBlur={(e) => onChange && onChange('footer', 'trialModalDesc', sanitizeEditText(e.target.innerText))}
+              className="text-on-surface-variant text-xs sm:text-sm font-body-md pl-5 leading-snug"
+            >
+              {modalDesc}
+            </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-background border border-outline-variant hover:border-primary-container text-white hover:text-primary-container flex items-center justify-center transition-colors font-mono font-bold text-xl focus:outline-none"
+            className="w-10 h-10 rounded-full bg-background border border-outline-variant hover:border-primary-container text-white hover:text-primary-container flex items-center justify-center transition-colors font-mono font-bold text-xl focus:outline-none shrink-0"
             aria-label="Close Drawer"
             title="Close Drawer"
           >
@@ -99,13 +117,6 @@ export default function TrialBookingModal({ isOpen, onClose }) {
             title="Redemption Muay Thai Trial Class Booking"
           ></iframe>
 
-        </div>
-
-        {/* Drawer Footer Bar */}
-        <div className="bg-surface-container-high border-t border-outline-variant px-4 py-3 text-center shrink-0">
-          <span className="font-label-mono text-xs text-on-surface-variant uppercase">
-            ⚡ Instant confirmation • Select any class time on our schedule
-          </span>
         </div>
 
       </div>

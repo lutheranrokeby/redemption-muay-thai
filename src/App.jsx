@@ -3,13 +3,13 @@ import HomePage from './pages/HomePage';
 import CoachesPage from './pages/CoachesPage';
 import ClassesPage from './pages/ClassesPage';
 import TimetablePage from './pages/TimetablePage';
+import MembershipsPage from './pages/MembershipsPage';
 import ContactPage from './pages/ContactPage';
 import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
 import TrialBookingModal from './components/TrialBookingModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
-// Strictly require VITE_ADMIN_PASSWORD environment variable, trimming whitespace and quotes
 const rawEnvPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
 const ADMIN_PASSWORD = rawEnvPass.replace(/^["']|["']$/g, '').trim();
 
@@ -25,15 +25,9 @@ export default function App() {
 
   const path = window.location.pathname;
 
+  // Enforce Strict Isolation: Admin Mode active ONLY on /admin routes
   useEffect(() => {
-    if (path.startsWith('/admin')) {
-      setIsAdmin(true);
-      sessionStorage.setItem('admin_session', 'true');
-    } else if (sessionStorage.getItem('admin_session') === 'true' && sessionStorage.getItem('admin_auth') === 'true') {
-      setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
-    }
+    setIsAdmin(path.startsWith('/admin'));
     fetchContent();
   }, [path]);
 
@@ -42,10 +36,11 @@ export default function App() {
       const data = await getSiteContent();
       setContentData(data);
     } catch (err) {
-      console.error('Failed to load content', err);
+      console.error('Failed to load site content', err);
     }
   };
 
+  // Generic Section Field Updater
   const handleFieldChange = (section, field, value) => {
     setContentData(prev => ({
       ...prev,
@@ -56,7 +51,63 @@ export default function App() {
     }));
   };
 
-  // Global Business Settings Handler
+  // Generic List Operations Helper (Coaches, Classes, Timetable, Memberships)
+  const updateList = (listKey, updater) => {
+    setContentData(prev => ({
+      ...prev,
+      [listKey]: updater(prev[listKey] || [])
+    }));
+  };
+
+  const handleAddListItem = (listKey, newItem) => {
+    updateList(listKey, (list) => [...list, newItem]);
+  };
+
+  const handleDeleteListItem = (listKey, index, promptMsg) => {
+    if (promptMsg && !confirm(promptMsg)) return;
+    updateList(listKey, (list) => {
+      const copy = [...list];
+      copy.splice(index, 1);
+      return copy;
+    });
+  };
+
+  const handleUpdateListItem = (listKey, index, field, value) => {
+    updateList(listKey, (list) => {
+      const copy = [...list];
+      copy[index] = { ...copy[index], [field]: value };
+      return copy;
+    });
+  };
+
+  // Image Upload Helper
+  const handleImageUpload = async (e, section, field) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const data = await uploadImageFile(file);
+      if (data.success) {
+        handleFieldChange(section, field, data.url);
+      }
+    } catch (err) {
+      alert('Image upload failed');
+    }
+  };
+
+  const handleListImageUpload = async (e, listKey, index) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const data = await uploadImageFile(file);
+      if (data.success) {
+        handleUpdateListItem(listKey, index, 'image', data.url);
+      }
+    } catch (err) {
+      alert('Image upload failed');
+    }
+  };
+
+  // Business Settings Handler
   const handleSaveBusinessSettings = (settings) => {
     setContentData(prev => ({
       ...prev,
@@ -80,196 +131,17 @@ export default function App() {
     alert('✅ Business Settings updated throughout the site! Click "Save & Publish Changes" to save permanently.');
   };
 
-  const handleImageUpload = async (e, section, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const data = await uploadImageFile(file);
-      if (data.success) {
-        handleFieldChange(section, field, data.url);
-      }
-    } catch (err) {
-      alert('Image upload failed');
-    }
-  };
-
-  // Bento Card Handlers
-  const handleAddBentoCard = () => {
-    setContentData(prev => {
-      const existing = prev.welcome.bentoCards || [
-        { id: 'b1', title: prev.welcome.bento1Title || 'No Ego', desc: prev.welcome.bento1Desc || 'Train hard, stay humble. Everyone is family here.', icon: 'sports_martial_arts' },
-        { id: 'b2', title: prev.welcome.bento2Title || 'All Levels', desc: prev.welcome.bento2Desc || 'From seasoned fighters to day-one beginners.', bg: prev.welcome.bento2Bg }
-      ];
-      const newCard = {
-        id: `b-${Date.now()}`,
-        title: 'New Feature',
-        desc: 'Custom feature description...',
-        icon: 'fitness_center'
-      };
-      return {
-        ...prev,
-        welcome: {
-          ...prev.welcome,
-          bentoCards: [...existing, newCard]
-        }
-      };
-    });
-  };
-
-  const handleDeleteBentoCard = (index) => {
-    if (!confirm('Are you sure you want to delete this feature card?')) return;
-    setContentData(prev => {
-      const existing = prev.welcome.bentoCards || [
-        { id: 'b1', title: prev.welcome.bento1Title || 'No Ego', desc: prev.welcome.bento1Desc || 'Train hard, stay humble. Everyone is family here.', icon: 'sports_martial_arts' },
-        { id: 'b2', title: prev.welcome.bento2Title || 'All Levels', desc: prev.welcome.bento2Desc || 'From seasoned fighters to day-one beginners.', bg: prev.welcome.bento2Bg }
-      ];
-      const newList = [...existing];
-      newList.splice(index, 1);
-      return {
-        ...prev,
-        welcome: {
-          ...prev.welcome,
-          bentoCards: newList
-        }
-      };
-    });
-  };
-
-  // Coaches Handlers
-  const handleAddCoach = (newCoach) => {
-    setContentData(prev => ({
-      ...prev,
-      coachesList: [...(prev.coachesList || []), newCoach]
-    }));
-  };
-
-  const handleDeleteCoach = (index) => {
-    if (!confirm('Are you sure you want to delete this coach?')) return;
-    setContentData(prev => {
-      const newList = [...(prev.coachesList || [])];
-      newList.splice(index, 1);
-      return { ...prev, coachesList: newList };
-    });
-  };
-
-  const handleCoachChange = (index, field, value) => {
-    setContentData(prev => {
-      const newList = [...(prev.coachesList || [])];
-      newList[index] = { ...newList[index], [field]: value };
-      return { ...prev, coachesList: newList };
-    });
-  };
-
-  const handleCoachImageUpload = async (e, index) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const data = await uploadImageFile(file);
-      if (data.success) {
-        handleCoachChange(index, 'image', data.url);
-      }
-    } catch (err) {
-      alert('Image upload failed');
-    }
-  };
-
-  // Classes Handlers
-  const handleAddClass = (newClass) => {
-    setContentData(prev => ({
-      ...prev,
-      classes: [...(prev.classes || []), newClass]
-    }));
-  };
-
-  const handleDeleteClass = (index) => {
-    if (!confirm('Are you sure you want to delete this class?')) return;
-    setContentData(prev => {
-      const newList = [...(prev.classes || [])];
-      newList.splice(index, 1);
-      return { ...prev, classes: newList };
-    });
-  };
-
-  const handleClassChange = (index, field, value) => {
-    setContentData(prev => {
-      const newList = [...(prev.classes || [])];
-      newList[index] = { ...newList[index], [field]: value };
-      return { ...prev, classes: newList };
-    });
-  };
-
-  const handleClassImageUpload = async (e, index) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const data = await uploadImageFile(file);
-      if (data.success) {
-        handleClassChange(index, 'image', data.url);
-      }
-    } catch (err) {
-      alert('Image upload failed');
-    }
-  };
-
-  // Timetable Handlers
-  const handleAddSlot = (newSlot) => {
-    setContentData(prev => ({
-      ...prev,
-      timetableData: [...(prev.timetableData || []), newSlot]
-    }));
-  };
-
-  const handleDeleteSlot = (index) => {
-    if (!confirm('Are you sure you want to delete this timetable slot?')) return;
-    setContentData(prev => {
-      const newList = [...(prev.timetableData || [])];
-      newList.splice(index, 1);
-      return { ...prev, timetableData: newList };
-    });
-  };
-
-  const handleSlotChange = (index, field, value) => {
-    setContentData(prev => {
-      const newList = [...(prev.timetableData || [])];
-      newList[index] = { ...newList[index], [field]: value };
-      return { ...prev, timetableData: newList };
-    });
-  };
-
-  // Contact Handlers
-  const handleContactChange = (field, value) => {
-    setContentData(prev => ({
-      ...prev,
-      contactInfo: {
-        ...(prev.contactInfo || {}),
-        [field]: value
-      }
-    }));
-  };
-
   const handleLoginSubmit = (e) => {
     if (e) e.preventDefault();
-
     if (!ADMIN_PASSWORD) {
-      return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in Netlify Environment Variables and trigger a clear-cache redeploy.');
+      return alert('⚠️ Admin password environment variable VITE_ADMIN_PASSWORD is not configured. Please set VITE_ADMIN_PASSWORD in Netlify Environment Variables.');
     }
-
-    const inputPass = password.trim();
-
-    if (inputPass === ADMIN_PASSWORD) {
+    if (password.trim() === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem('admin_auth', 'true');
-      sessionStorage.setItem('admin_session', 'true');
     } else {
-      alert('Incorrect password. Password must match your VITE_ADMIN_PASSWORD environment variable.');
+      alert('Incorrect password.');
     }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    sessionStorage.removeItem('admin_auth');
-    sessionStorage.removeItem('admin_session');
-    window.location.href = '/';
   };
 
   const handleSave = async () => {
@@ -283,12 +155,9 @@ export default function App() {
     }
   };
 
-  // High-Contrast Athletic Redemption Muay Thai Loading Screen
   if (!contentData) {
     return (
       <div className="min-h-screen bg-[#131313] text-white flex flex-col items-center justify-center p-6 space-y-6 select-none">
-        
-        {/* Brand Typography Header */}
         <div className="text-center space-y-2">
           <h1 className="font-headline-lg text-4xl sm:text-6xl italic tracking-widest uppercase text-white font-extrabold">
             REDEMPTION <span className="text-primary-container not-italic">MUAY THAI</span>
@@ -297,33 +166,29 @@ export default function App() {
             Sunshine Coast, QLD • Premier Striking Facility
           </p>
         </div>
-
-        {/* Glowing Electric Cyan Loading Bar */}
         <div className="w-64 sm:w-80 h-2 bg-surface-container-high rounded-full overflow-hidden border border-outline-variant/60 shadow-xl relative">
           <div className="h-full bg-primary-container rounded-full animate-pulse w-full origin-left transition-all duration-500"></div>
         </div>
-
-        {/* Loading Tag */}
         <div className="flex items-center gap-2 text-xs font-label-mono text-primary-container uppercase font-bold tracking-widest pt-2">
           <span className="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
           <span>Loading Site Content...</span>
         </div>
-
       </div>
     );
   }
 
-  const renderCurrentPage = () => {
-    const adminMode = isAdmin && isAuthenticated;
-    const openModal = () => setShowTrialModal(true);
+  const isUnderAdminRoute = path.startsWith('/admin');
+  const adminMode = isUnderAdminRoute && isAuthenticated;
+  const openModal = () => setShowTrialModal(true);
 
+  const renderCurrentPage = () => {
     if (path === '/coaches' || path === '/admin/coaches') {
       return (
         <CoachesPage 
           data={contentData} 
-          onAddCoach={handleAddCoach}
-          onDeleteCoach={handleDeleteCoach}
-          onCoachChange={handleCoachChange}
+          onAddCoach={(item) => handleAddListItem('coachesList', item)}
+          onDeleteCoach={(idx) => handleDeleteListItem('coachesList', idx, 'Are you sure you want to delete this coach?')}
+          onCoachChange={(idx, fld, val) => handleUpdateListItem('coachesList', idx, fld, val)}
           onImageUpload={handleImageUpload}
           onPageFieldChange={handleFieldChange}
           onOpenBookingModal={openModal}
@@ -336,10 +201,10 @@ export default function App() {
       return (
         <ClassesPage 
           data={contentData}
-          onAddClass={handleAddClass}
-          onDeleteClass={handleDeleteClass}
-          onClassChange={handleClassChange}
-          onClassImageUpload={handleClassImageUpload}
+          onAddClass={(item) => handleAddListItem('classes', item)}
+          onDeleteClass={(idx) => handleDeleteListItem('classes', idx, 'Are you sure you want to delete this class?')}
+          onClassChange={(idx, fld, val) => handleUpdateListItem('classes', idx, fld, val)}
+          onClassImageUpload={(e, idx) => handleListImageUpload(e, 'classes', idx)}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}
@@ -352,9 +217,24 @@ export default function App() {
       return (
         <TimetablePage 
           data={contentData}
-          onAddSlot={handleAddSlot}
-          onDeleteSlot={handleDeleteSlot}
-          onSlotChange={handleSlotChange}
+          onAddSlot={(item) => handleAddListItem('timetableData', item)}
+          onDeleteSlot={(idx) => handleDeleteListItem('timetableData', idx, 'Are you sure you want to delete this timetable slot?')}
+          onSlotChange={(idx, fld, val) => handleUpdateListItem('timetableData', idx, fld, val)}
+          onPageFieldChange={handleFieldChange}
+          onImageUpload={handleImageUpload}
+          onOpenBookingModal={openModal}
+          isAdmin={adminMode}
+        />
+      );
+    }
+
+    if (path === '/memberships' || path === '/admin/memberships') {
+      return (
+        <MembershipsPage 
+          data={contentData}
+          onAddMembership={(item) => handleAddListItem('memberships', item)}
+          onDeleteMembership={(idx) => handleDeleteListItem('memberships', idx, 'Are you sure you want to delete this membership plan?')}
+          onMembershipChange={(idx, fld, val) => handleUpdateListItem('memberships', idx, fld, val)}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}
@@ -367,7 +247,7 @@ export default function App() {
       return (
         <ContactPage 
           data={contentData}
-          onContactChange={handleContactChange}
+          onContactChange={(fld, val) => handleFieldChange('contactInfo', fld, val)}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}
@@ -381,10 +261,13 @@ export default function App() {
         data={contentData}
         onChange={handleFieldChange}
         onImageUpload={handleImageUpload}
-        onClassChange={handleClassChange}
-        onClassImageUpload={handleClassImageUpload}
-        onAddBentoCard={handleAddBentoCard}
-        onDeleteBentoCard={handleDeleteBentoCard}
+        onClassChange={(idx, fld, val) => handleUpdateListItem('classes', idx, fld, val)}
+        onClassImageUpload={(e, idx) => handleListImageUpload(e, 'classes', idx)}
+        onAddBentoCard={() => {
+          const newCard = { id: `b-${Date.now()}`, title: 'New Feature', desc: 'Custom feature description...', icon: 'fitness_center' };
+          handleAddListItem('welcome.bentoCards', newCard);
+        }}
+        onDeleteBentoCard={(idx) => handleDeleteListItem('welcome.bentoCards', idx, 'Are you sure you want to delete this feature card?')}
         onOpenBookingModal={openModal}
         isAdmin={adminMode}
       />
@@ -392,8 +275,8 @@ export default function App() {
   };
 
   return (
-    <div className={isAdmin && isAuthenticated ? 'edit-mode' : ''}>
-      {isAdmin && !isAuthenticated && (
+    <div className={isUnderAdminRoute && isAuthenticated ? 'edit-mode' : ''}>
+      {isUnderAdminRoute && !isAuthenticated && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-4">
           <form onSubmit={handleLoginSubmit} className="bg-surface-container-low border border-primary-container rounded-lg p-8 max-w-md w-full shadow-2xl space-y-6">
             <div className="border-b border-outline-variant pb-4">
@@ -405,7 +288,7 @@ export default function App() {
               <div className="bg-danger-red/20 border border-danger-red p-4 rounded text-xs text-white space-y-2">
                 <p className="font-bold text-danger-red">⚠️ Missing Environment Variable</p>
                 <p>The <code className="bg-black/60 px-1 py-0.5 rounded text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable was not detected during build time.</p>
-                <p className="text-[11px] text-on-surface-variant">Add <code className="text-white">VITE_ADMIN_PASSWORD=your_password</code> in Netlify Environment Variables and click <strong>Trigger Deploy</strong> $\rightarrow$ <strong>Clear cache and deploy site</strong>.</p>
+                <p className="text-[11px] text-on-surface-variant">Add <code className="text-white">VITE_ADMIN_PASSWORD=your_password</code> in Netlify Environment Variables.</p>
               </div>
             ) : (
               <div>
@@ -418,7 +301,6 @@ export default function App() {
                   placeholder="Enter admin password..." 
                   className="w-full bg-background border border-outline-variant text-white p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
                 />
-                <p className="text-[10px] text-on-surface-variant mt-1.5">Authenticated via <code className="text-primary-container">VITE_ADMIN_PASSWORD</code> environment variable.</p>
               </div>
             )}
 
@@ -436,13 +318,16 @@ export default function App() {
 
       {renderCurrentPage()}
 
-      {/* Global Mobile & Desktop Optimized Trial Booking Modal */}
+      {/* Global Mobile & Desktop Optimized Trial Booking Modal with Admin Editing */}
       <TrialBookingModal 
         isOpen={showTrialModal} 
         onClose={() => setShowTrialModal(false)} 
+        data={contentData}
+        onChange={handleFieldChange}
+        isAdmin={adminMode}
       />
 
-      {isAdmin && isAuthenticated && (
+      {isUnderAdminRoute && isAuthenticated && (
         <AdminBar 
           onSave={handleSave} 
           onOpenSettings={() => setShowSettingsModal(true)} 
