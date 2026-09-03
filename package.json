@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5173",
-    "build": "vite build",
+    "build": "node scripts/fetch-content.js && vite build",
     "preview": "vite preview",
     "start": "node server.js"
   },
