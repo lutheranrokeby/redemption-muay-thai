@@ -48,6 +48,7 @@ export const getSiteContent = async () => {
 // Save site content & trigger Netlify Build Hook (Option B)
 export const saveSiteContent = async (contentData) => {
   let savedLocally = false;
+  let savedToSupabase = false;
 
   // 1. Try local Express API if running node server.js
   try {
@@ -64,10 +65,10 @@ export const saveSiteContent = async (contentData) => {
     // Local API not present on Netlify
   }
 
-  // 2. Save to Supabase Database
+  // 2. Save / Upsert to Supabase Database
   if (isSupabaseConfigured()) {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.main_content`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_ANON_KEY,
@@ -81,8 +82,12 @@ export const saveSiteContent = async (contentData) => {
           updated_at: new Date().toISOString()
         })
       });
-      if (!res.ok) {
-        console.error('Supabase save error status:', res.status);
+      if (res.ok) {
+        savedToSupabase = true;
+        console.log('✅ Successfully saved row to Supabase site_content table!');
+      } else {
+        const errText = await res.text();
+        console.error('Supabase save error status:', res.status, errText);
       }
     } catch (err) {
       console.error('Failed to save to Supabase', err);
@@ -99,7 +104,7 @@ export const saveSiteContent = async (contentData) => {
     }
   }
 
-  return { success: true, savedLocally };
+  return { success: true, savedLocally, savedToSupabase };
 };
 
 // Upload image (to Supabase Storage if configured, or local upload endpoint)

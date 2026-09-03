@@ -52,24 +52,38 @@ ALTER TABLE public.coaches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.classes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.timetable ENABLE ROW LEVEL SECURITY;
 
--- Create Public Read Policies (Allow anyone to read site content)
-CREATE POLICY "Public Read Content" ON public.site_content FOR SELECT USING (true);
-CREATE POLICY "Public Read Coaches" ON public.coaches FOR SELECT USING (true);
-CREATE POLICY "Public Read Classes" ON public.classes FOR SELECT USING (true);
-CREATE POLICY "Public Read Timetable" ON public.timetable FOR SELECT USING (true);
+-- Drop any legacy restrictive policies if re-running
+DROP POLICY IF EXISTS "Public Read Content" ON public.site_content;
+DROP POLICY IF EXISTS "Admin Write Content" ON public.site_content;
+DROP POLICY IF EXISTS "Public Read Coaches" ON public.coaches;
+DROP POLICY IF EXISTS "Admin Write Coaches" ON public.coaches;
+DROP POLICY IF EXISTS "Public Read Classes" ON public.classes;
+DROP POLICY IF EXISTS "Admin Write Classes" ON public.classes;
+DROP POLICY IF EXISTS "Public Read Timetable" ON public.timetable;
+DROP POLICY IF EXISTS "Admin Write Timetable" ON public.timetable;
 
--- Create Authenticated / Admin Write Policies (Allow write access with Anon/Service Key)
-CREATE POLICY "Admin Write Content" ON public.site_content FOR ALL USING (true);
-CREATE POLICY "Admin Write Coaches" ON public.coaches FOR ALL USING (true);
-CREATE POLICY "Admin Write Classes" ON public.classes FOR ALL USING (true);
-CREATE POLICY "Admin Write Timetable" ON public.timetable FOR ALL USING (true);
+-- Create Open Read & Write Policies for site_content, coaches, classes, timetable
+CREATE POLICY "Public Read Content" ON public.site_content FOR SELECT USING (true);
+CREATE POLICY "Admin Write Content" ON public.site_content FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Public Read Coaches" ON public.coaches FOR SELECT USING (true);
+CREATE POLICY "Admin Write Coaches" ON public.coaches FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Public Read Classes" ON public.classes FOR SELECT USING (true);
+CREATE POLICY "Admin Write Classes" ON public.classes FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Public Read Timetable" ON public.timetable FOR SELECT USING (true);
+CREATE POLICY "Admin Write Timetable" ON public.timetable FOR ALL USING (true) WITH CHECK (true);
 
 -- =========================================================================
--- SUPABASE STORAGE BUCKET SETUP FOR IMAGE UPLOADS
+-- SUPABASE STORAGE BUCKET SETUP FOR IMAGE & MEDIA UPLOADS
 -- =========================================================================
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('uploads', 'uploads', true) 
 ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Public Read Uploads" ON storage.objects;
+DROP POLICY IF EXISTS "Public Upload Objects" ON storage.objects;
 
 CREATE POLICY "Public Read Uploads" ON storage.objects FOR SELECT USING (bucket_id = 'uploads');
 CREATE POLICY "Public Upload Objects" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'uploads');
