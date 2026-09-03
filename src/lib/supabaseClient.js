@@ -9,48 +9,18 @@ export const isSupabaseConfigured = () => {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.startsWith('http'));
 };
 
-// Fetch site content (from Supabase if configured, or defaultContent fallback)
+// Pure SSG Mode: Content is pre-baked into defaultContent at build time by scripts/fetch-content.js
+// Executes 0 runtime API calls to Supabase for public visitors!
 export const getSiteContent = async () => {
-  if (isSupabaseConfigured()) {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.main_content&select=data`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0 && data[0].data) {
-          return data[0].data;
-        }
-      }
-    } catch (err) {
-      console.warn('Supabase fetch failed, falling back to default content', err);
-    }
-  }
-
-  // Fallback to Express local endpoint if running locally, otherwise return defaultContent
-  try {
-    const res = await fetch('/api/content');
-    const contentType = res.headers.get('content-type');
-    if (res.ok && contentType && contentType.includes('application/json')) {
-      return await res.json();
-    }
-  } catch (err) {
-    // Ignore fallback fetch error on serverless environments
-  }
-
-  // Default Bundled Fallback (Prevents stuck loader on Netlify)
   return defaultContent;
 };
 
-// Save site content & trigger Netlify Build Hook (Option B)
+// Save site content to Supabase & trigger Netlify Build Hook (Option B Pure SSG)
 export const saveSiteContent = async (contentData) => {
   let savedLocally = false;
   let savedToSupabase = false;
 
-  // 1. Try local Express API if running node server.js
+  // 1. Try local Express API if running node server.js locally
   try {
     const res = await fetch('/api/content', {
       method: 'POST',
@@ -94,7 +64,7 @@ export const saveSiteContent = async (contentData) => {
     }
   }
 
-  // 3. Option B: Trigger Netlify Build Webhook
+  // 3. Trigger Netlify Build Webhook to rebuild static site with new content
   if (NETLIFY_BUILD_HOOK_URL) {
     try {
       await fetch(NETLIFY_BUILD_HOOK_URL, { method: 'POST' });
