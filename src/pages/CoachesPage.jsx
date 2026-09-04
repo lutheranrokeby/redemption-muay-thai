@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachChange, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
+export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachChange, onCoachImageUpload, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newCoach, setNewCoach] = useState({
     name: '',
@@ -88,39 +88,6 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
               </p>
             </div>
 
-            {/* Athletic Stats Badges */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="bg-surface-container-low border border-outline-variant p-4 rounded text-left space-y-1">
-                <span 
-                  contentEditable={isAdmin}
-                  suppressContentEditableWarning={true}
-                  onBlur={(e) => handleHeaderChange('stat1Val', e.target.innerText)}
-                  className="font-display-xl text-3xl text-primary-container font-bold block"
-                >{pageMeta.stat1Val || "12+"}</span>
-                <span 
-                  contentEditable={isAdmin}
-                  suppressContentEditableWarning={true}
-                  onBlur={(e) => handleHeaderChange('stat1Lbl', e.target.innerText)}
-                  className="block font-label-mono text-[11px] text-on-surface-variant uppercase"
-                >{pageMeta.stat1Lbl || "Years Ring Experience"}</span>
-              </div>
-
-              <div className="bg-surface-container-low border border-outline-variant p-4 rounded text-left space-y-1">
-                <span 
-                  contentEditable={isAdmin}
-                  suppressContentEditableWarning={true}
-                  onBlur={(e) => handleHeaderChange('stat2Val', e.target.innerText)}
-                  className="font-display-xl text-3xl text-primary-container font-bold block"
-                >{pageMeta.stat2Val || "6x"}</span>
-                <span 
-                  contentEditable={isAdmin}
-                  suppressContentEditableWarning={true}
-                  onBlur={(e) => handleHeaderChange('stat2Lbl', e.target.innerText)}
-                  className="block font-label-mono text-[11px] text-on-surface-variant uppercase"
-                >{pageMeta.stat2Lbl || "WMC & IFMA Belts"}</span>
-              </div>
-            </div>
-
             {/* Admin Add Coach Button */}
             {isAdmin && (
               <div className="pt-2">
@@ -193,9 +160,9 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
                     
                     {isAdmin && (
                       <div className="img-edit-overlay absolute inset-0 bg-black/60 items-center justify-center z-30 flex p-4">
-                        <label className="btn-clip bg-primary-container text-black font-button-text px-4 py-2.5 text-xs uppercase cursor-pointer hover:bg-white font-bold">
+                        <label className="btn-clip bg-primary-container text-black font-button-text px-4 py-2.5 text-xs uppercase cursor-pointer hover:bg-white font-bold shadow-2xl">
                           📷 Change Photo
-                          <input type="file" className="hidden" accept="image/*" onChange={(e) => onImageUpload(e, index)} />
+                          <input type="file" className="hidden" accept="image/*" onChange={(e) => onCoachImageUpload && onCoachImageUpload(e, index)} />
                         </label>
                       </div>
                     )}

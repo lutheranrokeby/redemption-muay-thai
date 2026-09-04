@@ -5,10 +5,10 @@ export default function BusinessSettingsModal({ data, onSaveSettings, onClose })
     location: data?.contactInfo?.address || data?.footer?.location || 'Warana, Sunshine Coast QLD 4575',
     phone: data?.contactInfo?.phone || data?.footer?.phone || '0400 000 000',
     email: data?.contactInfo?.email || data?.footer?.email || 'info@redemptionmuaythai.com',
-    openingHours: data?.contactInfo?.openingHours || 'Mon-Fri: 6:00am - 8:00pm | Sat: 8:00am - 12:00pm | Sun: Closed',
     instagram: data?.footer?.instagram || 'https://instagram.com',
     facebook: data?.footer?.facebook || 'https://facebook.com',
-    youtube: data?.footer?.youtube || 'https://youtube.com'
+    youtube: data?.footer?.youtube || 'https://youtube.com',
+    tiktok: data?.footer?.tiktok || 'https://tiktok.com'
   });
 
   const handleSubmit = (e) => {
@@ -84,22 +84,7 @@ export default function BusinessSettingsModal({ data, onSaveSettings, onClose })
             </div>
           </div>
 
-          {/* 4. Operating Hours */}
-          <div>
-            <label className="block text-xs font-label-mono text-primary-container mb-1.5 uppercase font-bold">
-              ⏰ Operating Hours
-            </label>
-            <textarea 
-              rows="2"
-              required
-              value={settings.openingHours} 
-              onChange={(e) => setSettings({ ...settings, openingHours: e.target.value })} 
-              placeholder="Mon-Fri: 6:00am - 8:00pm | Sat: 8:00am - 12:00pm | Sun: Closed" 
-              className="w-full bg-background border border-outline-variant p-3 rounded-lg text-white text-sm focus:border-primary-container focus:outline-none" 
-            ></textarea>
-          </div>
-
-          {/* 5. Social Links */}
+          {/* 4. Social Links */}
           <div className="border-t border-outline-variant/60 pt-4 space-y-3">
             <h4 className="font-label-mono text-xs uppercase text-primary-container font-bold tracking-wider">
               🌐 Social Media Handles & Links
@@ -134,6 +119,17 @@ export default function BusinessSettingsModal({ data, onSaveSettings, onClose })
                 value={settings.youtube} 
                 onChange={(e) => setSettings({ ...settings, youtube: e.target.value })} 
                 placeholder="https://youtube.com/c/redemptionmuaythai" 
+                className="w-full bg-background border border-outline-variant p-2.5 rounded-lg text-white text-sm" 
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-label-mono text-on-surface-variant mb-1 uppercase">TikTok URL</label>
+              <input 
+                type="url" 
+                value={settings.tiktok} 
+                onChange={(e) => setSettings({ ...settings, tiktok: e.target.value })} 
+                placeholder="https://tiktok.com/@redemptionmuaythai" 
                 className="w-full bg-background border border-outline-variant p-2.5 rounded-lg text-white text-sm" 
               />
             </div>

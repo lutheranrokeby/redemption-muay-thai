@@ -122,6 +122,19 @@ export default function App() {
     }
   };
 
+  const handleCoachImageUpload = async (e, index) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const data = await uploadImageFile(file);
+      if (data.success) {
+        handleUpdateListItem('coachesList', index, 'image', data.url);
+      }
+    } catch (err) {
+      alert('Coach image upload failed');
+    }
+  };
+
   // Business Settings Handler
   const handleSaveBusinessSettings = (settings) => {
     setContentData(prev => ({
@@ -130,8 +143,7 @@ export default function App() {
         ...(prev.contactInfo || {}),
         address: settings.location,
         phone: settings.phone,
-        email: settings.email,
-        openingHours: settings.openingHours
+        email: settings.email
       },
       footer: {
         ...(prev.footer || {}),
@@ -140,7 +152,8 @@ export default function App() {
         email: settings.email,
         instagram: settings.instagram,
         facebook: settings.facebook,
-        youtube: settings.youtube
+        youtube: settings.youtube,
+        tiktok: settings.tiktok
       }
     }));
     alert('✅ Business Settings updated throughout the site! Click "Save & Publish Changes" to save permanently.');
@@ -221,6 +234,7 @@ export default function App() {
           onAddCoach={(item) => handleAddListItem('coachesList', item)}
           onDeleteCoach={(idx) => handleDeleteListItem('coachesList', idx, 'Are you sure you want to delete this coach?')}
           onCoachChange={(idx, fld, val) => handleUpdateListItem('coachesList', idx, fld, val)}
+          onCoachImageUpload={handleCoachImageUpload}
           onImageUpload={handleImageUpload}
           onPageFieldChange={handleFieldChange}
           onOpenBookingModal={openModal}
@@ -331,7 +345,7 @@ export default function App() {
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter admin password..." 
-                  className="w-full bg-background border border-outline-variant text-white p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
+                  className="w-full bg-background border border-outline-variant p-3 rounded font-label-mono text-sm focus:border-primary-container focus:outline-none" 
                 />
               </div>
             )}

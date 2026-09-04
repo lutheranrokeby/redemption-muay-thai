@@ -9,8 +9,7 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
     address: 'Warana, Sunshine Coast QLD 4575',
     mapQuery: 'Warana, Sunshine Coast QLD 4575',
     phone: '0400 000 000',
-    email: 'info@redemptionmuaythai.com',
-    openingHours: 'Mon-Fri: 6:00am - 8:00pm | Sat: 8:00am - 12:00pm | Sun: Closed'
+    email: 'info@redemptionmuaythai.com'
   };
 
   const mapSearchQuery = contact.mapQuery || contact.address || 'Warana, Sunshine Coast QLD 4575';
@@ -133,19 +132,6 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
                       onBlur={(e) => onContactChange('email', e.target.innerText)}
                       className="text-white text-sm"
                     >{contact.email}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <span className="material-symbols-outlined text-primary-container text-2xl mt-1">schedule</span>
-                  <div>
-                    <h4 className="font-label-mono text-xs uppercase text-primary-container font-bold">Operating Hours</h4>
-                    <p 
-                      contentEditable={isAdmin}
-                      suppressContentEditableWarning={true}
-                      onBlur={(e) => onContactChange('openingHours', e.target.innerText)}
-                      className="text-white text-sm"
-                    >{contact.openingHours}</p>
                   </div>
                 </div>
               </div>

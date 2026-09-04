@@ -12,6 +12,7 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
   const hideInstagram = data.hideInstagram;
   const hideFacebook = data.hideFacebook;
   const hideYoutube = data.hideYoutube;
+  const hideTikTok = data.hideTikTok;
 
   const handleBookingClick = (e) => {
     if (bookingMode === 'modal') {
@@ -214,6 +215,14 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
                 >
                   {hideYoutube ? '🙈 YT' : '👁️ YT'}
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => onChange && onChange('footer', 'hideTikTok', !hideTikTok)}
+                  className={`px-2 py-0.5 rounded font-bold ${hideTikTok ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary-container/20 text-primary-container'}`}
+                >
+                  {hideTikTok ? '🙈 TikTok' : '👁️ TikTok'}
+                </button>
               </div>
             )}
 
@@ -260,6 +269,21 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
                 >
                   <svg className="w-5 h-5 fill-current transform group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                  </svg>
+                </a>
+              )}
+
+              {/* TikTok */}
+              {(!hideTikTok || isAdmin) && (
+                <a 
+                  href={data.tiktok || "https://tiktok.com"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`w-10 h-10 bg-surface-container-high border border-outline-variant rounded-lg flex items-center justify-center text-primary-container hover:bg-primary-container hover:text-black transition-all duration-300 shadow-md group ${hideTikTok && isAdmin ? 'opacity-30 border-dashed border-primary-container' : ''}`}
+                  aria-label="Follow Redemption Muay Thai on TikTok"
+                >
+                  <svg className="w-5 h-5 fill-current transform group-hover:scale-110 transition-transform" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.57-1.31 1.57-1.26 2.57.01.95.53 1.87 1.34 2.38.79.52 1.83.62 2.71.28.98-.36 1.72-1.22 1.92-2.24.11-.63.09-1.27.09-1.91.01-4.88-.01-9.76.01-14.64z"/>
                   </svg>
                 </a>
               )}
@@ -329,15 +353,10 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
 
       </div>
 
-      {/* 3. BOTTOM COPYRIGHT & LEGAL BAR */}
+      {/* 3. BOTTOM COPYRIGHT BAR */}
       <div className="bg-background border-t border-outline-variant py-6 px-grid-margin">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-label-mono text-on-surface-variant">
+        <div className="max-w-7xl mx-auto flex justify-center items-center text-xs font-label-mono text-on-surface-variant text-center">
           <p>© 2026 REDEMPTION MUAY THAI. ALL RIGHTS RESERVED. SUNSHINE COAST, QLD.</p>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-primary transition-colors">PRIVACY POLICY</a>
-            <a href="#" className="hover:text-primary transition-colors">TERMS OF SERVICE</a>
-            <a href="#" className="hover:text-primary transition-colors">GYM RULES</a>
-          </div>
         </div>
       </div>
 
