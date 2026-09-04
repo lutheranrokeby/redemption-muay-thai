@@ -7,7 +7,7 @@ const isVideoUrl = (url) => {
   return cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.endsWith('.mov') || cleanUrl.includes('video');
 };
 
-export default function Hero({ data, onChange, onImageUpload, isAdmin }) {
+export default function Hero({ data, onChange, onImageUpload, isAdmin, children }) {
   if (!data) return null;
 
   const desktopMedia = data.bgImage || data.bgMediaDesktop || '';
@@ -47,7 +47,7 @@ export default function Hero({ data, onChange, onImageUpload, isAdmin }) {
       {/* Absolute Background Container */}
       <div className="absolute inset-0 z-0 bg-surface-dim">
         
-        {/* DESKTOP BACKGROUND MEDIA (Hidden on mobile if separate mobile media is present) */}
+        {/* DESKTOP BACKGROUND MEDIA */}
         <div className="hidden md:block w-full h-full">
           {isDesktopVideo ? (
             <video 
@@ -69,7 +69,7 @@ export default function Hero({ data, onChange, onImageUpload, isAdmin }) {
           )}
         </div>
 
-        {/* MOBILE BACKGROUND MEDIA (Shown on screens < 768px) */}
+        {/* MOBILE BACKGROUND MEDIA */}
         <div className="block md:hidden w-full h-full">
           {isMobileVideo ? (
             <video 
@@ -97,43 +97,49 @@ export default function Hero({ data, onChange, onImageUpload, isAdmin }) {
 
       {/* Foreground Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-grid-margin grid grid-cols-1 md:grid-cols-12 gap-gutter text-center">
-        <div className="md:col-span-10 md:col-start-2 flex flex-col items-center">
-          <h1 className="font-display-xl text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase mb-6 sm:mb-stack-lg leading-[0.95] tracking-tight">
-            <span 
-              contentEditable={isAdmin}
-              suppressContentEditableWarning={true}
-              onBlur={(e) => onChange('hero', 'titleLine1', e.target.innerText)}
-            >{data.titleLine1}</span> <br/>
-            <span 
-              contentEditable={isAdmin}
-              suppressContentEditableWarning={true}
-              onBlur={(e) => onChange('hero', 'titleCyan', e.target.innerText)}
-              className="text-primary-container"
-            >{data.titleCyan}</span><br/> 
-            <span 
-              contentEditable={isAdmin}
-              suppressContentEditableWarning={true}
-              onBlur={(e) => onChange('hero', 'titleLine2', e.target.innerText)}
-            >{data.titleLine2}</span>
-          </h1>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
-            <a 
-              href="/contact"
-              contentEditable={isAdmin}
-              suppressContentEditableWarning={true}
-              onBlur={(e) => onChange('hero', 'cta1Text', e.target.innerText)}
-              className="btn-clip bg-primary-container text-black font-button-text px-8 py-4 uppercase tracking-widest hover:bg-white transition-colors text-center font-bold text-sm sm:text-base"
-            >{data.cta1Text}</a>
-            <a 
-              href="/coaches"
-              contentEditable={isAdmin}
-              suppressContentEditableWarning={true}
-              onBlur={(e) => onChange('hero', 'cta2Text', e.target.innerText)}
-              className="border-2 border-primary-container text-primary-container font-button-text px-8 py-4 uppercase tracking-widest hover:bg-primary-container hover:text-black transition-colors text-center font-bold text-sm sm:text-base"
-            >{data.cta2Text}</a>
+        {children ? (
+          <div className="md:col-span-10 md:col-start-2 flex flex-col items-center w-full">
+            {children}
           </div>
-        </div>
+        ) : (
+          <div className="md:col-span-10 md:col-start-2 flex flex-col items-center">
+            <h1 className="font-display-xl text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase mb-6 sm:mb-stack-lg leading-[0.95] tracking-tight">
+              <span 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => onChange && onChange('hero', 'titleLine1', e.target.innerText)}
+              >{data.titleLine1}</span> <br/>
+              <span 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => onChange && onChange('hero', 'titleCyan', e.target.innerText)}
+                className="text-primary-container"
+              >{data.titleCyan}</span><br/> 
+              <span 
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => onChange && onChange('hero', 'titleLine2', e.target.innerText)}
+              >{data.titleLine2}</span>
+            </h1>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
+              <a 
+                href="/contact"
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => onChange && onChange('hero', 'cta1Text', e.target.innerText)}
+                className="btn-clip bg-primary-container text-black font-button-text px-8 py-4 uppercase tracking-widest hover:bg-white transition-colors text-center font-bold text-sm sm:text-base"
+              >{data.cta1Text}</a>
+              <a 
+                href="/coaches"
+                contentEditable={isAdmin}
+                suppressContentEditableWarning={true}
+                onBlur={(e) => onChange && onChange('hero', 'cta2Text', e.target.innerText)}
+                className="border-2 border-primary-container text-primary-container font-button-text px-8 py-4 uppercase tracking-widest hover:bg-primary-container hover:text-black transition-colors text-center font-bold text-sm sm:text-base"
+              >{data.cta2Text}</a>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -23,7 +23,7 @@ export default function Footer({ data, onChange, onImageUpload, onOpenBookingMod
   };
 
   return (
-    <footer id="contact" className="w-full bg-surface-container-lowest text-on-surface border-t-4 border-primary-container relative z-10">
+    <footer id="contact" className="w-full bg-surface-container-lowest text-on-surface relative z-10">
       
       {/* 1. TOP BANNER: FREE TRIAL CLASS BOOKING BANNER */}
       <div className="bg-surface-container-high border-b border-outline-variant py-12 px-grid-margin">

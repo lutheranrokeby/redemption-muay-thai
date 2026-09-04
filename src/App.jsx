@@ -5,6 +5,7 @@ import ClassesPage from './pages/ClassesPage';
 import TimetablePage from './pages/TimetablePage';
 import MembershipsPage from './pages/MembershipsPage';
 import ContactPage from './pages/ContactPage';
+import OfferPage from './pages/OfferPage';
 import AdminBar from './components/AdminBar';
 import BusinessSettingsModal from './components/BusinessSettingsModal';
 import TrialBookingModal from './components/TrialBookingModal';
@@ -78,6 +79,20 @@ export default function App() {
       copy[index] = { ...copy[index], [field]: value };
       return copy;
     });
+  };
+
+  // Offers Data Handler
+  const handleOfferChange = (slug, field, value) => {
+    setContentData(prev => ({
+      ...prev,
+      offers: {
+        ...(prev.offers || {}),
+        [slug]: {
+          ...(prev.offers?.[slug] || {}),
+          [field]: value
+        }
+      }
+    }));
   };
 
   // Image Upload Helper
@@ -182,6 +197,23 @@ export default function App() {
   const openModal = () => setShowTrialModal(true);
 
   const renderCurrentPage = () => {
+    // Dynamic Offer Landing Page Routes (/offers/:slug or /admin/offers/:slug)
+    const isOfferRoute = path.startsWith('/offers/') || path.startsWith('/admin/offers/');
+    if (isOfferRoute) {
+      const slug = path.replace('/admin/offers/', '').replace('/offers/', '').trim();
+      return (
+        <OfferPage 
+          slug={slug}
+          data={contentData}
+          onOfferChange={handleOfferChange}
+          onPageFieldChange={handleFieldChange}
+          onImageUpload={handleImageUpload}
+          onOpenBookingModal={openModal}
+          isAdmin={adminMode}
+        />
+      );
+    }
+
     if (path === '/coaches' || path === '/admin/coaches') {
       return (
         <CoachesPage 
@@ -318,7 +350,6 @@ export default function App() {
 
       {renderCurrentPage()}
 
-      {/* Global Mobile & Desktop Optimized Trial Booking Modal with Admin Editing */}
       <TrialBookingModal 
         isOpen={showTrialModal} 
         onClose={() => setShowTrialModal(false)} 
