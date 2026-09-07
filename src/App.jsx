@@ -281,6 +281,9 @@ export default function App() {
           onAddMembership={(item) => handleAddListItem('memberships', item)}
           onDeleteMembership={(idx) => handleDeleteListItem('memberships', idx, 'Are you sure you want to delete this membership plan?')}
           onMembershipChange={(idx, fld, val) => handleUpdateListItem('memberships', idx, fld, val)}
+          onAddKidsMembership={(item) => handleAddListItem('kidsMemberships', item)}
+          onDeleteKidsMembership={(idx) => handleDeleteListItem('kidsMemberships', idx, 'Are you sure you want to delete this kids membership plan?')}
+          onKidsMembershipChange={(idx, fld, val) => handleUpdateListItem('kidsMemberships', idx, fld, val)}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}

@@ -5,6 +5,75 @@ import Footer from '../components/Footer';
 // Days of week order (Monday = 0, Sunday = 6)
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+const COLOR_PALETTE = [
+  { name: 'Cyan (Brand Default)', hex: '#00e5ff' },
+  { name: 'Orange (Kids/Juniors)', hex: '#ff9100' },
+  { name: 'Green (Youth/Beginners)', hex: '#10b981' },
+  { name: 'Red (Sparring/Fighters)', hex: '#ff3b30' },
+  { name: 'Purple (Specialty)', hex: '#a855f7' },
+  { name: 'Gold (Advanced)', hex: '#f59e0b' },
+  { name: 'Sky Blue', hex: '#38bdf8' },
+  { name: 'Pink (Conditioning)', hex: '#ec4899' },
+  { name: 'Silver / White', hex: '#e5e2e1' }
+];
+
+function ColorPickerPopover({ currentColor, onSelectColor, onClose }) {
+  return (
+    <div 
+      className="absolute right-0 top-8 z-50 bg-surface-container-high border border-outline-variant p-3 rounded-lg shadow-2xl w-60 text-left space-y-2.5 backdrop-blur-md"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between border-b border-outline-variant/60 pb-1.5">
+        <span className="text-[11px] font-label-mono uppercase tracking-wider text-primary font-bold">Class Color</span>
+        <button 
+          type="button"
+          onClick={onClose}
+          className="text-on-surface-variant hover:text-white text-xs px-1"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div className="grid grid-cols-5 gap-1.5 pt-1">
+        {COLOR_PALETTE.map((c) => (
+          <button
+            key={c.hex}
+            type="button"
+            onClick={() => {
+              onSelectColor(c.hex);
+              onClose();
+            }}
+            title={c.name}
+            className={`w-7 h-7 rounded-full transition-all flex items-center justify-center ${
+              currentColor?.toLowerCase() === c.hex.toLowerCase()
+                ? 'ring-2 ring-white ring-offset-2 ring-offset-surface-container-high scale-110'
+                : 'opacity-80 hover:opacity-100 hover:scale-105'
+            }`}
+            style={{ backgroundColor: c.hex }}
+          >
+            {currentColor?.toLowerCase() === c.hex.toLowerCase() && (
+              <span className="text-[10px] font-bold text-black drop-shadow">✓</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="pt-2 border-t border-outline-variant/40 flex items-center justify-between text-[11px] font-label-mono text-on-surface-variant">
+        <span>Custom Hex:</span>
+        <div className="flex items-center gap-1.5">
+          <input
+            type="color"
+            value={currentColor || '#00e5ff'}
+            onChange={(e) => onSelectColor(e.target.value)}
+            className="w-6 h-6 rounded cursor-pointer bg-transparent border-0 p-0"
+          />
+          <span className="text-white text-[10px] font-mono uppercase">{currentColor || '#00e5ff'}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const getDayIndex = (dayName) => {
   if (!dayName) return 7;
   const idx = daysOfWeek.findIndex(d => d.toLowerCase() === dayName.trim().toLowerCase());
@@ -44,13 +113,15 @@ const getSortableMinutes = (slot) => {
 export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotChange, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
   const [selectedDayFilter, setSelectedDayFilter] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [activeColorPickerIndex, setActiveColorPickerIndex] = useState(null);
   
   const [newSlot, setNewSlot] = useState({
     startTime: '06:00',
     endTime: '07:15',
     days: ['Monday', 'Wednesday', 'Friday'],
     className: 'Morning Muay Thai',
-    level: 'All Levels'
+    level: 'All Levels',
+    color: '#00e5ff'
   });
 
   const toggleDay = (day) => {
@@ -80,6 +151,7 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
     if (newSlot.days.length === 0) return alert('Please select at least one day of the week');
     
     const formattedTime = `${format12Hour(newSlot.startTime)} - ${format12Hour(newSlot.endTime)}`;
+    const slotColor = newSlot.color || '#00e5ff';
     
     newSlot.days.forEach(day => {
       onAddSlot({
@@ -89,17 +161,23 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
         endTime: newSlot.endTime,
         day: day,
         className: newSlot.className,
-        level: newSlot.level
+        level: newSlot.level,
+        color: slotColor
       });
     });
     
     setShowAddModal(false);
   };
 
-  const filteredSlots = data?.timetableData?.filter(slot => {
+  const slotsWithIndex = (data?.timetableData || []).map((slot, originalIndex) => ({
+    ...slot,
+    _originalIndex: originalIndex
+  }));
+
+  const filteredSlots = slotsWithIndex.filter(slot => {
     if (selectedDayFilter === 'All') return true;
-    return slot.day.toLowerCase() === selectedDayFilter.toLowerCase();
-  }) || [];
+    return slot.day?.toLowerCase() === selectedDayFilter.toLowerCase();
+  });
 
   const sortedSlots = [...filteredSlots].sort((a, b) => {
     const dayDiff = getDayIndex(a.day) - getDayIndex(b.day);
@@ -152,63 +230,105 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
         {/* 1. MOBILE NO-SCROLL CARD VIEW (< sm) */}
         <div className="block sm:hidden space-y-3">
           {sortedSlots.length > 0 ? (
-            sortedSlots.map((slot, index) => (
-              <div key={slot.id || index} className="bg-surface-container-low border-l-4 border-l-primary-container border border-outline-variant/60 rounded-r-lg p-4 shadow-lg space-y-2 relative">
-                
-                {isAdmin && (
-                  <button 
-                    onClick={() => onDeleteSlot(index)}
-                    className="absolute top-3 right-3 bg-danger-red text-white text-[10px] font-label-mono px-2 py-0.5 rounded"
-                  >
-                    Delete
-                  </button>
-                )}
-
-                {/* Top Row: Day & Level Tag */}
-                <div className="flex items-center justify-between gap-2 pr-12">
-                  <span 
-                    contentEditable={isAdmin}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => onSlotChange(index, 'day', e.target.innerText)}
-                    className="font-label-mono text-xs text-primary-container font-bold uppercase bg-primary-container/10 px-2 py-0.5 rounded border border-primary-container/30"
-                  >
-                    {slot.day}
-                  </span>
-                  
-                  <span 
-                    contentEditable={isAdmin}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => onSlotChange(index, 'level', e.target.innerText)}
-                    className="font-label-mono text-[11px] text-on-surface-variant uppercase bg-surface-container-high px-2 py-0.5 rounded border border-outline-variant"
-                  >
-                    {slot.level}
-                  </span>
-                </div>
-
-                {/* Middle Row: Program Title */}
-                <h3 
-                  contentEditable={isAdmin}
-                  suppressContentEditableWarning={true}
-                  onBlur={(e) => onSlotChange(index, 'className', e.target.innerText)}
-                  className="font-headline-md text-xl uppercase text-white tracking-wide"
+            sortedSlots.map((slot) => {
+              const slotColor = slot.color || '#00e5ff';
+              return (
+                <div 
+                  key={slot.id || slot._originalIndex} 
+                  className="bg-surface-container-low border-l-4 border border-outline-variant/60 rounded-r-lg p-4 shadow-lg space-y-2 relative"
+                  style={{ borderLeftColor: slotColor }}
                 >
-                  {slot.className}
-                </h3>
+                  {isAdmin && (
+                    <div className="absolute top-3 right-3 flex items-center gap-2">
+                      {/* Color Picker Swatch */}
+                      <div className="relative">
+                        <button 
+                          type="button"
+                          onClick={() => setActiveColorPickerIndex(activeColorPickerIndex === slot._originalIndex ? null : slot._originalIndex)}
+                          className="w-6 h-6 rounded-full border border-white/60 shadow hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
+                          style={{ backgroundColor: slotColor }}
+                          title="Change class color"
+                        />
+                        {activeColorPickerIndex === slot._originalIndex && (
+                          <ColorPickerPopover 
+                            currentColor={slotColor}
+                            onSelectColor={(col) => onSlotChange(slot._originalIndex, 'color', col)}
+                            onClose={() => setActiveColorPickerIndex(null)}
+                          />
+                        )}
+                      </div>
+                      <button 
+                        onClick={() => onDeleteSlot(slot._originalIndex)}
+                        className="bg-danger-red text-white text-[10px] font-label-mono px-2 py-1 rounded hover:bg-red-700 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
 
-                {/* Bottom Row: Time Interval */}
-                <div className="flex items-center gap-1.5 text-xs font-label-mono text-primary font-bold pt-1">
-                  <span className="material-symbols-outlined text-sm text-primary-container">schedule</span>
-                  <span 
-                    contentEditable={isAdmin}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => onSlotChange(index, 'time', e.target.innerText)}
-                  >
-                    {slot.time}
-                  </span>
+                  {/* Top Row: Day & Level Tag */}
+                  <div className={`flex items-center justify-between gap-2 ${isAdmin ? 'pr-20' : ''}`}>
+                    <span 
+                      contentEditable={isAdmin}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => onSlotChange(slot._originalIndex, 'day', e.target.innerText)}
+                      className="font-label-mono text-xs font-bold uppercase px-2 py-0.5 rounded border transition-colors"
+                      style={{
+                        color: slotColor,
+                        borderColor: `${slotColor}40`,
+                        backgroundColor: `${slotColor}15`
+                      }}
+                    >
+                      {slot.day}
+                    </span>
+                    
+                    <span 
+                      contentEditable={isAdmin}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => onSlotChange(slot._originalIndex, 'level', e.target.innerText)}
+                      className="font-label-mono text-[11px] uppercase px-2 py-0.5 rounded border transition-colors"
+                      style={{
+                        color: slotColor,
+                        borderColor: `${slotColor}30`,
+                        backgroundColor: `${slotColor}10`
+                      }}
+                    >
+                      {slot.level}
+                    </span>
+                  </div>
+
+                  {/* Middle Row: Program Title with Color Accent Dot */}
+                  <div className="flex items-center gap-2 pt-0.5">
+                    <span 
+                      className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0"
+                      style={{ backgroundColor: slotColor }}
+                    />
+                    <h3 
+                      contentEditable={isAdmin}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => onSlotChange(slot._originalIndex, 'className', e.target.innerText)}
+                      className="font-headline-md text-xl uppercase text-white tracking-wide"
+                    >
+                      {slot.className}
+                    </h3>
+                  </div>
+
+                  {/* Bottom Row: Time Interval */}
+                  <div className="flex items-center gap-1.5 text-xs font-label-mono font-bold pt-1">
+                    <span className="material-symbols-outlined text-sm" style={{ color: slotColor }}>schedule</span>
+                    <span 
+                      contentEditable={isAdmin}
+                      suppressContentEditableWarning={true}
+                      onBlur={(e) => onSlotChange(slot._originalIndex, 'time', e.target.innerText)}
+                      className="text-white"
+                    >
+                      {slot.time}
+                    </span>
+                  </div>
+
                 </div>
-
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="bg-surface-container-low border border-outline-variant p-6 rounded text-center text-xs text-on-surface-variant font-label-mono">
               No timetable slots found for {selectedDayFilter}.
@@ -224,54 +344,95 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
                 <th className="py-4 px-4 w-32">Day</th>
                 <th className="py-4 px-4 w-48">Time Interval</th>
                 <th className="py-4 px-4">Class Program</th>
-                <th className="py-4 px-4 w-36">Level / Group</th>
-                {isAdmin && <th className="py-4 px-4 w-20 text-center">Action</th>}
+                <th className="py-4 px-4 w-40">Level / Group</th>
+                {isAdmin && <th className="py-4 px-4 w-28 text-center">Action</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant font-body-md text-sm">
               {sortedSlots.length > 0 ? (
-                sortedSlots.map((slot, index) => (
-                  <tr key={slot.id || index} className="hover:bg-surface-variant/40 transition-colors">
-                    <td className="py-4 px-4 font-label-mono text-white font-bold">
-                      <span 
-                        contentEditable={isAdmin}
-                        suppressContentEditableWarning={true}
-                        onBlur={(e) => onSlotChange(index, 'day', e.target.innerText)}
-                        className="inline-block bg-primary-container/10 border border-primary-container/30 text-primary-container px-2 py-0.5 rounded text-xs"
-                      >{slot.day}</span>
-                    </td>
-                    <td className="py-4 px-4 font-label-mono text-primary font-bold">
-                      <span 
-                        contentEditable={isAdmin}
-                        suppressContentEditableWarning={true}
-                        onBlur={(e) => onSlotChange(index, 'time', e.target.innerText)}
-                      >{slot.time}</span>
-                    </td>
-                    <td className="py-4 px-4 font-headline-md uppercase text-lg text-white">
-                      <span 
-                        contentEditable={isAdmin}
-                        suppressContentEditableWarning={true}
-                        onBlur={(e) => onSlotChange(index, 'className', e.target.innerText)}
-                      >{slot.className}</span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <span 
-                        contentEditable={isAdmin}
-                        suppressContentEditableWarning={true}
-                        onBlur={(e) => onSlotChange(index, 'level', e.target.innerText)}
-                        className="inline-block bg-surface-container-high border border-outline-variant px-3 py-1 text-xs font-label-mono text-primary-container rounded uppercase"
-                      >{slot.level}</span>
-                    </td>
-                    {isAdmin && (
-                      <td className="py-4 px-4 text-center">
-                        <button 
-                          onClick={() => onDeleteSlot(index)}
-                          className="bg-danger-red text-white text-[10px] font-label-mono px-2 py-1 rounded hover:bg-red-700"
-                        >Delete</button>
+                sortedSlots.map((slot) => {
+                  const slotColor = slot.color || '#00e5ff';
+                  return (
+                    <tr 
+                      key={slot.id || slot._originalIndex} 
+                      className="hover:bg-surface-variant/40 transition-colors"
+                    >
+                      <td className="py-4 px-4 font-label-mono text-white font-bold">
+                        <span 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => onSlotChange(slot._originalIndex, 'day', e.target.innerText)}
+                          className="inline-block border px-2.5 py-0.5 rounded text-xs transition-colors"
+                          style={{
+                            color: slotColor,
+                            borderColor: `${slotColor}40`,
+                            backgroundColor: `${slotColor}15`
+                          }}
+                        >{slot.day}</span>
                       </td>
-                    )}
-                  </tr>
-                ))
+                      <td className="py-4 px-4 font-label-mono text-white font-bold">
+                        <span 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => onSlotChange(slot._originalIndex, 'time', e.target.innerText)}
+                        >{slot.time}</span>
+                      </td>
+                      <td className="py-4 px-4 font-headline-md uppercase text-lg text-white">
+                        <div className="flex items-center gap-2.5">
+                          <span 
+                            className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0"
+                            style={{ backgroundColor: slotColor }}
+                          />
+                          <span 
+                            contentEditable={isAdmin}
+                            suppressContentEditableWarning={true}
+                            onBlur={(e) => onSlotChange(slot._originalIndex, 'className', e.target.innerText)}
+                          >{slot.className}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => onSlotChange(slot._originalIndex, 'level', e.target.innerText)}
+                          className="inline-block border px-3 py-1 text-xs font-label-mono rounded uppercase transition-colors"
+                          style={{ 
+                            color: slotColor, 
+                            borderColor: `${slotColor}40`,
+                            backgroundColor: `${slotColor}15`
+                          }}
+                        >{slot.level}</span>
+                      </td>
+                      {isAdmin && (
+                        <td className="py-4 px-4 text-center">
+                          <div className="flex items-center justify-center gap-2 relative">
+                            {/* Color Swatch / Button */}
+                            <div className="relative">
+                              <button 
+                                type="button"
+                                onClick={() => setActiveColorPickerIndex(activeColorPickerIndex === slot._originalIndex ? null : slot._originalIndex)}
+                                className="w-6 h-6 rounded-full border border-white/60 shadow hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
+                                style={{ backgroundColor: slotColor }}
+                                title="Change class color"
+                              />
+                              {activeColorPickerIndex === slot._originalIndex && (
+                                <ColorPickerPopover 
+                                  currentColor={slotColor}
+                                  onSelectColor={(col) => onSlotChange(slot._originalIndex, 'color', col)}
+                                  onClose={() => setActiveColorPickerIndex(null)}
+                                />
+                              )}
+                            </div>
+                            <button 
+                              onClick={() => onDeleteSlot(slot._originalIndex)}
+                              className="bg-danger-red text-white text-[10px] font-label-mono px-2.5 py-1 rounded hover:bg-red-700 transition-colors"
+                            >Delete</button>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan={isAdmin ? 5 : 4} className="py-8 text-center text-on-surface-variant">No timetable slots found for {selectedDayFilter}.</td>
@@ -293,6 +454,14 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
         </div>
 
       </main>
+
+      {/* Invisible backdrop to dismiss open color pickers */}
+      {activeColorPickerIndex !== null && (
+        <div 
+          className="fixed inset-0 z-40 cursor-default" 
+          onClick={() => setActiveColorPickerIndex(null)} 
+        />
+      )}
 
       {/* Add Slot Modal */}
       {showAddModal && (
@@ -364,6 +533,62 @@ export default function TimetablePage({ data, onAddSlot, onDeleteSlot, onSlotCha
             <div>
               <label className="block text-xs font-label-mono text-primary-container mb-1 uppercase">Level / Tag</label>
               <input type="text" value={newSlot.level} onChange={(e) => setNewSlot({...newSlot, level: e.target.value})} placeholder="e.g. All Levels, Adults, Juniors" className="w-full bg-background border border-outline-variant p-2 sm:p-2.5 rounded text-white text-sm" />
+            </div>
+
+            {/* Class Color Palette Selector */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-label-mono text-primary-container uppercase">Color Coding</label>
+                <div className="flex items-center gap-1.5 text-xs text-on-surface-variant font-label-mono">
+                  <span>Preview:</span>
+                  <span 
+                    className="inline-block px-2 py-0.5 rounded text-[11px] font-bold border"
+                    style={{ 
+                      color: newSlot.color, 
+                      borderColor: `${newSlot.color}50`, 
+                      backgroundColor: `${newSlot.color}20` 
+                    }}
+                  >
+                    {newSlot.className || 'Class Name'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-background rounded border border-outline-variant space-y-2.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  {COLOR_PALETTE.map((c) => (
+                    <button
+                      key={c.hex}
+                      type="button"
+                      onClick={() => setNewSlot({ ...newSlot, color: c.hex })}
+                      title={c.name}
+                      className={`w-7 h-7 rounded-full transition-all flex items-center justify-center ${
+                        newSlot.color?.toLowerCase() === c.hex.toLowerCase()
+                          ? 'ring-2 ring-white ring-offset-2 ring-offset-background scale-110 shadow-lg'
+                          : 'opacity-80 hover:opacity-100 hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                    >
+                      {newSlot.color?.toLowerCase() === c.hex.toLowerCase() && (
+                        <span className="text-[10px] font-bold text-black drop-shadow">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-outline-variant/40 text-xs font-label-mono text-on-surface-variant">
+                  <span>Custom Hex:</span>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="color" 
+                      value={newSlot.color || '#00e5ff'} 
+                      onChange={(e) => setNewSlot({ ...newSlot, color: e.target.value })}
+                      className="w-6 h-6 rounded cursor-pointer bg-transparent border-0 p-0"
+                    />
+                    <span className="text-white text-[11px] uppercase font-mono">{newSlot.color || '#00e5ff'}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-outline-variant">
