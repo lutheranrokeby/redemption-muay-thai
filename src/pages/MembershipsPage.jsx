@@ -100,7 +100,7 @@ export default function MembershipsPage({
     }
   ];
 
-  const kidsMemberships = data?.kidsMemberships?.length ? data.kidsMemberships : defaultKidsMemberships;
+  const kidsMemberships = (data?.kidsMemberships?.length ? data.kidsMemberships : defaultKidsMemberships).filter(Boolean);
 
   const faqList = pageMeta.faqItems || [
     { q: 'Are there lock-in contracts?', a: 'No lock-in contracts. We believe in providing authentic value and flexibility so you can pause or adjust your membership anytime with 2 weeks notice.' },
@@ -123,35 +123,37 @@ export default function MembershipsPage({
     setShowAddKidsModal(false);
   };
 
-  const handleAddFeature = (planIndex) => {
-    const list = [...memberships];
-    const plan = list[planIndex];
+  const handleAddFeature = (planIndex, directPlan) => {
+    const plan = directPlan || memberships[planIndex];
+    if (!plan) return;
     const updatedFeatures = [...(plan.features || []), 'New membership feature benefit'];
-    onMembershipChange(planIndex, 'features', updatedFeatures);
+    if (onMembershipChange) {
+      onMembershipChange(planIndex, 'features', updatedFeatures);
+    }
   };
 
-  const handleRemoveFeature = (planIndex, fIndex) => {
-    const list = [...memberships];
-    const plan = list[planIndex];
-    const updatedFeatures = [...(plan.features || [])];
-    updatedFeatures.splice(fIndex, 1);
-    onMembershipChange(planIndex, 'features', updatedFeatures);
+  const handleRemoveFeature = (planIndex, fIndex, directPlan) => {
+    const plan = directPlan || memberships[planIndex];
+    if (!plan || !Array.isArray(plan.features)) return;
+    const updatedFeatures = plan.features.filter((_, idx) => idx !== fIndex);
+    if (onMembershipChange) {
+      onMembershipChange(planIndex, 'features', updatedFeatures);
+    }
   };
 
-  const handleAddKidsFeature = (planIndex) => {
-    const list = [...kidsMemberships];
-    const plan = list[planIndex];
+  const handleAddKidsFeature = (planIndex, directPlan) => {
+    const plan = directPlan || kidsMemberships[planIndex];
+    if (!plan) return;
     const updatedFeatures = [...(plan.features || []), 'New kids program benefit'];
     if (onKidsMembershipChange) {
       onKidsMembershipChange(planIndex, 'features', updatedFeatures);
     }
   };
 
-  const handleRemoveKidsFeature = (planIndex, fIndex) => {
-    const list = [...kidsMemberships];
-    const plan = list[planIndex];
-    const updatedFeatures = [...(plan.features || [])];
-    updatedFeatures.splice(fIndex, 1);
+  const handleRemoveKidsFeature = (planIndex, fIndex, directPlan) => {
+    const plan = directPlan || kidsMemberships[planIndex];
+    if (!plan || !Array.isArray(plan.features)) return;
+    const updatedFeatures = plan.features.filter((_, idx) => idx !== fIndex);
     if (onKidsMembershipChange) {
       onKidsMembershipChange(planIndex, 'features', updatedFeatures);
     }
@@ -390,24 +392,31 @@ export default function MembershipsPage({
                     <div className="flex justify-between items-center">
                       <span className="font-label-mono text-[11px] uppercase tracking-wider text-primary-container font-bold">INCLUDED FEATURES:</span>
                       {isAdmin && (
-                        <button onClick={() => handleAddFeature(index)} className="text-[10px] font-label-mono text-primary hover:underline">
+                        <button 
+                          type="button"
+                          onClick={() => handleAddFeature(index, plan)} 
+                          className="text-[10px] font-label-mono text-primary hover:underline cursor-pointer"
+                        >
                           ➕ Add Benefit
                         </button>
                       )}
                     </div>
 
                     <ul className="space-y-2.5">
-                      {plan.features?.map((feat, fIdx) => (
-                        <li key={fIdx} className="flex items-start justify-between gap-2 text-xs sm:text-sm">
+                      {Array.isArray(plan.features) && plan.features.map((feat, fIdx) => (
+                        <li key={`${plan.id || index}-feat-${fIdx}`} className="flex items-start justify-between gap-2 text-xs sm:text-sm">
                           <div className="flex items-start gap-2">
                             <span className="material-symbols-outlined text-primary-container text-base mt-0.5 shrink-0">check_circle</span>
                             <span 
                               contentEditable={isAdmin}
                               suppressContentEditableWarning={true}
                               onBlur={(e) => {
+                                if (!Array.isArray(plan.features)) return;
                                 const updated = [...plan.features];
-                                updated[fIdx] = e.target.innerText;
-                                onMembershipChange(index, 'features', updated);
+                                if (fIdx < updated.length) {
+                                  updated[fIdx] = e.target.innerText;
+                                  onMembershipChange(index, 'features', updated);
+                                }
                               }}
                               className="text-on-surface font-body-md"
                             >{feat}</span>
@@ -415,8 +424,14 @@ export default function MembershipsPage({
 
                           {isAdmin && (
                             <button 
-                              onClick={() => handleRemoveFeature(index, fIdx)}
-                              className="text-danger-red text-[10px] font-label-mono px-1 hover:underline shrink-0"
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleRemoveFeature(index, fIdx, plan);
+                              }}
+                              className="text-danger-red text-[10px] font-label-mono px-1 hover:underline shrink-0 cursor-pointer"
+                              title="Delete benefit"
                             >✕</button>
                           )}
                         </li>
@@ -546,13 +561,15 @@ export default function MembershipsPage({
               {/* Right Column: The Membership Options (Main Plan Sits at Top of Stack) */}
               <div className="lg:col-span-8 space-y-5">
                 {[...kidsMemberships]
+                  .filter(Boolean)
                   .map((plan, originalIndex) => ({ plan, originalIndex }))
-                  .sort((a, b) => (b.plan.featured ? 1 : 0) - (a.plan.featured ? 1 : 0))
+                  .sort((a, b) => (b?.plan?.featured ? 1 : 0) - (a?.plan?.featured ? 1 : 0))
                   .map(({ plan, originalIndex }) => {
+                    if (!plan) return null;
                     const targetUrl = plan.ctaUrl || '/contact';
                     const isExternalLink = targetUrl.startsWith('http://') || targetUrl.startsWith('https://');
-                    const isFeatured = plan.featured;
-                    const hideCta = plan.hideCta;
+                    const isFeatured = Boolean(plan.featured);
+                    const hideCta = Boolean(plan.hideCta);
 
                     return (
                       <div 
@@ -567,21 +584,24 @@ export default function MembershipsPage({
                         {isAdmin && (
                           <div className="absolute top-3 right-3 flex items-center gap-1.5 z-30 bg-background/95 p-1 rounded border border-outline-variant text-[11px] font-label-mono">
                             <button
+                              type="button"
                               onClick={() => handleToggleMainKidsPlan(originalIndex)}
-                              className={`px-2 py-0.5 rounded font-bold ${isFeatured ? 'bg-primary-container text-black' : 'bg-surface-container-high text-white'}`}
+                              className={`px-2 py-0.5 rounded font-bold cursor-pointer ${isFeatured ? 'bg-primary-container text-black' : 'bg-surface-container-high text-white'}`}
                             >
                               {isFeatured ? '⭐ Main' : '☆ Make Main'}
                             </button>
                             <button
+                              type="button"
                               onClick={() => onKidsMembershipChange(originalIndex, 'hideCta', !hideCta)}
-                              className={`px-2 py-0.5 rounded font-bold ${hideCta ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary-container/20 text-primary-container'}`}
+                              className={`px-2 py-0.5 rounded font-bold cursor-pointer ${hideCta ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary-container/20 text-primary-container'}`}
                               title="Toggle CTA Button Visibility"
                             >
                               {hideCta ? '🙈 CTA Hidden' : '👁️ CTA Visible'}
                             </button>
                             <button
+                              type="button"
                               onClick={() => onDeleteKidsMembership(originalIndex)}
-                              className="bg-danger-red text-white px-2 py-0.5 rounded hover:bg-red-700 font-bold"
+                              className="bg-danger-red text-white px-2 py-0.5 rounded hover:bg-red-700 font-bold cursor-pointer"
                             >
                               🗑️ Delete
                             </button>
@@ -636,24 +656,31 @@ export default function MembershipsPage({
                               <div className="flex items-center gap-3">
                                 <span className="font-label-mono text-[10px] uppercase tracking-wider text-primary-container font-bold">WHAT'S INCLUDED:</span>
                                 {isAdmin && (
-                                  <button onClick={() => handleAddKidsFeature(originalIndex)} className="text-[10px] font-label-mono text-primary hover:underline">
+                                  <button 
+                                    type="button"
+                                    onClick={() => handleAddKidsFeature(originalIndex, plan)} 
+                                    className="text-[10px] font-label-mono text-primary hover:underline cursor-pointer"
+                                  >
                                     ➕ Add Benefit
                                   </button>
                                 )}
                               </div>
 
                               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                                {plan.features?.map((feat, fIdx) => (
-                                  <li key={fIdx} className="flex items-start justify-between gap-2">
+                                {Array.isArray(plan.features) && plan.features.map((feat, fIdx) => (
+                                  <li key={`${plan.id || originalIndex}-kfeat-${fIdx}`} className="flex items-start justify-between gap-2">
                                     <div className="flex items-start gap-1.5">
                                       <span className="material-symbols-outlined text-primary-container text-sm mt-0.5 shrink-0">check_circle</span>
                                       <span 
                                         contentEditable={isAdmin}
                                         suppressContentEditableWarning={true}
                                         onBlur={(e) => {
+                                          if (!Array.isArray(plan.features)) return;
                                           const updated = [...plan.features];
-                                          updated[fIdx] = e.target.innerText;
-                                          onKidsMembershipChange(originalIndex, 'features', updated);
+                                          if (fIdx < updated.length) {
+                                            updated[fIdx] = e.target.innerText;
+                                            onKidsMembershipChange(originalIndex, 'features', updated);
+                                          }
                                         }}
                                         className="text-on-surface font-body-md"
                                       >{feat}</span>
@@ -661,8 +688,14 @@ export default function MembershipsPage({
 
                                     {isAdmin && (
                                       <button 
-                                        onClick={() => handleRemoveKidsFeature(originalIndex, fIdx)}
-                                        className="text-danger-red text-[10px] font-label-mono px-1 hover:underline shrink-0"
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleRemoveKidsFeature(originalIndex, fIdx, plan);
+                                        }}
+                                        className="text-danger-red text-[10px] font-label-mono px-1 hover:underline shrink-0 cursor-pointer"
+                                        title="Delete benefit"
                                       >✕</button>
                                     )}
                                   </li>

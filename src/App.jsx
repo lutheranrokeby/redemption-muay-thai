@@ -11,6 +11,8 @@ import BusinessSettingsModal from './components/BusinessSettingsModal';
 import TrialBookingModal from './components/TrialBookingModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
+import defaultContent from '../content.json';
+
 const rawEnvPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
 const ADMIN_PASSWORD = rawEnvPass.replace(/^["']|["']$/g, '').trim();
 
@@ -35,9 +37,19 @@ export default function App() {
   const fetchContent = async () => {
     try {
       const data = await getSiteContent();
-      setContentData(data);
+      setContentData({
+        ...defaultContent,
+        ...(data || {}),
+        kidsMemberships: (Array.isArray(data?.kidsMemberships) && data.kidsMemberships.length > 0)
+          ? data.kidsMemberships
+          : (defaultContent.kidsMemberships || []),
+        timetableData: (Array.isArray(data?.timetableData) && data.timetableData.length > 0)
+          ? data.timetableData
+          : (defaultContent.timetableData || [])
+      });
     } catch (err) {
       console.error('Failed to load site content', err);
+      setContentData(defaultContent);
     }
   };
 
@@ -46,18 +58,25 @@ export default function App() {
     setContentData(prev => ({
       ...prev,
       [section]: {
-        ...(prev[section] || {}),
+        ...(prev?.[section] || {}),
         [field]: value
       }
     }));
   };
 
-  // Generic List Operations Helper (Coaches, Classes, Timetable, Memberships)
+  // Generic List Operations Helper (Coaches, Classes, Timetable, Memberships, Kids Memberships)
   const updateList = (listKey, updater) => {
-    setContentData(prev => ({
-      ...prev,
-      [listKey]: updater(prev[listKey] || [])
-    }));
+    setContentData(prev => {
+      if (!prev) return prev;
+      let currentList = prev[listKey];
+      if (!Array.isArray(currentList) || currentList.length === 0) {
+        currentList = Array.isArray(defaultContent[listKey]) ? [...defaultContent[listKey]] : [];
+      }
+      return {
+        ...prev,
+        [listKey]: updater(currentList)
+      };
+    });
   };
 
   const handleAddListItem = (listKey, newItem) => {
@@ -67,16 +86,22 @@ export default function App() {
   const handleDeleteListItem = (listKey, index, promptMsg) => {
     if (promptMsg && !confirm(promptMsg)) return;
     updateList(listKey, (list) => {
+      if (!Array.isArray(list)) return [];
       const copy = [...list];
-      copy.splice(index, 1);
+      if (index >= 0 && index < copy.length) {
+        copy.splice(index, 1);
+      }
       return copy;
     });
   };
 
   const handleUpdateListItem = (listKey, index, field, value) => {
     updateList(listKey, (list) => {
+      if (!Array.isArray(list)) return [];
       const copy = [...list];
-      copy[index] = { ...copy[index], [field]: value };
+      if (index >= 0 && index < copy.length) {
+        copy[index] = { ...copy[index], [field]: value };
+      }
       return copy;
     });
   };
