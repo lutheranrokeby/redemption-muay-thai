@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { DEFAULT_KIDS_MEMBERSHIPS } from '../constants/defaultKidsMemberships';
 
 export default function MembershipsPage({ 
   data, 
@@ -10,6 +11,7 @@ export default function MembershipsPage({
   onAddKidsMembership,
   onDeleteKidsMembership,
   onKidsMembershipChange,
+  onUpdateKidsMembershipsList,
   onPageFieldChange, 
   onImageUpload, 
   onOpenBookingModal, 
@@ -46,61 +48,9 @@ export default function MembershipsPage({
   const pageMeta = data?.membershipsPage || {};
   const memberships = data?.memberships || [];
   
-  const defaultKidsMemberships = [
-    {
-      id: 'km1',
-      title: '1 CLASS / WEEK',
-      price: '$29',
-      interval: 'per week',
-      badge: 'STARTER',
-      featured: false,
-      description: 'Ideal for kids starting out or balancing other weekly sports and after-school activities.',
-      features: [
-        '1 structured kids class per week',
-        'Muay Thai basics, balance & coordination',
-        'Discipline, focus & respect fundamentals',
-        'No lock-in contracts • Cancel anytime'
-      ],
-      ctaText: 'SELECT 1-CLASS PLAN',
-      ctaUrl: '/contact'
-    },
-    {
-      id: 'km2',
-      title: '2 CLASSES / WEEK',
-      price: '$34',
-      interval: 'per week',
-      badge: 'MOST POPULAR',
-      featured: true,
-      description: 'The optimal routine for steady skill progression, fitness, and building lasting confidence.',
-      features: [
-        '2 structured kids classes per week',
-        'Striking technique, padwork & defense',
-        'Anti-bullying awareness & self-confidence',
-        'No lock-in contracts • Cancel anytime'
-      ],
-      ctaText: 'SELECT 2-CLASS PLAN',
-      ctaUrl: '/contact'
-    },
-    {
-      id: 'km3',
-      title: 'UNLIMITED PASS',
-      price: '$39',
-      interval: 'per week',
-      badge: 'BEST VALUE',
-      featured: false,
-      description: 'Unrestricted access to all age-appropriate kids sessions for dedicated young practitioners.',
-      features: [
-        'Unlimited kids classes per week',
-        'Full access to technique, fitness & open sessions',
-        'Accelerated skill growth & leadership development',
-        'No lock-in contracts • Cancel anytime'
-      ],
-      ctaText: 'GET UNLIMITED PASS',
-      ctaUrl: '/contact'
-    }
-  ];
-
-  const kidsMemberships = (data?.kidsMemberships?.length ? data.kidsMemberships : defaultKidsMemberships).filter(Boolean);
+  const kidsMemberships = (Array.isArray(data?.kidsMemberships) && data.kidsMemberships.length > 0
+    ? data.kidsMemberships 
+    : DEFAULT_KIDS_MEMBERSHIPS).filter(Boolean);
 
   const faqList = pageMeta.faqItems || [
     { q: 'Are there lock-in contracts?', a: 'No lock-in contracts. We believe in providing authentic value and flexibility so you can pause or adjust your membership anytime with 2 weeks notice.' },
@@ -161,11 +111,15 @@ export default function MembershipsPage({
 
   const handleToggleMainKidsPlan = (targetIdx) => {
     const isCurrentlyMain = Boolean(kidsMemberships[targetIdx]?.featured);
-    if (isCurrentlyMain) {
-      if (onKidsMembershipChange) onKidsMembershipChange(targetIdx, 'featured', false);
-    } else {
-      kidsMemberships.forEach((p, idx) => {
-        if (onKidsMembershipChange) onKidsMembershipChange(idx, 'featured', idx === targetIdx);
+    const updatedList = kidsMemberships.map((p, idx) => ({
+      ...p,
+      featured: isCurrentlyMain ? false : (idx === targetIdx)
+    }));
+    if (onUpdateKidsMembershipsList) {
+      onUpdateKidsMembershipsList(updatedList);
+    } else if (onKidsMembershipChange) {
+      updatedList.forEach((p, idx) => {
+        onKidsMembershipChange(idx, 'featured', p.featured);
       });
     }
   };

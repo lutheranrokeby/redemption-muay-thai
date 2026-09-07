@@ -12,6 +12,7 @@ import TrialBookingModal from './components/TrialBookingModal';
 import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabaseClient';
 
 import defaultContent from '../content.json';
+import { DEFAULT_KIDS_MEMBERSHIPS } from './constants/defaultKidsMemberships';
 
 const rawEnvPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
 const ADMIN_PASSWORD = rawEnvPass.replace(/^["']|["']$/g, '').trim();
@@ -37,19 +38,30 @@ export default function App() {
   const fetchContent = async () => {
     try {
       const data = await getSiteContent();
+      const kidsList = (Array.isArray(data?.kidsMemberships) && data.kidsMemberships.length > 0)
+        ? data.kidsMemberships
+        : (Array.isArray(defaultContent.kidsMemberships) && defaultContent.kidsMemberships.length > 0)
+          ? defaultContent.kidsMemberships
+          : DEFAULT_KIDS_MEMBERSHIPS;
+
+      const timetableList = (Array.isArray(data?.timetableData) && data.timetableData.length > 0)
+        ? data.timetableData
+        : (Array.isArray(defaultContent.timetableData) && defaultContent.timetableData.length > 0)
+          ? defaultContent.timetableData
+          : [];
+
       setContentData({
         ...defaultContent,
         ...(data || {}),
-        kidsMemberships: (Array.isArray(data?.kidsMemberships) && data.kidsMemberships.length > 0)
-          ? data.kidsMemberships
-          : (defaultContent.kidsMemberships || []),
-        timetableData: (Array.isArray(data?.timetableData) && data.timetableData.length > 0)
-          ? data.timetableData
-          : (defaultContent.timetableData || [])
+        kidsMemberships: kidsList,
+        timetableData: timetableList
       });
     } catch (err) {
       console.error('Failed to load site content', err);
-      setContentData(defaultContent);
+      setContentData({
+        ...defaultContent,
+        kidsMemberships: DEFAULT_KIDS_MEMBERSHIPS
+      });
     }
   };
 
@@ -70,7 +82,13 @@ export default function App() {
       if (!prev) return prev;
       let currentList = prev[listKey];
       if (!Array.isArray(currentList) || currentList.length === 0) {
-        currentList = Array.isArray(defaultContent[listKey]) ? [...defaultContent[listKey]] : [];
+        if (listKey === 'kidsMemberships') {
+          currentList = [...DEFAULT_KIDS_MEMBERSHIPS];
+        } else if (Array.isArray(defaultContent[listKey]) && defaultContent[listKey].length > 0) {
+          currentList = [...defaultContent[listKey]];
+        } else {
+          currentList = [];
+        }
       }
       return {
         ...prev,
@@ -86,8 +104,10 @@ export default function App() {
   const handleDeleteListItem = (listKey, index, promptMsg) => {
     if (promptMsg && !confirm(promptMsg)) return;
     updateList(listKey, (list) => {
-      if (!Array.isArray(list)) return [];
-      const copy = [...list];
+      let copy = Array.isArray(list) ? [...list] : [];
+      if (copy.length === 0 && listKey === 'kidsMemberships') {
+        copy = [...DEFAULT_KIDS_MEMBERSHIPS];
+      }
       if (index >= 0 && index < copy.length) {
         copy.splice(index, 1);
       }
@@ -97,13 +117,22 @@ export default function App() {
 
   const handleUpdateListItem = (listKey, index, field, value) => {
     updateList(listKey, (list) => {
-      if (!Array.isArray(list)) return [];
-      const copy = [...list];
+      let copy = Array.isArray(list) ? [...list] : [];
+      if (copy.length === 0 && listKey === 'kidsMemberships') {
+        copy = [...DEFAULT_KIDS_MEMBERSHIPS];
+      }
       if (index >= 0 && index < copy.length) {
         copy[index] = { ...copy[index], [field]: value };
       }
       return copy;
     });
+  };
+
+  const handleUpdateKidsMembershipsList = (newList) => {
+    setContentData(prev => ({
+      ...prev,
+      kidsMemberships: newList
+    }));
   };
 
   // Offers Data Handler
@@ -309,6 +338,7 @@ export default function App() {
           onAddKidsMembership={(item) => handleAddListItem('kidsMemberships', item)}
           onDeleteKidsMembership={(idx) => handleDeleteListItem('kidsMemberships', idx, 'Are you sure you want to delete this kids membership plan?')}
           onKidsMembershipChange={(idx, fld, val) => handleUpdateListItem('kidsMemberships', idx, fld, val)}
+          onUpdateKidsMembershipsList={handleUpdateKidsMembershipsList}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}

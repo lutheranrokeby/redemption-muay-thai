@@ -25,8 +25,31 @@ async function fetchLatestContent() {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0 && data[0].data) {
         const contentFilePath = path.join(process.cwd(), 'content.json');
-        fs.writeFileSync(contentFilePath, JSON.stringify(data[0].data, null, 2));
-        console.log('🎉 [Build Step] Successfully fetched latest content from Supabase and baked into content.json!');
+        let localContent = {};
+        try {
+          localContent = JSON.parse(fs.readFileSync(contentFilePath, 'utf8'));
+        } catch (e) {
+          console.warn('Could not read existing content.json:', e);
+        }
+
+        const remoteData = data[0].data;
+        const mergedContent = {
+          ...localContent,
+          ...remoteData,
+          kidsMemberships: (Array.isArray(remoteData.kidsMemberships) && remoteData.kidsMemberships.length > 0)
+            ? remoteData.kidsMemberships
+            : (localContent.kidsMemberships || []),
+          timetableData: (Array.isArray(remoteData.timetableData) && remoteData.timetableData.length > 0)
+            ? remoteData.timetableData
+            : (localContent.timetableData || []),
+          membershipsPage: {
+            ...(localContent.membershipsPage || {}),
+            ...(remoteData.membershipsPage || {})
+          }
+        };
+
+        fs.writeFileSync(contentFilePath, JSON.stringify(mergedContent, null, 2));
+        console.log('🎉 [Build Step] Successfully fetched and merged latest content from Supabase!');
         return;
       }
     }
