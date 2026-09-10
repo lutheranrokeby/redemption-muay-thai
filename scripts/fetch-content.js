@@ -36,6 +36,10 @@ async function fetchLatestContent() {
         const mergedContent = {
           ...localContent,
           ...remoteData,
+          challengeOffer: {
+            ...(localContent.challengeOffer || {}),
+            ...(remoteData.challengeOffer || {})
+          },
           kidsMemberships: (Array.isArray(remoteData.kidsMemberships) && remoteData.kidsMemberships.length > 0)
             ? remoteData.kidsMemberships
             : (localContent.kidsMemberships || []),

@@ -53,6 +53,10 @@ export default function App() {
       setContentData({
         ...defaultContent,
         ...(data || {}),
+        challengeOffer: {
+          ...(defaultContent.challengeOffer || {}),
+          ...(data?.challengeOffer || {})
+        },
         kidsMemberships: kidsList,
         timetableData: timetableList
       });
