@@ -24,9 +24,10 @@
     "enabled": true,
     "badge": "🔥 6-WEEK FIGHT READY CHALLENGE",
     "spotsText": "STRICTLY 12 SPOTS AVAILABLE",
-    "title": "Transform Your Body & Mind In 6 Weeks",
-    "subtitle": "Step onto the mats for structured, ego-free fight camp training. Build explosive striking power, drop body fat, and train like a fighter with senior coach guidance.",
-    "dealHighlight": "100% Refundable Deposit Or VIP Fight Pack Options Available",
+    "title": "CHALLENGE YOURSELF IN 6 WEEKS",
+    "subtitle": "We’re looking for 12 motivated men and women to participate in our upcoming 6 Week \"Redemption\" Muay Thai Challenge—and if you complete it, your entire $500 deposit goes back into your pocket.",
+    "totalValue": "$1498",
+    "dealHighlight": "Complete 3 simple requirements and get 100% of your $500 deposit refunded!",
     "inclusions": [
       {
         "icon": "sports_mma",
@@ -34,21 +35,24 @@
         "desc": "All adult classes, beginner to fighter"
       },
       {
-        "icon": "shield",
-        "title": "Custom Fighter Gear Pack",
-        "desc": "Official gloves, wraps & tee on Day 1"
+        "icon": "spa",
+        "title": "Recovery Membership Included",
+        "desc": "Gain access to Redemptions recovery kit - Infrared sauna, recovery sleeves and massage gun"
       },
       {
-        "icon": "fitness_center",
-        "title": "1-on-1 Coach Pad-Work",
-        "desc": "Fast-track striking technique & power"
+        "icon": "sports_kabaddi",
+        "title": "1-on-1 PT Session with Billy",
+        "desc": "Advance your game with a 30 minute sessions with Billy every week"
       },
       {
-        "icon": "restaurant",
-        "title": "Fighter Nutrition Blueprint",
-        "desc": "Personalized meal roadmap & body scans"
+        "icon": "groups",
+        "title": "Private Fight Camp Community & Sparring Group Access",
+        "desc": "Supportive team environment"
       }
     ],
+    "imageTag": "Test your skills",
+    "imageTitle": "Exhibition Fight Night Ticket",
+    "imageDesc": "Test your skills in a safe, 100% padded, beginner-friendly exhibition match",
     "ctaText": "Explore The 6-Week Challenge →",
     "ctaUrl": "/offers/6-week-challenge",
     "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw"

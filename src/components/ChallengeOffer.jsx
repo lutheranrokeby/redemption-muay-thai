@@ -5,9 +5,10 @@ const DEFAULT_OFFER_DATA = {
   enabled: true,
   badge: '🔥 6-WEEK FIGHT READY CHALLENGE',
   spotsText: 'STRICTLY 12 SPOTS AVAILABLE',
-  title: 'Transform Your Body & Mind In 6 Weeks',
-  subtitle: 'Step onto the mats for structured, ego-free fight camp training. Build explosive striking power, drop body fat, and train like a fighter with senior coach guidance.',
-  dealHighlight: '100% REFUNDABLE DEPOSIT OR $149 VIP FIGHT PACK',
+  title: 'CHALLENGE YOURSELF IN 6 WEEKS',
+  subtitle: 'We’re looking for 12 motivated men and women to participate in our upcoming 6 Week "Redemption" Muay Thai Challenge—and if you complete it, your entire $500 deposit goes back into your pocket.',
+  totalValue: '$1498',
+  dealHighlight: 'Complete 3 simple requirements and get 100% of your $500 deposit refunded!',
   inclusions: [
     {
       icon: 'sports_mma',
@@ -15,21 +16,24 @@ const DEFAULT_OFFER_DATA = {
       desc: 'All adult classes, beginner to fighter'
     },
     {
-      icon: 'shield',
-      title: 'Custom Fighter Gear Pack',
-      desc: 'Official gloves, wraps & tee on Day 1'
+      icon: 'spa',
+      title: 'Recovery Membership Included',
+      desc: 'Gain access to Redemptions recovery kit - Infrared sauna, recovery sleeves and massage gun'
     },
     {
-      icon: 'fitness_center',
-      title: '1-on-1 Coach Pad-Work',
-      desc: 'Fast-track striking technique & power'
+      icon: 'sports_kabaddi',
+      title: '1-on-1 PT Session with Billy',
+      desc: 'Advance your game with a 30 minute sessions with Billy every week'
     },
     {
-      icon: 'restaurant',
-      title: 'Fighter Nutrition Blueprint',
-      desc: 'Personalized meal roadmap & body scans'
+      icon: 'groups',
+      title: 'Private Fight Camp Community & Sparring Group Access',
+      desc: 'Supportive team environment'
     }
   ],
+  imageTag: 'Test your skills',
+  imageTitle: 'Exhibition Fight Night Ticket',
+  imageDesc: 'Test your skills in a safe, 100% padded, beginner-friendly exhibition match',
   ctaText: 'Explore The 6-Week Challenge →',
   ctaUrl: '/offers/6-week-challenge',
   image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw'
@@ -224,21 +228,45 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
               ))}
             </div>
 
-            {/* Deal Highlight Callout */}
-            <div className="bg-gradient-to-r from-primary-container/10 via-surface-container-high to-primary-container/5 border-l-4 border-primary-container p-3 rounded-r-lg">
-              <span 
-                contentEditable={isAdmin}
-                suppressContentEditableWarning={true}
-                onBlur={(e) => handleFieldEdit('dealHighlight', e.target.innerText)}
-                className="font-label-mono text-xs sm:text-sm uppercase font-bold tracking-wider text-primary-container block"
-              >
-                ✨ {offer.dealHighlight}
-              </span>
+            {/* Total Value & Guarantee Box */}
+            <div className="bg-surface-container-high/90 border-2 border-primary-container/70 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_25px_rgba(0,229,255,0.12)]">
+              <div className="space-y-0.5">
+                <span className="font-label-mono text-[11px] uppercase tracking-widest text-primary-container font-bold block">
+                  TOTAL PACKAGE VALUE
+                </span>
+                <div className="flex items-baseline gap-2.5">
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => handleFieldEdit('totalValue', e.target.innerText)}
+                    className="font-display-xl text-3xl sm:text-4xl text-white font-extrabold tracking-tight"
+                  >
+                    {offer.totalValue || '$1498'}
+                  </span>
+                  <span className="text-on-surface-variant font-label-mono text-xs line-through opacity-70">
+                    Value Stack
+                  </span>
+                </div>
+              </div>
+
+              <div className="sm:border-l sm:border-outline-variant/80 sm:pl-5 space-y-0.5 max-w-sm">
+                <span className="font-label-mono text-[11px] font-bold uppercase tracking-wider text-primary-container block">
+                  ✨ 100% REFUNDABLE DEPOSIT
+                </span>
+                <p 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleFieldEdit('dealHighlight', e.target.innerText)}
+                  className="text-on-surface-variant text-xs leading-relaxed"
+                >
+                  {offer.dealHighlight || 'Complete 3 simple requirements and get 100% of your $500 deposit refunded!'}
+                </p>
+              </div>
             </div>
 
-            {/* CTA Button & Reassurance Notes */}
-            <div className="pt-2 space-y-3">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            {/* CTA Button */}
+            <div className="pt-2">
+              <div className="flex items-center">
                 <a 
                   href={ctaHref}
                   className="btn-clip bg-primary-container text-black font-button-text font-black px-8 py-4 uppercase tracking-wider text-sm sm:text-base hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(0,229,255,0.35)] inline-flex items-center gap-2 group cursor-pointer"
@@ -254,10 +282,6 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                     arrow_forward
                   </span>
                 </a>
-
-                <span className="font-label-mono text-xs text-on-surface-variant tracking-wide">
-                  Zero Lock-In Contracts &bull; All Levels Welcome
-                </span>
               </div>
             </div>
 
@@ -299,15 +323,30 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
               <div className="absolute bottom-0 inset-x-0 p-6 space-y-2 text-left bg-gradient-to-t from-black via-black/90 to-transparent">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary-container text-lg">verified</span>
-                  <span className="font-label-mono text-xs uppercase tracking-widest text-primary-container font-bold">
-                    REDEMPTION PROMISE
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => handleFieldEdit('imageTag', e.target.innerText)}
+                    className="font-label-mono text-xs uppercase tracking-widest text-primary-container font-bold"
+                  >
+                    {offer.imageTag || 'Test your skills'}
                   </span>
                 </div>
-                <p className="text-white font-headline-sm text-base sm:text-lg uppercase tracking-wide leading-snug">
-                  100% Padded Safety Protocols. Matched Only Against People At Your Level.
-                </p>
-                <p className="text-on-surface-variant text-xs font-body-md">
-                  Experience a real fight camp routine designed for everyday adults.
+                <h3 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleFieldEdit('imageTitle', e.target.innerText)}
+                  className="text-white font-headline-sm text-base sm:text-lg uppercase tracking-wide leading-snug"
+                >
+                  {offer.imageTitle || 'Exhibition Fight Night Ticket'}
+                </h3>
+                <p 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleFieldEdit('imageDesc', e.target.innerText)}
+                  className="text-on-surface-variant text-xs font-body-md leading-relaxed"
+                >
+                  {offer.imageDesc || 'Test your skills in a safe, 100% padded, beginner-friendly exhibition match'}
                 </p>
               </div>
 
