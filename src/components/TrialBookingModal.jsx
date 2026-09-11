@@ -72,7 +72,7 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
         </div>
 
         {/* Drawer Body: Embedded Widget + Athletic Loading Skeleton */}
-        <div className="flex-grow overflow-y-auto bg-background p-2 sm:p-4 relative min-h-[500px]">
+        <div className="flex-1 flex-grow w-full relative min-h-0 bg-background">
           
           {/* Loading Skeleton & Spinner Overlay */}
           {iframeLoading && (
@@ -112,7 +112,8 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
             src="https://api.leadconnectorhq.com/widget/group/3pKErThGxL28ZK4Ir8if"
             allow="payment"
             onLoad={() => setIframeLoading(false)}
-            style={{ width: '100%', minHeight: '680px', border: 'none', overflow: 'hidden' }}
+            className="w-full h-full border-0 block"
+            style={{ width: '100%', height: '100%', border: 'none' }}
             id="3pKErThGxL28ZK4Ir8if_1788231703501"
             title="Redemption Muay Thai Trial Class Booking"
           ></iframe>
