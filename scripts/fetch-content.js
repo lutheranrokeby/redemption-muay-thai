@@ -52,6 +52,12 @@ async function fetchLatestContent() {
           timetableData: (Array.isArray(remoteData.timetableData) && remoteData.timetableData.length > 0)
             ? remoteData.timetableData
             : (localContent.timetableData || []),
+          coachesList: (Array.isArray(remoteData.coachesList) && remoteData.coachesList.length > 0)
+            ? remoteData.coachesList.map((rc, idx) => ({
+                ...(localContent.coachesList?.[idx] || {}),
+                ...rc
+              }))
+            : (localContent.coachesList || []),
           membershipsPage: {
             ...(localContent.membershipsPage || {}),
             ...(remoteData.membershipsPage || {})

@@ -142,6 +142,9 @@
       "2x IFMA Australian Champion (66.67kg)",
       "Fought in Destiny, Eruption & Muay Thai League"
     ],
+    "privatePrice": "$100",
+    "privateRate": "per hour session",
+    "hidePrivateRate": false,
     "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
   },
   "coachesList": [
@@ -156,6 +159,9 @@
         "2x IFMA Australian Champion (66.67kg)",
         "Fought in Destiny, Eruption & Muay Thai League"
       ],
+      "privatePrice": "$100",
+      "privateRate": "per hour session",
+      "hidePrivateRate": false,
       "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
     },
     {
@@ -169,6 +175,9 @@
         "Junior Program Director",
         "Strength & Conditioning Specialist"
       ],
+      "privatePrice": "$90",
+      "privateRate": "per hour session",
+      "hidePrivateRate": false,
       "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw"
     }
   ],

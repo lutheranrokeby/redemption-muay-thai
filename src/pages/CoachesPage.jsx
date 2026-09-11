@@ -9,6 +9,9 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
     subtitle: '',
     badge: 'COACH',
     bio: '',
+    privatePrice: '$100',
+    privateRate: 'per hour session',
+    hidePrivateRate: false,
     achievements: ['4x WMC State Champion', '10+ Years Ring Experience'],
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw'
   });
@@ -22,6 +25,9 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
       subtitle: '',
       badge: 'COACH',
       bio: '',
+      privatePrice: '$100',
+      privateRate: 'per hour session',
+      hidePrivateRate: false,
       achievements: ['4x WMC State Champion', '10+ Years Ring Experience'],
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw'
     });
@@ -140,12 +146,48 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
               >
                 
                 {isAdmin && (
-                  <button 
-                    onClick={() => onDeleteCoach(index)}
-                    className="absolute top-4 right-4 bg-danger-red text-white text-xs font-label-mono px-3 py-1.5 rounded hover:bg-red-700 z-40 shadow-lg"
-                  >
-                    🗑️ Delete Coach
-                  </button>
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 z-40 bg-background/95 p-1.5 rounded-lg border border-outline-variant text-[11px] font-label-mono flex-wrap shadow-xl">
+                    <button
+                      type="button"
+                      onClick={() => onCoachChange(index, 'hidePrivateRate', !coach.hidePrivateRate)}
+                      className={`px-2.5 py-1 rounded font-bold cursor-pointer transition-all border ${
+                        coach.hidePrivateRate 
+                          ? 'bg-surface-container-high text-on-surface-variant border-outline-variant hover:border-primary-container' 
+                          : 'bg-primary-container text-black border-primary-container hover:bg-white'
+                      }`}
+                      title="Toggle Private Session Price Visibility on Public View"
+                    >
+                      {coach.hidePrivateRate ? '🙈 Private Price: Hidden' : '👁️ Private Price: Visible'}
+                    </button>
+
+                    <div className="flex items-center gap-1 bg-surface-container-high px-2 py-0.5 rounded border border-outline-variant/60" title="Adjust Private Session Cost & Unit">
+                      <span className="text-primary-container font-bold">💲</span>
+                      <input 
+                        type="text"
+                        value={coach.privatePrice || (coach.name?.includes('Billy') ? '$100' : '$90')}
+                        onChange={(e) => onCoachChange(index, 'privatePrice', e.target.value)}
+                        className="w-14 bg-background border border-outline-variant/60 rounded px-1.5 py-0.5 text-white font-mono text-[11px] text-center focus:border-primary-container focus:outline-none"
+                        placeholder="$100"
+                        title="Adjust Cost (e.g. $100)"
+                      />
+                      <input 
+                        type="text"
+                        value={coach.privateRate || 'per hour session'}
+                        onChange={(e) => onCoachChange(index, 'privateRate', e.target.value)}
+                        className="w-28 bg-background border border-outline-variant/60 rounded px-1.5 py-0.5 text-on-surface-variant font-mono text-[10px] focus:border-primary-container focus:outline-none"
+                        placeholder="per hour session"
+                        title="Adjust Unit (e.g. per hour session)"
+                      />
+                    </div>
+
+                    <button 
+                      onClick={() => onDeleteCoach(index)}
+                      className="bg-danger-red text-white text-[11px] font-label-mono px-2 py-1 rounded hover:bg-red-700 font-bold ml-1 cursor-pointer"
+                      title="Delete Coach"
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-12">
@@ -248,6 +290,65 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
                       </ul>
                     </div>
 
+                    {/* Private Session Price Section */}
+                    {(!coach.hidePrivateRate || isAdmin) && (
+                      <div className={`rounded-xl border p-4 sm:p-5 transition-all ${
+                        coach.hidePrivateRate && isAdmin
+                          ? 'bg-surface-container-high/30 border-dashed border-primary-container/60 opacity-60'
+                          : 'bg-surface-container-high/60 border-outline-variant/60 shadow-inner'
+                      }`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          
+                          {/* Left Title & Description */}
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-primary-container/15 border border-primary-container/30 flex items-center justify-center text-primary-container shrink-0">
+                              <span className="material-symbols-outlined text-xl">sports_mma</span>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-label-mono text-[11px] uppercase tracking-wider text-primary-container font-bold">
+                                  PRIVATE 1-ON-1 SESSION
+                                </span>
+                                {coach.hidePrivateRate && isAdmin && (
+                                  <span className="bg-danger-red/20 text-white text-[9px] font-label-mono px-1.5 py-0.5 rounded border border-danger-red/40 font-bold uppercase">
+                                    Hidden From Public
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-on-surface-variant font-medium">
+                                Dedicated private padwork, technical focus & conditioning
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Right Price & Unit */}
+                          <div className="sm:text-right shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-outline-variant/40">
+                            <div className="flex items-baseline sm:justify-end gap-1.5">
+                              <span 
+                                contentEditable={isAdmin}
+                                suppressContentEditableWarning={true}
+                                onBlur={(e) => onCoachChange(index, 'privatePrice', e.target.innerText.trim())}
+                                className="font-display-xl text-2xl sm:text-3xl font-extrabold text-white tracking-tight focus:outline-none focus:text-primary-container cursor-text"
+                                title={isAdmin ? "Click to edit cost (e.g. $100)" : undefined}
+                              >
+                                {coach.privatePrice || (coach.name?.includes('Billy') ? '$100' : '$90')}
+                              </span>
+                              <span 
+                                contentEditable={isAdmin}
+                                suppressContentEditableWarning={true}
+                                onBlur={(e) => onCoachChange(index, 'privateRate', e.target.innerText.trim())}
+                                className="font-label-mono text-xs text-on-surface-variant font-bold uppercase focus:outline-none focus:text-primary-container cursor-text"
+                                title={isAdmin ? "Click to edit unit (e.g. per hour session)" : undefined}
+                              >
+                                {coach.privateRate || 'per hour session'}
+                              </span>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    )}
+
                     <div className="pt-2">
                       <a 
                         href="#" 
@@ -298,6 +399,30 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
             <div>
               <label className="block text-xs font-label-mono text-primary-container mb-1">Bio</label>
               <textarea rows="3" value={newCoach.bio} onChange={(e) => setNewCoach({...newCoach, bio: e.target.value})} placeholder="Coach biography..." className="w-full bg-background border border-outline-variant p-2.5 rounded text-white text-sm"></textarea>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-label-mono text-primary-container mb-1">Private Session Cost</label>
+                <input type="text" value={newCoach.privatePrice} onChange={(e) => setNewCoach({...newCoach, privatePrice: e.target.value})} placeholder="e.g. $100" className="w-full bg-background border border-outline-variant p-2.5 rounded text-white text-sm font-bold" />
+              </div>
+              <div>
+                <label className="block text-xs font-label-mono text-primary-container mb-1">Session Rate / Unit</label>
+                <input type="text" value={newCoach.privateRate} onChange={(e) => setNewCoach({...newCoach, privateRate: e.target.value})} placeholder="e.g. per hour session" className="w-full bg-background border border-outline-variant p-2.5 rounded text-white text-sm" />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 pt-1">
+              <input 
+                type="checkbox" 
+                id="chkShowPrivateRate" 
+                checked={!newCoach.hidePrivateRate} 
+                onChange={(e) => setNewCoach({...newCoach, hidePrivateRate: !e.target.checked})} 
+                className="accent-primary-container w-4 h-4 cursor-pointer" 
+              />
+              <label htmlFor="chkShowPrivateRate" className="text-xs font-label-mono text-white cursor-pointer font-bold">
+                Show Private Session Price on public view
+              </label>
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-outline-variant">
