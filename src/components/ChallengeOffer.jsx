@@ -7,7 +7,7 @@ const DEFAULT_OFFER_TEMPLATE = {
   enabled: true,
   badge: '6-WEEK FIGHT READY CHALLENGE',
   spotsText: 'STRICTLY 12 SPOTS AVAILABLE',
-  title: 'CHALLENGE YOURSELF IN 6 WEEKS',
+  title: 'JOIN THE REDEMPTION 6 WEEK CHALLENGE',
   subtitle: 'We’re looking for 12 motivated men and women to participate in our upcoming 6 Week "Redemption" Muay Thai Challenge—and if you complete it, your entire $500 deposit goes back into your pocket.',
   totalValue: '$1498',
   dealHighlight: 'Complete 3 simple requirements and get 100% of your $500 deposit refunded!',
@@ -28,6 +28,11 @@ const DEFAULT_OFFER_TEMPLATE = {
       desc: 'Advance your game with a 30 minute sessions with Billy every week'
     },
     {
+      icon: 'restaurant',
+      title: 'Fighter Nutrition Blueprint & Meal Guide',
+      desc: 'Follow the guide to lean out and boost performance.'
+    },
+    {
       icon: 'groups',
       title: 'Private Fight Camp Community & Sparring Group Access',
       desc: 'Supportive team environment'
@@ -45,6 +50,7 @@ const ATHLETIC_ICONS = [
   'sports_mma',
   'spa',
   'sports_kabaddi',
+  'restaurant',
   'groups',
   'fitness_center',
   'verified',
