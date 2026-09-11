@@ -3,7 +3,7 @@ import { getAdminHref, sanitizeEditText } from '../utils/urlHelper';
 
 const DEFAULT_OFFER_DATA = {
   enabled: true,
-  badge: '🔥 6-WEEK FIGHT READY CHALLENGE',
+  badge: '6-WEEK FIGHT READY CHALLENGE',
   spotsText: 'STRICTLY 12 SPOTS AVAILABLE',
   title: 'CHALLENGE YOURSELF IN 6 WEEKS',
   subtitle: 'We’re looking for 12 motivated men and women to participate in our upcoming 6 Week "Redemption" Muay Thai Challenge—and if you complete it, your entire $500 deposit goes back into your pocket.',
@@ -234,7 +234,7 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                 <span className="font-label-mono text-[11px] uppercase tracking-widest text-primary-container font-bold block">
                   TOTAL PACKAGE VALUE
                 </span>
-                <div className="flex items-baseline gap-2.5">
+                <div className="flex items-baseline">
                   <span 
                     contentEditable={isAdmin}
                     suppressContentEditableWarning={true}
@@ -243,15 +243,12 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                   >
                     {offer.totalValue || '$1498'}
                   </span>
-                  <span className="text-on-surface-variant font-label-mono text-xs line-through opacity-70">
-                    Value Stack
-                  </span>
                 </div>
               </div>
 
               <div className="sm:border-l sm:border-outline-variant/80 sm:pl-5 space-y-0.5 max-w-sm">
                 <span className="font-label-mono text-[11px] font-bold uppercase tracking-wider text-primary-container block">
-                  ✨ 100% REFUNDABLE DEPOSIT
+                  100% REFUNDABLE DEPOSIT
                 </span>
                 <p 
                   contentEditable={isAdmin}
