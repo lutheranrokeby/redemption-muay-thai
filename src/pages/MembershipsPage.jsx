@@ -489,10 +489,10 @@ export default function MembershipsPage({
                           el.scrollIntoView({ behavior: 'smooth' });
                         }
                       }}
-                      className="block bg-primary-container text-black rounded-xl p-3 sm:p-3.5 text-center shadow-[0_0_25px_rgba(0,229,255,0.35)] border-2 border-black/15 transition-all hover:bg-white hover:scale-[1.01] cursor-pointer mt-3 group/rec"
+                      className="block bg-primary-container text-black rounded-xl p-3 sm:p-3.5 text-center border-2 border-black/15 transition-all hover:bg-white hover:scale-[1.01] cursor-pointer mt-3 group/rec"
                       title="View Redemption Recovery details"
                     >
-                      <div className="inline-flex items-center gap-1 font-label-mono text-[10px] font-black uppercase tracking-widest bg-black text-primary-container px-2.5 py-0.5 rounded-full mb-1 shadow-sm">
+                      <div className="inline-flex items-center gap-1 font-label-mono text-[10px] font-black uppercase tracking-widest bg-black text-primary-container px-2.5 py-0.5 rounded-full mb-1">
                         <span className="material-symbols-outlined text-xs font-bold">check_circle</span>
                         <span>INCLUDED</span>
                       </div>

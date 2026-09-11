@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { getAdminHref } from '../utils/urlHelper';
 
 export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachChange, onCoachImageUpload, onImageUpload, onPageFieldChange, onOpenBookingModal, isAdmin }) {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -341,8 +342,7 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
 
                     <div className="pt-2">
                       <a 
-                        href="#" 
-                        onClick={(e) => { e.preventDefault(); if (onOpenBookingModal) onOpenBookingModal(); }}
+                        href={getAdminHref(coach.ctaUrl || '/contact', isAdmin)}
                         className="inline-block btn-clip bg-primary-container text-black font-button-text px-6 py-3 uppercase tracking-widest hover:bg-white transition-colors text-xs sm:text-sm font-bold cursor-pointer"
                       >
                         <span 
