@@ -16,6 +16,7 @@ export default function OfferPage({ slug, data, onOfferChange, onPageFieldChange
       valueStackTitle: "HERE'S WHAT'S INCLUDED IN THE CHALLENGE:",
       valueItems: [
         { title: "6 Weeks Unlimited Muay Thai Access", desc: "All levels, zero ego", value: "$450" },
+        { title: "Redemption Recovery", desc: "Gain access to Redemptions recovery facility - Infrared sauna, recovery sleeves and massage gun", value: "$198" },
         { title: "Weekly 1-on-1 Coach Check-ins & Pad Work", desc: "Dial in your striking technique & power", value: "$300" },
         { title: "Done-For-You Fighter Nutrition Blueprint & Meal Guide", desc: "Lean out & boost performance", value: "$150" },
         { title: "Private Fight Camp Community & Sparring Group Access", desc: "Supportive team environment", value: "$150" },
@@ -42,12 +43,13 @@ export default function OfferPage({ slug, data, onOfferChange, onPageFieldChange
       valueStackTitle: "HERE'S EVERYTHING INCLUDED IN YOUR VIP ENTRY:",
       valueItems: [
         { title: "6 Weeks Unlimited Muay Thai Training", desc: "All levels welcome", value: "$450" },
+        { title: "Redemption Recovery", desc: "Gain access to Redemptions recovery facility - Infrared sauna, recovery sleeves and massage gun", value: "$198" },
         { title: "Custom Fighter Gear Pack", desc: "Official Gloves, Hand Wraps & Team Tee handed to you on Day 1", value: "$180" },
         { title: "Weekly 1-on-1 Pad-Work Sessions", desc: "Senior coaches fast-track your technique", value: "$300" },
         { title: "Done-For-You Fighter Nutrition Blueprint & Body Comp Scans", desc: "Personalized nutrition plan", value: "$150" },
         { title: "Exclusive Ticket to Exhibition Fight Night + Personal Highlight Reel & Photos", desc: "Professional media coverage", value: "$250" }
       ],
-      totalValue: "$1,330",
+      totalValue: "$1,528",
       vipPrice: "Just $149 today + $49/wk",
       spotsText: "ONLY 15 VIP SPOTS OPEN FOR UPCOMING INTAKE",
       ctaText: "Reserve Your Fighter Pack & Claim Spot →",

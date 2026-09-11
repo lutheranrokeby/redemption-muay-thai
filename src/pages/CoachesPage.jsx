@@ -299,26 +299,16 @@ export default function CoachesPage({ data, onAddCoach, onDeleteCoach, onCoachCh
                       }`}>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           
-                          {/* Left Title & Description */}
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-primary-container/15 border border-primary-container/30 flex items-center justify-center text-primary-container shrink-0">
-                              <span className="material-symbols-outlined text-xl">sports_mma</span>
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-label-mono text-[11px] uppercase tracking-wider text-primary-container font-bold">
-                                  PRIVATE 1-ON-1 SESSION
-                                </span>
-                                {coach.hidePrivateRate && isAdmin && (
-                                  <span className="bg-danger-red/20 text-white text-[9px] font-label-mono px-1.5 py-0.5 rounded border border-danger-red/40 font-bold uppercase">
-                                    Hidden From Public
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-xs text-on-surface-variant font-medium">
-                                Dedicated private padwork, technical focus & conditioning
-                              </p>
-                            </div>
+                          {/* Left Title */}
+                          <div className="flex items-center gap-2">
+                            <span className="font-label-mono text-xs uppercase tracking-wider text-primary-container font-bold">
+                              PRIVATE 1-ON-1 SESSION
+                            </span>
+                            {coach.hidePrivateRate && isAdmin && (
+                              <span className="bg-danger-red/20 text-white text-[9px] font-label-mono px-1.5 py-0.5 rounded border border-danger-red/40 font-bold uppercase">
+                                Hidden From Public
+                              </span>
+                            )}
                           </div>
 
                           {/* Right Price & Unit */}

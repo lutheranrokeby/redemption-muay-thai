@@ -467,5 +467,104 @@
     "youtube": "https://youtube.com",
     "trialBookingUrl": "https://api.leadconnectorhq.com/widget/groups/trial-bookingz",
     "logoImage": "/uploads/1788232704441_trans.png"
+  },
+  "offers": {
+    "6-week-challenge": {
+      "selectedVariant": "A",
+      "optionA": {
+        "headline": "SUNSHINE COAST: Want to get in fight-ready shape for FREE over the next 6 weeks?",
+        "subheadline": "We’re looking for 12 motivated men and women to participate in our upcoming 6-Week \"Redemption\" Muay Thai Challenge—and if you complete it, your entire deposit goes back into your pocket.",
+        "dealTitle": "Here’s the deal:",
+        "dealDesc": "Most people fail because they lack skin in the game and real accountability. So we put $500 on the line to back up our training.\n\nYou pay a $500 commitment deposit today. Complete 3 simple requirements, and at the end of 6 weeks, you get 100% OF YOUR $500 REFUNDED (or convert it into $650 gym credit toward long-term training).",
+        "valueStackTitle": "HERE'S WHAT'S INCLUDED IN THE CHALLENGE:",
+        "valueItems": [
+          {
+            "title": "6 Weeks Unlimited Muay Thai Access",
+            "desc": "All levels, zero ego",
+            "value": "$450"
+          },
+          {
+            "title": "Redemption Recovery",
+            "desc": "Gain access to Redemptions recovery facility - Infrared sauna, recovery sleeves and massage gun",
+            "value": "$198"
+          },
+          {
+            "title": "Weekly 1-on-1 Coach Check-ins & Pad Work",
+            "desc": "Dial in your striking technique & power",
+            "value": "$300"
+          },
+          {
+            "title": "Done-For-You Fighter Nutrition Blueprint & Meal Guide",
+            "desc": "Lean out & boost performance",
+            "value": "$150"
+          },
+          {
+            "title": "Private Fight Camp Community & Sparring Group Access",
+            "desc": "Supportive team environment",
+            "value": "$150"
+          },
+          {
+            "title": "Exhibition Fight Night Ticket",
+            "desc": "Test your skills in a safe, 100% padded, beginner-friendly exhibition match",
+            "value": "$250"
+          }
+        ],
+        "requirementsTitle": "THE 3 REQUIREMENTS TO GET YOUR $500 BACK:",
+        "requirements": [
+          "Attend 3 Muay Thai sessions a week for 6 weeks",
+          "Post 1 progress photo/video tagging the gym",
+          "Leave an honest review at the end"
+        ],
+        "guaranteeText": "Literally that's it. If you can commit to those 3 things, you train for free.",
+        "spotsText": "STRICTLY 12 SPOTS AVAILABLE",
+        "ctaText": "Apply Now — Claim Your Spot →",
+        "depositPrice": "$500",
+        "refundText": "100% REFUNDABLE DEPOSIT"
+      },
+      "optionB": {
+        "headline": "SUNSHINE COAST: Want to step into the ring, get in the best shape of your life, and train like a real fighter in 6 weeks?",
+        "subheadline": "Most people want to train martial arts, but they get intimidated by toxic gyms, getting beat up on Day 1, or not knowing where to start.",
+        "dealTitle": "The Solution:",
+        "dealDesc": "We built The 6-Week \"Fight Ready\" VIP Challenge to give everyday adults a structured, safe, and elite fight camp experience—zero ego, 100% padded safety protocols, and matched only against people your own level.",
+        "valueStackTitle": "HERE'S EVERYTHING INCLUDED IN YOUR VIP ENTRY:",
+        "valueItems": [
+          {
+            "title": "6 Weeks Unlimited Muay Thai Training",
+            "desc": "All levels welcome",
+            "value": "$450"
+          },
+          {
+            "title": "Redemption Recovery",
+            "desc": "Gain access to Redemptions recovery facility - Infrared sauna, recovery sleeves and massage gun",
+            "value": "$198"
+          },
+          {
+            "title": "Custom Fighter Gear Pack",
+            "desc": "Official Gloves, Hand Wraps & Team Tee handed to you on Day 1",
+            "value": "$180"
+          },
+          {
+            "title": "Weekly 1-on-1 Pad-Work Sessions",
+            "desc": "Senior coaches fast-track your technique",
+            "value": "$300"
+          },
+          {
+            "title": "Done-For-You Fighter Nutrition Blueprint & Body Comp Scans",
+            "desc": "Personalized nutrition plan",
+            "value": "$150"
+          },
+          {
+            "title": "Exclusive Ticket to Exhibition Fight Night + Personal Highlight Reel & Photos",
+            "desc": "Professional media coverage",
+            "value": "$250"
+          }
+        ],
+        "totalValue": "$1,528",
+        "vipPrice": "Just $149 today + $49/wk",
+        "spotsText": "ONLY 15 VIP SPOTS OPEN FOR UPCOMING INTAKE",
+        "ctaText": "Reserve Your Fighter Pack & Claim Spot →",
+        "guaranteeText": "Only 15 spots open for the upcoming intake to keep 1-on-1 coaching quality high."
+      }
+    }
   }
 }

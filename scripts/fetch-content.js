@@ -61,6 +61,10 @@ async function fetchLatestContent() {
           membershipsPage: {
             ...(localContent.membershipsPage || {}),
             ...(remoteData.membershipsPage || {})
+          },
+          offers: {
+            ...(localContent.offers || {}),
+            ...(remoteData.offers || {})
           }
         };
 
