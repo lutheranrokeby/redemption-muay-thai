@@ -38,7 +38,10 @@ async function fetchLatestContent() {
           ...remoteData,
           challengeOffer: {
             ...(localContent.challengeOffer || {}),
-            ...(remoteData.challengeOffer || {})
+            ...(remoteData.challengeOffer || {}),
+            offers: (Array.isArray(remoteData.challengeOffer?.offers) && remoteData.challengeOffer.offers.length > 0)
+              ? remoteData.challengeOffer.offers
+              : (localContent.challengeOffer?.offers || [])
           },
           kidsMemberships: (Array.isArray(remoteData.kidsMemberships) && remoteData.kidsMemberships.length > 0)
             ? remoteData.kidsMemberships

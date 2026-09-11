@@ -69,15 +69,27 @@ export default function App() {
     }
   };
 
-  // Generic Section Field Updater
+  // Generic Section Field Updater (supports single field or partial object merge)
   const handleFieldChange = (section, field, value) => {
-    setContentData(prev => ({
-      ...prev,
-      [section]: {
-        ...(prev?.[section] || {}),
-        [field]: value
+    setContentData(prev => {
+      if (!prev) return prev;
+      if (typeof field === 'object' && field !== null) {
+        return {
+          ...prev,
+          [section]: {
+            ...(prev[section] || {}),
+            ...field
+          }
+        };
       }
-    }));
+      return {
+        ...prev,
+        [section]: {
+          ...(prev[section] || {}),
+          [field]: value
+        }
+      };
+    });
   };
 
   // Generic List Operations Helper (Coaches, Classes, Timetable, Memberships, Kids Memberships)

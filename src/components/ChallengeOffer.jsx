@@ -1,7 +1,9 @@
 import React from 'react';
 import { getAdminHref, sanitizeEditText } from '../utils/urlHelper';
 
-const DEFAULT_OFFER_DATA = {
+const DEFAULT_OFFER_TEMPLATE = {
+  id: '6-week-challenge',
+  name: '6-Week Challenge',
   enabled: true,
   badge: '6-WEEK FIGHT READY CHALLENGE',
   spotsText: 'STRICTLY 12 SPOTS AVAILABLE',
@@ -39,45 +41,169 @@ const DEFAULT_OFFER_DATA = {
   image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVeOhOmaG2DwFJ-Agk0ZON_NeVfXaq7GIW5GxLGiWCBjiOoEc8TpL9i84x_6rI78VB6VHGjJGtmSQR4IAhBct8r5swdZ1NQYqXzjovee_GbcG-iaaG93ov7DqAWQfPbuqnPXwxcMBafCcAyCAPkeePjwswvESwBf5orWLDW6sVk4Ncl2_QyGlyWfrS1KChWtkMD1MDyeftLa3KFHWP2_GyVAc4Kp-cWE3fWb8Aiuy0gy62oSLwQIPaSw'
 };
 
-export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin }) {
-  const offer = {
-    ...DEFAULT_OFFER_DATA,
-    ...(data || {})
-  };
+const ATHLETIC_ICONS = [
+  'sports_mma',
+  'spa',
+  'sports_kabaddi',
+  'groups',
+  'fitness_center',
+  'verified',
+  'check_circle',
+  'timer'
+];
 
-  const isEnabled = offer.enabled !== false;
+export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin }) {
+  // Extract offers list with backwards compatibility for legacy flat objects
+  const rawOffers = Array.isArray(data?.offers) && data.offers.length > 0 
+    ? data.offers 
+    : [
+        {
+          ...DEFAULT_OFFER_TEMPLATE,
+          ...(data || {})
+        }
+      ];
+
+  // Clean and ensure every offer has required default fields and an ID
+  const offers = rawOffers.map((item, idx) => ({
+    ...DEFAULT_OFFER_TEMPLATE,
+    ...item,
+    id: item.id || `offer_${idx + 1}`,
+    name: item.name || item.title || `Offer ${idx + 1}`
+  }));
+
+  const activeOfferId = data?.activeOfferId || offers[0].id;
+  const activeOffer = offers.find(o => o.id === activeOfferId) || offers[0];
+  const isEnabled = activeOffer.enabled !== false;
 
   // In Public Mode: completely hide if deactivated by admin
   if (!isAdmin && !isEnabled) {
     return null;
   }
 
-  const handleFieldEdit = (field, val) => {
-    if (onChange) {
-      onChange('challengeOffer', field, sanitizeEditText(val));
-    }
+  // Update helper that syncs both the active offer inside offers[] and flat top-level keys
+  const commitOfferChanges = (updatedOffers, newActiveId = activeOfferId) => {
+    if (!onChange) return;
+    const targetOffer = updatedOffers.find(o => o.id === newActiveId) || updatedOffers[0];
+    onChange('challengeOffer', {
+      ...targetOffer,
+      offers: updatedOffers,
+      activeOfferId: newActiveId
+    });
   };
 
-  const handleInclusionEdit = (index, subField, val) => {
-    if (onChange) {
-      const updatedInclusions = [...(offer.inclusions || DEFAULT_OFFER_DATA.inclusions)];
-      if (updatedInclusions[index]) {
-        updatedInclusions[index] = {
-          ...updatedInclusions[index],
-          [subField]: sanitizeEditText(val)
-        };
-        onChange('challengeOffer', 'inclusions', updatedInclusions);
-      }
+  const handleUpdateActiveOfferField = (field, val) => {
+    const cleanVal = typeof val === 'string' ? sanitizeEditText(val) : val;
+    const updatedOffers = offers.map(o => 
+      o.id === activeOffer.id ? { ...o, [field]: cleanVal } : o
+    );
+    commitOfferChanges(updatedOffers);
+  };
+
+  const handleSwitchOffer = (targetId) => {
+    if (!onChange) return;
+    const targetOffer = offers.find(o => o.id === targetId) || offers[0];
+    onChange('challengeOffer', {
+      ...targetOffer,
+      offers,
+      activeOfferId: targetId
+    });
+  };
+
+  const handleCreateNewOffer = () => {
+    const offerName = prompt('Enter a name for the new offer:', 'New Training Offer');
+    if (!offerName || !offerName.trim()) return;
+
+    const newId = `offer_${Date.now()}`;
+    const newOffer = {
+      ...DEFAULT_OFFER_TEMPLATE,
+      id: newId,
+      name: offerName.trim(),
+      title: offerName.trim().toUpperCase(),
+      enabled: true
+    };
+
+    const updatedOffers = [...offers, newOffer];
+    commitOfferChanges(updatedOffers, newId);
+  };
+
+  const handleDuplicateOffer = () => {
+    const newId = `offer_${Date.now()}`;
+    const duplicateOffer = {
+      ...activeOffer,
+      id: newId,
+      name: `${activeOffer.name || 'Offer'} (Copy)`
+    };
+
+    const updatedOffers = [...offers, duplicateOffer];
+    commitOfferChanges(updatedOffers, newId);
+  };
+
+  const handleDeleteOffer = () => {
+    if (offers.length <= 1) {
+      alert('You must have at least one offer in your system.');
+      return;
     }
+    if (!confirm(`Are you sure you want to delete "${activeOffer.name}"?`)) return;
+
+    const remainingOffers = offers.filter(o => o.id !== activeOffer.id);
+    commitOfferChanges(remainingOffers, remainingOffers[0].id);
+  };
+
+  const handleRenameOffer = () => {
+    const newName = prompt('Enter a new name for this offer:', activeOffer.name || '');
+    if (!newName || !newName.trim()) return;
+    handleUpdateActiveOfferField('name', newName.trim());
   };
 
   const handleToggleEnabled = () => {
-    if (onChange) {
-      onChange('challengeOffer', 'enabled', !isEnabled);
-    }
+    handleUpdateActiveOfferField('enabled', !isEnabled);
   };
 
-  const ctaHref = getAdminHref(offer.ctaUrl || '/offers/6-week-challenge', isAdmin);
+  // Inclusions Management (Add, Delete, Edit, Cycle Icon)
+  const handleAddInclusion = () => {
+    const currentInclusions = Array.isArray(activeOffer.inclusions) ? activeOffer.inclusions : [];
+    const newInclusion = {
+      icon: 'sports_mma',
+      title: 'New Included Benefit',
+      desc: 'Describe what is included in this offer...'
+    };
+    handleUpdateActiveOfferField('inclusions', [...currentInclusions, newInclusion]);
+  };
+
+  const handleDeleteInclusion = (indexToDelete) => {
+    const currentInclusions = Array.isArray(activeOffer.inclusions) ? activeOffer.inclusions : [];
+    const updatedInclusions = currentInclusions.filter((_, idx) => idx !== indexToDelete);
+    handleUpdateActiveOfferField('inclusions', updatedInclusions);
+  };
+
+  const handleInclusionFieldEdit = (index, subField, val) => {
+    const currentInclusions = Array.isArray(activeOffer.inclusions) ? activeOffer.inclusions : [];
+    const updatedInclusions = currentInclusions.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, [subField]: sanitizeEditText(val) };
+      }
+      return item;
+    });
+    handleUpdateActiveOfferField('inclusions', updatedInclusions);
+  };
+
+  const handleCycleIcon = (index) => {
+    if (!isAdmin) return;
+    const currentInclusions = Array.isArray(activeOffer.inclusions) ? activeOffer.inclusions : [];
+    const currentIcon = currentInclusions[index]?.icon || 'sports_mma';
+    const currentPos = ATHLETIC_ICONS.indexOf(currentIcon);
+    const nextIcon = ATHLETIC_ICONS[(currentPos + 1) % ATHLETIC_ICONS.length];
+    
+    const updatedInclusions = currentInclusions.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, icon: nextIcon };
+      }
+      return item;
+    });
+    handleUpdateActiveOfferField('inclusions', updatedInclusions);
+  };
+
+  const ctaHref = getAdminHref(activeOffer.ctaUrl || '/offers/6-week-challenge', isAdmin);
 
   return (
     <section 
@@ -96,26 +222,73 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
 
       <div className="container max-w-7xl mx-auto relative z-10 space-y-8">
         
-        {/* Admin Controls Toolbar */}
+        {/* Admin Controls Toolbar (Multi-Offer Manager & Switcher) */}
         {isAdmin && (
-          <div className="bg-surface-container-high/95 border-2 border-primary-container rounded-xl p-3.5 shadow-2xl space-y-2.5 font-label-mono text-xs backdrop-blur-md">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="bg-surface-container-high/95 border-2 border-primary-container rounded-xl p-4 shadow-2xl space-y-3 font-label-mono text-xs backdrop-blur-md">
+            
+            {/* Top Row: Offer Selector & Offer Actions */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 border-b border-outline-variant/60 pb-3">
+              
+              {/* Offer Selector Dropdown */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-primary-container font-bold text-sm">⚙️ 6-Week Challenge Offer Controls:</span>
-                <span className={`px-2.5 py-1 rounded-full font-bold uppercase tracking-wider text-[10px] ${
-                  isEnabled 
-                    ? 'bg-primary-container/20 text-primary-container border border-primary-container/60' 
-                    : 'bg-danger-red/20 text-danger-red border border-danger-red/60'
-                }`}>
-                  {isEnabled ? '🟢 Live on Homepage' : '🔴 Inactive / Hidden'}
-                </span>
+                <span className="text-primary-container font-bold text-sm">🎯 Active Homepage Offer:</span>
+                <select
+                  value={activeOffer.id}
+                  onChange={(e) => handleSwitchOffer(e.target.value)}
+                  className="bg-background border border-primary-container text-white px-3 py-1.5 rounded font-bold cursor-pointer text-xs focus:ring-1 focus:ring-primary-container"
+                >
+                  {offers.map(off => (
+                    <option key={off.id} value={off.id}>
+                      {off.name || off.title} {off.enabled ? '🟢 (Live)' : '🔴 (Hidden)'}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="button"
+                  onClick={handleRenameOffer}
+                  className="bg-surface-container border border-outline-variant hover:border-primary-container text-white px-2 py-1.5 rounded font-bold cursor-pointer"
+                  title="Rename current offer"
+                >
+                  ✏️ Rename
+                </button>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Offer Actions: New, Duplicate, Delete, Activate/Deactivate */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleCreateNewOffer}
+                  className="bg-primary-container text-black px-3 py-1.5 rounded font-bold hover:bg-white transition-all cursor-pointer shadow-md"
+                  title="Create a brand new offer preset"
+                >
+                  ➕ New Offer
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDuplicateOffer}
+                  className="bg-surface-container border border-outline-variant hover:border-primary-container text-white px-2.5 py-1.5 rounded font-bold cursor-pointer"
+                  title="Duplicate this offer"
+                >
+                  📋 Duplicate
+                </button>
+
+                {offers.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={handleDeleteOffer}
+                    className="bg-danger-red/80 hover:bg-danger-red text-white px-2.5 py-1.5 rounded font-bold cursor-pointer"
+                    title="Delete this offer"
+                  >
+                    🗑️ Delete Offer
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={handleToggleEnabled}
-                  className={`px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded font-bold transition-all cursor-pointer ${
                     isEnabled 
                       ? 'bg-danger-red text-white hover:bg-red-700 shadow-md' 
                       : 'bg-primary-container text-black hover:bg-white shadow-md'
@@ -124,24 +297,48 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                 >
                   {isEnabled ? '🙈 Deactivate Offer' : '👁️ Activate Offer'}
                 </button>
-
-                <label className="bg-surface-container text-white px-3 py-1.5 rounded-lg border border-outline-variant hover:border-primary-container cursor-pointer font-bold inline-flex items-center gap-1.5">
-                  📷 Change Photo
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*" 
-                    onChange={(e) => onImageUpload && onImageUpload(e, 'challengeOffer', 'image')} 
-                  />
-                </label>
               </div>
+
+            </div>
+
+            {/* Bottom Row: Status Indicator & Photo Change */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-on-surface-variant text-[11px]">Status:</span>
+                <span className={`px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider text-[10px] ${
+                  isEnabled 
+                    ? 'bg-primary-container/20 text-primary-container border border-primary-container/60' 
+                    : 'bg-danger-red/20 text-danger-red border border-danger-red/60'
+                }`}>
+                  {isEnabled ? '🟢 Live on Homepage' : '🔴 Inactive / Hidden'}
+                </span>
+                <span className="text-on-surface-variant text-[11px] hidden sm:inline">&bull; Offer ID: <code className="text-primary-container">{activeOffer.id}</code></span>
+              </div>
+
+              <label className="bg-surface-container text-white px-3 py-1 rounded border border-outline-variant hover:border-primary-container cursor-pointer font-bold inline-flex items-center gap-1.5 text-[11px]">
+                📷 Change Offer Photo
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*" 
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      handleUpdateActiveOfferField('image', reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }} 
+                />
+              </label>
             </div>
 
             {!isEnabled && (
               <div className="bg-yellow-950/40 border border-yellow-500/60 text-yellow-300 p-2.5 rounded text-xs flex items-center gap-2">
                 <span className="text-base">⚠️</span>
                 <span>
-                  <strong>ADMIN PREVIEW:</strong> This 6-Week Challenge offer section is currently <strong>DEACTIVATED</strong>. Public visitors cannot see it. Click <strong>&quot;Activate Offer&quot;</strong> above to publish it to your live homepage.
+                  <strong>ADMIN PREVIEW:</strong> The <strong>&quot;{activeOffer.name}&quot;</strong> offer is currently <strong>DEACTIVATED</strong>. Public visitors cannot see this section. Click <strong>&quot;Activate Offer&quot;</strong> above to publish it to your live homepage.
                 </span>
               </div>
             )}
@@ -159,20 +356,20 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
               <span 
                 contentEditable={isAdmin}
                 suppressContentEditableWarning={true}
-                onBlur={(e) => handleFieldEdit('badge', e.target.innerText)}
+                onBlur={(e) => handleUpdateActiveOfferField('badge', e.target.innerText)}
                 className="bg-primary-container/15 text-primary-container border border-primary-container/60 font-label-mono text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm"
               >
-                {offer.badge}
+                {activeOffer.badge}
               </span>
 
               <span 
                 contentEditable={isAdmin}
                 suppressContentEditableWarning={true}
-                onBlur={(e) => handleFieldEdit('spotsText', e.target.innerText)}
+                onBlur={(e) => handleUpdateActiveOfferField('spotsText', e.target.innerText)}
                 className="bg-surface-container-high border border-outline-variant text-on-surface-variant font-label-mono text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full inline-flex items-center gap-1.5"
               >
                 <span className="w-2 h-2 rounded-full bg-danger-red animate-pulse"></span>
-                {offer.spotsText}
+                {activeOffer.spotsText}
               </span>
             </div>
 
@@ -180,52 +377,87 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
             <h2 
               contentEditable={isAdmin}
               suppressContentEditableWarning={true}
-              onBlur={(e) => handleFieldEdit('title', e.target.innerText)}
+              onBlur={(e) => handleUpdateActiveOfferField('title', e.target.innerText)}
               className="font-display-xl text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-white leading-tight"
             >
-              {offer.title}
+              {activeOffer.title}
             </h2>
 
             {/* Subtitle / Narrative */}
             <p 
               contentEditable={isAdmin}
               suppressContentEditableWarning={true}
-              onBlur={(e) => handleFieldEdit('subtitle', e.target.innerText)}
+              onBlur={(e) => handleUpdateActiveOfferField('subtitle', e.target.innerText)}
               className="text-on-surface-variant font-body-lg text-base sm:text-lg leading-relaxed max-w-2xl"
             >
-              {offer.subtitle}
+              {activeOffer.subtitle}
             </p>
 
-            {/* 4 Inclusions Quick-Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              {(offer.inclusions || DEFAULT_OFFER_DATA.inclusions).map((inc, iIdx) => (
-                <div 
-                  key={iIdx} 
-                  className="bg-surface-container-low/90 border border-outline-variant/60 hover:border-primary-container/60 transition-all rounded-xl p-3.5 flex items-start gap-3 shadow-md"
-                >
-                  <span className="material-symbols-outlined text-primary-container text-2xl shrink-0 mt-0.5">
-                    {inc.icon || 'check_circle'}
-                  </span>
-                  <div className="space-y-0.5 min-w-0 flex-1">
-                    <h4 
-                      contentEditable={isAdmin}
-                      suppressContentEditableWarning={true}
-                      onBlur={(e) => handleInclusionEdit(iIdx, 'title', e.target.innerText)}
-                      className="font-headline-sm font-bold text-white text-sm sm:text-base leading-snug uppercase tracking-wide"
-                    >
-                      {inc.title}
-                    </h4>
-                    <p 
-                      contentEditable={isAdmin}
-                      suppressContentEditableWarning={true}
-                      onBlur={(e) => handleInclusionEdit(iIdx, 'desc', e.target.innerText)}
-                      className="text-on-surface-variant text-xs leading-relaxed"
-                    >
-                      {inc.desc}
-                    </p>
+            {/* Inclusions Section with Add/Delete Inclusions Controls */}
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="font-label-mono text-[11px] uppercase tracking-wider text-primary-container font-bold">
+                  WHAT IS INCLUDED:
+                </span>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={handleAddInclusion}
+                    className="bg-primary-container/20 text-primary-container border border-primary-container/60 px-2.5 py-1 rounded text-[11px] font-label-mono font-bold hover:bg-primary-container hover:text-black transition-all cursor-pointer inline-flex items-center gap-1"
+                  >
+                    ➕ Add Item
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {(activeOffer.inclusions || []).map((inc, iIdx) => (
+                  <div 
+                    key={iIdx} 
+                    className="bg-surface-container-low/90 border border-outline-variant/60 hover:border-primary-container/60 transition-all rounded-xl p-3.5 flex items-start justify-between gap-3 shadow-md relative group"
+                  >
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      <span 
+                        onClick={() => handleCycleIcon(iIdx)}
+                        title={isAdmin ? "Click to change icon" : ""}
+                        className={`material-symbols-outlined text-primary-container text-2xl shrink-0 mt-0.5 ${isAdmin ? 'cursor-pointer hover:scale-110 transition-transform' : ''}`}
+                      >
+                        {inc.icon || 'sports_mma'}
+                      </span>
+                      <div className="space-y-0.5 min-w-0 flex-1">
+                        <h4 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => handleInclusionFieldEdit(iIdx, 'title', e.target.innerText)}
+                          className="font-headline-sm font-bold text-white text-sm sm:text-base leading-snug uppercase tracking-wide"
+                        >
+                          {inc.title}
+                        </h4>
+                        <p 
+                          contentEditable={isAdmin}
+                          suppressContentEditableWarning={true}
+                          onBlur={(e) => handleInclusionFieldEdit(iIdx, 'desc', e.target.innerText)}
+                          className="text-on-surface-variant text-xs leading-relaxed"
+                        >
+                          {inc.desc}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Admin Delete Item Button */}
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteInclusion(iIdx)}
+                        className="text-danger-red hover:text-white hover:bg-danger-red/80 px-1.5 py-0.5 rounded text-xs shrink-0 cursor-pointer transition-colors"
+                        title="Delete this inclusion item"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {/* Total Value & Guarantee Box */}
@@ -238,10 +470,10 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                   <span 
                     contentEditable={isAdmin}
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => handleFieldEdit('totalValue', e.target.innerText)}
+                    onBlur={(e) => handleUpdateActiveOfferField('totalValue', e.target.innerText)}
                     className="font-display-xl text-3xl sm:text-4xl text-white font-extrabold tracking-tight"
                   >
-                    {offer.totalValue || '$1498'}
+                    {activeOffer.totalValue || '$1498'}
                   </span>
                 </div>
               </div>
@@ -253,10 +485,10 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                 <p 
                   contentEditable={isAdmin}
                   suppressContentEditableWarning={true}
-                  onBlur={(e) => handleFieldEdit('dealHighlight', e.target.innerText)}
+                  onBlur={(e) => handleUpdateActiveOfferField('dealHighlight', e.target.innerText)}
                   className="text-on-surface-variant text-xs leading-relaxed"
                 >
-                  {offer.dealHighlight || 'Complete 3 simple requirements and get 100% of your $500 deposit refunded!'}
+                  {activeOffer.dealHighlight || 'Complete 3 simple requirements and get 100% of your $500 deposit refunded!'}
                 </p>
               </div>
             </div>
@@ -271,9 +503,9 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                   <span 
                     contentEditable={isAdmin}
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => handleFieldEdit('ctaText', e.target.innerText)}
+                    onBlur={(e) => handleUpdateActiveOfferField('ctaText', e.target.innerText)}
                   >
-                    {offer.ctaText}
+                    {activeOffer.ctaText}
                   </span>
                   <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
                     arrow_forward
@@ -290,8 +522,8 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
               
               {/* Challenge Photo */}
               <img 
-                src={offer.image || DEFAULT_OFFER_DATA.image} 
-                alt="Redemption 6-Week Challenge Training" 
+                src={activeOffer.image || DEFAULT_OFFER_TEMPLATE.image} 
+                alt={`${activeOffer.name || 'Redemption Challenge'} Training`} 
                 className="w-full h-80 sm:h-96 lg:h-[480px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
 
@@ -303,19 +535,6 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                 INTAKE OPEN
               </div>
 
-              {/* Admin Photo Upload Button Trigger */}
-              {isAdmin && (
-                <label className="absolute top-4 left-4 bg-primary-container text-black font-label-mono text-xs px-3 py-1.5 rounded font-bold uppercase tracking-wider cursor-pointer hover:bg-white transition-all shadow-lg flex items-center gap-1 z-30">
-                  📷 Change Image
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*" 
-                    onChange={(e) => onImageUpload && onImageUpload(e, 'challengeOffer', 'image')} 
-                  />
-                </label>
-              )}
-
               {/* Bottom Card Callout */}
               <div className="absolute bottom-0 inset-x-0 p-6 space-y-2 text-left bg-gradient-to-t from-black via-black/90 to-transparent">
                 <div className="flex items-center gap-2">
@@ -323,27 +542,27 @@ export default function ChallengeOffer({ data, onChange, onImageUpload, isAdmin 
                   <span 
                     contentEditable={isAdmin}
                     suppressContentEditableWarning={true}
-                    onBlur={(e) => handleFieldEdit('imageTag', e.target.innerText)}
+                    onBlur={(e) => handleUpdateActiveOfferField('imageTag', e.target.innerText)}
                     className="font-label-mono text-xs uppercase tracking-widest text-primary-container font-bold"
                   >
-                    {offer.imageTag || 'Test your skills'}
+                    {activeOffer.imageTag || 'Test your skills'}
                   </span>
                 </div>
                 <h3 
                   contentEditable={isAdmin}
                   suppressContentEditableWarning={true}
-                  onBlur={(e) => handleFieldEdit('imageTitle', e.target.innerText)}
+                  onBlur={(e) => handleUpdateActiveOfferField('imageTitle', e.target.innerText)}
                   className="text-white font-headline-sm text-base sm:text-lg uppercase tracking-wide leading-snug"
                 >
-                  {offer.imageTitle || 'Exhibition Fight Night Ticket'}
+                  {activeOffer.imageTitle || 'Exhibition Fight Night Ticket'}
                 </h3>
                 <p 
                   contentEditable={isAdmin}
                   suppressContentEditableWarning={true}
-                  onBlur={(e) => handleFieldEdit('imageDesc', e.target.innerText)}
+                  onBlur={(e) => handleUpdateActiveOfferField('imageDesc', e.target.innerText)}
                   className="text-on-surface-variant text-xs font-body-md leading-relaxed"
                 >
-                  {offer.imageDesc || 'Test your skills in a safe, 100% padded, beginner-friendly exhibition match'}
+                  {activeOffer.imageDesc || 'Test your skills in a safe, 100% padded, beginner-friendly exhibition match'}
                 </p>
               </div>
 
