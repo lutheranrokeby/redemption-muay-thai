@@ -7,16 +7,6 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
   useEffect(() => {
     if (!isOpen) return;
     setIframeLoading(true);
-
-    const scriptId = 'ghl-group-script';
-    let script = document.getElementById(scriptId);
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://link.msgsndr.com/js/form_embed.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -34,7 +24,7 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
       ></div>
 
       {/* DESKTOP RIGHT-HAND DRAWER / MOBILE FULL-SCREEN TAKEOVER */}
-      <div className="fixed inset-0 md:inset-y-0 md:left-auto md:right-0 z-[260] w-full md:max-w-2xl lg:max-w-3xl bg-surface-container-low border-l-0 md:border-l-2 md:border-outline-variant flex flex-col h-full shadow-2xl transition-transform duration-300">
+      <div className="fixed inset-0 md:inset-y-0 md:left-auto md:right-0 z-[260] w-full md:max-w-2xl lg:max-w-3xl bg-surface-container-low border-l-0 md:border-l-2 md:border-outline-variant flex flex-col h-full max-h-screen shadow-2xl transition-transform duration-300 overflow-hidden">
         
         {/* Drawer Header */}
         <div className="bg-surface-container-high border-b border-outline-variant px-4 py-4 sm:px-6 flex items-start justify-between gap-4 shrink-0">
@@ -72,7 +62,19 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
         </div>
 
         {/* Drawer Body: Embedded Widget + Athletic Loading Skeleton */}
-        <div className="flex-1 flex-grow w-full relative min-h-0 bg-background">
+        <div className="flex-1 flex-grow w-full h-full relative min-h-0 bg-background overflow-hidden">
+          <style>{`
+            #3pKErThGxL28ZK4Ir8if_1788231703501 {
+              width: 100% !important;
+              height: 100% !important;
+              max-height: 100% !important;
+              position: absolute !important;
+              top: 0 !important;
+              left: 0 !important;
+              right: 0 !important;
+              bottom: 0 !important;
+            }
+          `}</style>
           
           {/* Loading Skeleton & Spinner Overlay */}
           {iframeLoading && (
@@ -112,10 +114,11 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
             src="https://api.leadconnectorhq.com/widget/group/3pKErThGxL28ZK4Ir8if"
             allow="payment"
             onLoad={() => setIframeLoading(false)}
-            className="w-full h-full border-0 block"
-            style={{ width: '100%', height: '100%', border: 'none' }}
+            className="absolute inset-0 w-full h-full border-0 block"
+            style={{ width: '100%', height: '100%', maxHeight: '100%', border: 'none' }}
             id="3pKErThGxL28ZK4Ir8if_1788231703501"
             title="Redemption Muay Thai Trial Class Booking"
+            scrolling="yes"
           ></iframe>
 
         </div>
