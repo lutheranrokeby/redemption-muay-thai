@@ -13,6 +13,7 @@ import { getSiteContent, saveSiteContent, uploadImageFile } from './lib/supabase
 
 import defaultContent from '../content.json';
 import { DEFAULT_KIDS_MEMBERSHIPS } from './constants/defaultKidsMemberships';
+import { DEFAULT_RECOVERY_MEMBERSHIPS } from './constants/defaultRecoveryMemberships';
 
 const rawEnvPass = import.meta.env.VITE_ADMIN_PASSWORD || '';
 const ADMIN_PASSWORD = rawEnvPass.replace(/^["']|["']$/g, '').trim();
@@ -44,6 +45,12 @@ export default function App() {
           ? defaultContent.kidsMemberships
           : DEFAULT_KIDS_MEMBERSHIPS;
 
+      const recoveryList = (Array.isArray(data?.recoveryMemberships) && data.recoveryMemberships.length > 0)
+        ? data.recoveryMemberships
+        : (Array.isArray(defaultContent.recoveryMemberships) && defaultContent.recoveryMemberships.length > 0)
+          ? defaultContent.recoveryMemberships
+          : DEFAULT_RECOVERY_MEMBERSHIPS;
+
       const timetableList = (Array.isArray(data?.timetableData) && data.timetableData.length > 0)
         ? data.timetableData
         : (Array.isArray(defaultContent.timetableData) && defaultContent.timetableData.length > 0)
@@ -58,13 +65,15 @@ export default function App() {
           ...(data?.challengeOffer || {})
         },
         kidsMemberships: kidsList,
+        recoveryMemberships: recoveryList,
         timetableData: timetableList
       });
     } catch (err) {
       console.error('Failed to load site content', err);
       setContentData({
         ...defaultContent,
-        kidsMemberships: DEFAULT_KIDS_MEMBERSHIPS
+        kidsMemberships: DEFAULT_KIDS_MEMBERSHIPS,
+        recoveryMemberships: DEFAULT_RECOVERY_MEMBERSHIPS
       });
     }
   };
@@ -100,6 +109,8 @@ export default function App() {
       if (!Array.isArray(currentList) || currentList.length === 0) {
         if (listKey === 'kidsMemberships') {
           currentList = [...DEFAULT_KIDS_MEMBERSHIPS];
+        } else if (listKey === 'recoveryMemberships') {
+          currentList = [...DEFAULT_RECOVERY_MEMBERSHIPS];
         } else if (Array.isArray(defaultContent[listKey]) && defaultContent[listKey].length > 0) {
           currentList = [...defaultContent[listKey]];
         } else {
@@ -123,6 +134,8 @@ export default function App() {
       let copy = Array.isArray(list) ? [...list] : [];
       if (copy.length === 0 && listKey === 'kidsMemberships') {
         copy = [...DEFAULT_KIDS_MEMBERSHIPS];
+      } else if (copy.length === 0 && listKey === 'recoveryMemberships') {
+        copy = [...DEFAULT_RECOVERY_MEMBERSHIPS];
       }
       if (index >= 0 && index < copy.length) {
         copy.splice(index, 1);
@@ -136,6 +149,8 @@ export default function App() {
       let copy = Array.isArray(list) ? [...list] : [];
       if (copy.length === 0 && listKey === 'kidsMemberships') {
         copy = [...DEFAULT_KIDS_MEMBERSHIPS];
+      } else if (copy.length === 0 && listKey === 'recoveryMemberships') {
+        copy = [...DEFAULT_RECOVERY_MEMBERSHIPS];
       }
       if (index >= 0 && index < copy.length) {
         copy[index] = { ...copy[index], [field]: value };
@@ -355,6 +370,9 @@ export default function App() {
           onDeleteKidsMembership={(idx) => handleDeleteListItem('kidsMemberships', idx, 'Are you sure you want to delete this kids membership plan?')}
           onKidsMembershipChange={(idx, fld, val) => handleUpdateListItem('kidsMemberships', idx, fld, val)}
           onUpdateKidsMembershipsList={handleUpdateKidsMembershipsList}
+          onAddRecoveryMembership={(item) => handleAddListItem('recoveryMemberships', item)}
+          onDeleteRecoveryMembership={(idx) => handleDeleteListItem('recoveryMemberships', idx, 'Are you sure you want to delete this recovery membership plan?')}
+          onRecoveryMembershipChange={(idx, fld, val) => handleUpdateListItem('recoveryMemberships', idx, fld, val)}
           onPageFieldChange={handleFieldChange}
           onImageUpload={handleImageUpload}
           onOpenBookingModal={openModal}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { DEFAULT_KIDS_MEMBERSHIPS } from '../constants/defaultKidsMemberships';
+import { DEFAULT_RECOVERY_MEMBERSHIPS } from '../constants/defaultRecoveryMemberships';
 
 export default function MembershipsPage({ 
   data, 
@@ -12,6 +13,9 @@ export default function MembershipsPage({
   onDeleteKidsMembership,
   onKidsMembershipChange,
   onUpdateKidsMembershipsList,
+  onAddRecoveryMembership,
+  onDeleteRecoveryMembership,
+  onRecoveryMembershipChange,
   onPageFieldChange, 
   onImageUpload, 
   onOpenBookingModal, 
@@ -51,6 +55,10 @@ export default function MembershipsPage({
   const kidsMemberships = (Array.isArray(data?.kidsMemberships) && data.kidsMemberships.length > 0
     ? data.kidsMemberships 
     : DEFAULT_KIDS_MEMBERSHIPS).filter(Boolean);
+
+  const recoveryMemberships = (Array.isArray(data?.recoveryMemberships) && data.recoveryMemberships.length > 0
+    ? data.recoveryMemberships 
+    : DEFAULT_RECOVERY_MEMBERSHIPS).filter(Boolean);
 
   const faqList = pageMeta.faqItems || [
     { q: 'Are there lock-in contracts?', a: 'No lock-in contracts. We believe in providing authentic value and flexibility so you can pause or adjust your membership anytime with 2 weeks notice.' },
@@ -106,6 +114,24 @@ export default function MembershipsPage({
     const updatedFeatures = plan.features.filter((_, idx) => idx !== fIndex);
     if (onKidsMembershipChange) {
       onKidsMembershipChange(planIndex, 'features', updatedFeatures);
+    }
+  };
+
+  const handleAddRecoveryFeature = (planIndex, directPlan) => {
+    const plan = directPlan || recoveryMemberships[planIndex];
+    if (!plan) return;
+    const updatedFeatures = [...(plan.features || []), 'New recovery benefit'];
+    if (onRecoveryMembershipChange) {
+      onRecoveryMembershipChange(planIndex, 'features', updatedFeatures);
+    }
+  };
+
+  const handleRemoveRecoveryFeature = (planIndex, fIndex, directPlan) => {
+    const plan = directPlan || recoveryMemberships[planIndex];
+    if (!plan || !Array.isArray(plan.features)) return;
+    const updatedFeatures = plan.features.filter((_, idx) => idx !== fIndex);
+    if (onRecoveryMembershipChange) {
+      onRecoveryMembershipChange(planIndex, 'features', updatedFeatures);
     }
   };
 
@@ -215,6 +241,17 @@ export default function MembershipsPage({
                 className="btn-clip bg-primary-container text-black font-button-text px-6 py-2.5 uppercase tracking-widest hover:bg-white transition-colors shadow-xl text-xs font-bold"
               >
                 ➕ Add Membership Plan
+              </button>
+
+              <button 
+                onClick={() => handleHeaderChange('hideRecoverySection', !pageMeta.hideRecoverySection)}
+                className={`font-label-mono text-xs px-4 py-2 rounded font-bold transition-all border ${
+                  pageMeta.hideRecoverySection 
+                    ? 'bg-surface-container-high text-on-surface-variant border-outline-variant' 
+                    : 'bg-primary-container/20 text-primary-container border-primary-container/60'
+                }`}
+              >
+                {pageMeta.hideRecoverySection ? '🙈 Recovery Section: Hidden' : '👁️ Recovery Section: Visible'}
               </button>
 
               <button 
@@ -439,6 +476,33 @@ export default function MembershipsPage({
                         >{plan.ctaText || 'SELECT MEMBERSHIP →'}</span>
                       </a>
                     </div>
+                  )}
+
+                  {/* Bright Blue Box at the bottom of the Main Membership */}
+                  {isFeatured && (
+                    <a
+                      href="#recovery-membership"
+                      onClick={(e) => {
+                        const el = document.getElementById('recovery-membership');
+                        if (el) {
+                          e.preventDefault();
+                          el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="block bg-primary-container text-black rounded-xl p-3 sm:p-3.5 text-center shadow-[0_0_25px_rgba(0,229,255,0.35)] border-2 border-black/15 transition-all hover:bg-white hover:scale-[1.01] cursor-pointer mt-3 group/rec"
+                      title="View Redemption Recovery details"
+                    >
+                      <div className="inline-flex items-center gap-1 font-label-mono text-[10px] font-black uppercase tracking-widest bg-black text-primary-container px-2.5 py-0.5 rounded-full mb-1 shadow-sm">
+                        <span className="material-symbols-outlined text-xs font-bold">check_circle</span>
+                        <span>INCLUDED</span>
+                      </div>
+                      <div className="font-headline-md text-base sm:text-lg font-black uppercase tracking-wide text-black leading-tight group-hover/rec:text-black">
+                        REDEMPTION RECOVERY
+                      </div>
+                      <p className="text-[11px] font-body-md font-semibold text-black/85 mt-0.5 leading-snug">
+                        Infrared Sauna • Compression Sleeves • Massage Gun
+                      </p>
+                    </a>
                   )}
 
                 </div>
@@ -719,6 +783,243 @@ export default function MembershipsPage({
                                     contentEditable={isAdmin}
                                     suppressContentEditableWarning={true}
                                     onBlur={(e) => onKidsMembershipChange(originalIndex, 'ctaText', e.target.innerText)}
+                                  >{plan.ctaText || 'SELECT PLAN →'}</span>
+                                </a>
+                              </div>
+                            )}
+                          </div>
+
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* RECOVERY MEMBERSHIP SECTION (Desktop: Title on Left, Options on Right) */}
+        {(!pageMeta.hideRecoverySection || isAdmin) && (
+          <div id="recovery-membership" className={`pt-12 border-t border-outline-variant/60 ${pageMeta.hideRecoverySection ? 'opacity-40 border-dashed border-primary-container p-4 rounded-xl' : ''}`}>
+            
+            <div className="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
+              
+              {/* Left Column: Title, Subtitle, Tagline & Admin Controls (Sticky on Desktop) */}
+              <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-4 mb-8 lg:mb-0">
+                <span 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('recoveryTagline', e.target.innerText)}
+                  className="font-label-mono text-xs text-primary-container uppercase tracking-widest font-bold block"
+                >
+                  {pageMeta.recoveryTagline || "RECOVERY & WELLNESS"}
+                </span>
+
+                <h2 className="font-display-xl text-4xl sm:text-5xl lg:text-6xl uppercase text-white leading-none tracking-tight">
+                  <span 
+                    contentEditable={isAdmin}
+                    suppressContentEditableWarning={true}
+                    onBlur={(e) => handleHeaderChange('recoveryTitle', e.target.innerText)}
+                  >{pageMeta.recoveryTitle || "Recovery Membership"}</span>
+                </h2>
+
+                <p 
+                  contentEditable={isAdmin}
+                  suppressContentEditableWarning={true}
+                  onBlur={(e) => handleHeaderChange('recoverySubtitle', e.target.innerText)}
+                  className="text-on-surface-variant font-body-lg text-sm sm:text-base leading-relaxed pt-1"
+                >
+                  {pageMeta.recoverySubtitle || "Dedicated access to Redemption's recovery facility to optimize muscle repair, reduce inflammation, and enhance overall athletic longevity."}
+                </p>
+
+                <div className="pt-2">
+                  <p className="font-label-mono text-xs text-on-surface-variant/80 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary-container inline-block"></span>
+                    No lock-in contracts • Cancel anytime
+                  </p>
+                </div>
+
+                {isAdmin && (
+                  <div className="pt-3 flex flex-wrap gap-2.5">
+                    <button 
+                      onClick={() => handleHeaderChange('hideRecoverySection', !pageMeta.hideRecoverySection)}
+                      className={`font-label-mono text-xs px-3 py-1.5 rounded font-bold transition-all border ${
+                        pageMeta.hideRecoverySection 
+                          ? 'bg-surface-container-high text-on-surface-variant border-outline-variant' 
+                          : 'bg-primary-container/20 text-primary-container border-primary-container/60'
+                      }`}
+                    >
+                      {pageMeta.hideRecoverySection ? '🙈 Hidden' : '👁️ Visible'}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column: The Recovery Membership Options */}
+              <div className="lg:col-span-8 space-y-5">
+                {[...recoveryMemberships]
+                  .filter(Boolean)
+                  .map((plan, originalIndex) => {
+                    if (!plan) return null;
+                    const targetUrl = plan.ctaUrl || '/contact';
+                    const isExternalLink = targetUrl.startsWith('http://') || targetUrl.startsWith('https://');
+                    const hideCta = Boolean(plan.hideCta);
+
+                    return (
+                      <div 
+                        key={plan.id || originalIndex}
+                        className="relative bg-surface-container-low border border-outline-variant hover:border-primary-container/60 transition-all duration-300 rounded-2xl p-6 sm:p-7 shadow-xl group"
+                      >
+                        {/* Admin Controls Toolbar (Hide CTA) */}
+                        {isAdmin && (
+                          <div className="absolute top-3 right-3 flex items-center gap-1.5 z-30 bg-background/95 p-1 rounded border border-outline-variant text-[11px] font-label-mono">
+                            <button
+                              type="button"
+                              onClick={() => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'hideCta', !hideCta)}
+                              className={`px-2 py-0.5 rounded font-bold cursor-pointer ${hideCta ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary-container/20 text-primary-container'}`}
+                              title="Toggle CTA Button Visibility"
+                            >
+                              {hideCta ? '🙈 CTA Hidden' : '👁️ CTA Visible'}
+                            </button>
+                          </div>
+                        )}
+
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                          
+                          {/* Left Info: Title, Description, Features (NO "Most popular" or "recommended", etc tags!) */}
+                          <div className="space-y-3 flex-grow">
+                            <h3 
+                              contentEditable={isAdmin}
+                              suppressContentEditableWarning={true}
+                              onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'title', e.target.innerText)}
+                              className="font-headline-lg uppercase tracking-wide text-2xl sm:text-3xl text-white"
+                            >
+                              {plan.title || "REDEMPTION RECOVERY"}
+                            </h3>
+
+                            <p 
+                              contentEditable={isAdmin}
+                              suppressContentEditableWarning={true}
+                              onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'description', e.target.innerText)}
+                              className="text-on-surface-variant text-xs sm:text-sm leading-relaxed max-w-xl"
+                            >
+                              {plan.description || "Dedicated access to Redemption's recovery facility to optimize muscle repair, reduce inflammation, and enhance overall athletic longevity."}
+                            </p>
+
+                            {/* Features List */}
+                            <div className="space-y-2 pt-1">
+                              <div className="flex items-center gap-3">
+                                <span className="font-label-mono text-[10px] uppercase tracking-wider text-primary-container font-bold">WHAT'S INCLUDED:</span>
+                                {isAdmin && (
+                                  <button 
+                                    type="button"
+                                    onClick={() => handleAddRecoveryFeature(originalIndex, plan)} 
+                                    className="text-[10px] font-label-mono text-primary hover:underline cursor-pointer"
+                                  >
+                                    ➕ Add Benefit
+                                  </button>
+                                )}
+                              </div>
+
+                              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                {Array.isArray(plan.features) && plan.features.map((feat, fIdx) => (
+                                  <li key={`${plan.id || originalIndex}-rfeat-${fIdx}`} className="flex items-start justify-between gap-2">
+                                    <div className="flex items-start gap-1.5">
+                                      <span className="material-symbols-outlined text-primary-container text-sm mt-0.5 shrink-0">check_circle</span>
+                                      <span 
+                                        contentEditable={isAdmin}
+                                        suppressContentEditableWarning={true}
+                                        onBlur={(e) => {
+                                          if (!Array.isArray(plan.features)) return;
+                                          const updated = [...plan.features];
+                                          if (fIdx < updated.length) {
+                                            updated[fIdx] = e.target.innerText;
+                                            if (onRecoveryMembershipChange) {
+                                              onRecoveryMembershipChange(originalIndex, 'features', updated);
+                                            }
+                                          }
+                                        }}
+                                        className="text-on-surface font-body-md"
+                                      >{feat}</span>
+                                    </div>
+
+                                    {isAdmin && (
+                                      <button 
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleRemoveRecoveryFeature(originalIndex, fIdx, plan);
+                                        }}
+                                        className="text-danger-red text-[10px] font-label-mono px-1 hover:underline shrink-0 cursor-pointer"
+                                        title="Delete benefit"
+                                      >✕</button>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* Right Action: Price Box & CTA Button */}
+                          <div className="shrink-0 md:w-56 md:border-l md:border-outline-variant/60 md:pl-6 pt-4 md:pt-0 border-t md:border-t-0 border-outline-variant/40 flex flex-col justify-center items-center md:items-end text-center md:text-right space-y-3">
+                            <div>
+                              <div className="flex items-baseline justify-center md:justify-end gap-1">
+                                <span 
+                                  contentEditable={isAdmin}
+                                  suppressContentEditableWarning={true}
+                                  onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'price', e.target.innerText)}
+                                  className="font-display-xl font-extrabold text-3xl sm:text-4xl text-white"
+                                >
+                                  {plan.price || "$33"}
+                                </span>
+                                <span 
+                                  contentEditable={isAdmin}
+                                  suppressContentEditableWarning={true}
+                                  onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'interval', e.target.innerText)}
+                                  className="font-label-mono text-xs text-on-surface-variant uppercase font-bold"
+                                >
+                                  /{plan.interval || 'per week'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Admin CTA URL Input */}
+                            {isAdmin && (
+                              <div className="w-full bg-background/90 border border-outline-variant p-1.5 rounded text-[10px] font-label-mono flex items-center justify-center gap-1">
+                                <span className="text-primary-container font-bold shrink-0">🔗 Link:</span>
+                                <span 
+                                  contentEditable={isAdmin}
+                                  suppressContentEditableWarning={true}
+                                  onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'ctaUrl', e.target.innerText.trim())}
+                                  className="text-white font-mono truncate max-w-[110px] focus:outline-none"
+                                >
+                                  {targetUrl}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Render CTA Button if NOT hidden */}
+                            {(!hideCta || isAdmin) && (
+                              <div className={`w-full ${hideCta && isAdmin ? 'opacity-40 border border-dashed border-primary-container rounded p-1' : ''}`}>
+                                <a 
+                                  href={targetUrl}
+                                  target={isExternalLink ? '_blank' : '_self'}
+                                  rel={isExternalLink ? 'noreferrer' : ''}
+                                  onClick={(e) => {
+                                    if (!isExternalLink && onOpenBookingModal) {
+                                      e.preventDefault();
+                                      onOpenBookingModal();
+                                    }
+                                  }}
+                                  className="w-full btn-clip font-button-text py-3 uppercase tracking-widest transition-all text-center font-bold text-xs sm:text-sm block cursor-pointer shadow-lg bg-surface-container-high text-white hover:bg-primary-container hover:text-black border border-outline-variant"
+                                >
+                                  <span 
+                                    contentEditable={isAdmin}
+                                    suppressContentEditableWarning={true}
+                                    onBlur={(e) => onRecoveryMembershipChange && onRecoveryMembershipChange(originalIndex, 'ctaText', e.target.innerText)}
                                   >{plan.ctaText || 'SELECT PLAN →'}</span>
                                 </a>
                               </div>

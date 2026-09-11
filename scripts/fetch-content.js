@@ -46,6 +46,9 @@ async function fetchLatestContent() {
           kidsMemberships: (Array.isArray(remoteData.kidsMemberships) && remoteData.kidsMemberships.length > 0)
             ? remoteData.kidsMemberships
             : (localContent.kidsMemberships || []),
+          recoveryMemberships: (Array.isArray(remoteData.recoveryMemberships) && remoteData.recoveryMemberships.length > 0)
+            ? remoteData.recoveryMemberships
+            : (localContent.recoveryMemberships || []),
           timetableData: (Array.isArray(remoteData.timetableData) && remoteData.timetableData.length > 0)
             ? remoteData.timetableData
             : (localContent.timetableData || []),

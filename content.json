@@ -302,6 +302,10 @@
     "kidsTitle": "Kids Memberships",
     "kidsSubtitle": "Flexible weekly training options based on how often your child wants to train. Building confidence, discipline, and screen-free fitness in a safe and supportive environment.",
     "hideKidsSection": false,
+    "recoveryTagline": "RECOVERY & WELLNESS",
+    "recoveryTitle": "Recovery Membership",
+    "recoverySubtitle": "Accelerate muscle repair, decrease inflammation, and maintain peak physical condition. Dedicated access to our full recovery suite designed for athletes and members.",
+    "hideRecoverySection": false,
     "faqTitle": "FREQUENTLY ASKED QUESTIONS",
     "ctaTitle": "HAVE QUESTIONS ABOUT OUR MEMBERSHIPS?",
     "ctaDesc": "Reach out to our coaching staff or drop in for a free trial class to find the best plan for you.",
@@ -415,6 +419,24 @@
       ],
       "ctaText": "GET UNLIMITED PASS",
       "ctaUrl": "/contact"
+    }
+  ],
+  "recoveryMemberships": [
+    {
+      "id": "rm1",
+      "title": "REDEMPTION RECOVERY",
+      "price": "$33",
+      "interval": "per week",
+      "featured": false,
+      "description": "Dedicated access to Redemption's recovery facility to optimize muscle repair, reduce inflammation, and enhance overall athletic longevity.",
+      "features": [
+        "Unlimited use of Redemption Recovery",
+        "Infrared Sauna, Compression Sleeves, Massage Gun.",
+        "No lock-in contracts"
+      ],
+      "ctaText": "SELECT PLAN",
+      "ctaUrl": "/contact",
+      "hideCta": false
     }
   ],
   "contactInfo": {
