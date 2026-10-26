@@ -1,0 +1,648 @@
+/* ==========================================================================
+   REDEMPTION MUAY THAI - LUTHERAN CRM PUBLIC BOOKING PAGE & INTAKE FORM THEME
+   Brand Palette: Dark Athletic (#131313, #1c1b1b, #201f1f), Electric Cyan (#00e5ff), Fight Red (#FF3B30)
+   Typography: Barlow Condensed (Headings/CTAs), JetBrains Mono (Meta/Labels), Inter/Barlow (Body)
+   ========================================================================== */
+
+/* 1. Google Web Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+/* 2. Global CSS Variables & Root Containers */
+:root,
+.lcrm-booking-root,
+.lcrm-form-root {
+  --lcrm-primary: #00e5ff !important;
+  --lcrm-primary-hover: #ffffff !important;
+  --lcrm-bg: #131313 !important;
+  --lcrm-surface: #1c1b1b !important;
+  --lcrm-surface-elevated: #242424 !important;
+  --lcrm-surface-high: #2a2a2a !important;
+  --lcrm-text: #e5e2e1 !important;
+  --lcrm-text-muted: #bac9cc !important;
+  --lcrm-text-dim: #849396 !important;
+  --lcrm-border: #3b494c !important;
+  --lcrm-border-focus: #00e5ff !important;
+  --lcrm-radius: 0.5rem !important;
+  --lcrm-danger: #FF3B30 !important;
+  --lcrm-glow: 0 0 25px rgba(0, 229, 255, 0.35) !important;
+  --lcrm-font-display: 'Barlow Condensed', -apple-system, sans-serif !important;
+  --lcrm-font-mono: 'JetBrains Mono', monospace !important;
+  --lcrm-font-body: 'Barlow', 'Inter', -apple-system, sans-serif !important;
+
+  background-color: #131313 !important;
+  color: #e5e2e1 !important;
+  font-family: 'Barlow', 'Inter', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  box-sizing: border-box !important;
+}
+
+/* Root Booking Page Layout */
+.lcrm-booking-root {
+  background: #131313 !important;
+  color: #e5e2e1 !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid #3b494c !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   PART I: BOOKING PAGE - SIDEBAR & HEADER BRANDING
+   ========================================================================== */
+
+.lcrm-booking-sidebar {
+  background: linear-gradient(180deg, #1c1b1b 0%, #151515 100%) !important;
+  border-right: 1px solid #3b494c !important;
+  padding: 2rem !important;
+}
+
+.lcrm-booking-header {
+  margin-bottom: 1.5rem !important;
+  border-bottom: 1px solid rgba(59, 73, 76, 0.6) !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.lcrm-booking-header img {
+  max-height: 48px !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 229, 255, 0.2)) !important;
+}
+
+.lcrm-booking-title {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.05 !important;
+  color: #ffffff !important;
+  margin: 0.5rem 0 !important;
+}
+
+.lcrm-booking-title span {
+  color: #00e5ff !important;
+}
+
+.lcrm-booking-description {
+  font-family: 'Barlow', 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  color: #bac9cc !important;
+  line-height: 1.55 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Session Meta Pills (Duration, Location, Timezone) */
+.lcrm-booking-meta {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+}
+
+.lcrm-booking-meta > div,
+.lcrm-booking-meta span {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #c3f5ff !important;
+  background: rgba(0, 229, 255, 0.08) !important;
+  border: 1px solid rgba(0, 229, 255, 0.25) !important;
+  padding: 0.35rem 0.75rem !important;
+  border-radius: 9999px !important;
+}
+
+/* ==========================================================================
+   PART II: BOOKING PAGE - MAIN WORKSPACE, CALENDAR & TIME SLOTS
+   ========================================================================== */
+
+.lcrm-booking-main {
+  background: #131313 !important;
+  padding: 2rem !important;
+}
+
+/* Month Calendar Grid Wrapper */
+.lcrm-booking-calendar {
+  background: #1c1b1b !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Calendar Month / Year Nav Title & Arrows */
+.lcrm-booking-calendar header,
+.lcrm-booking-calendar .calendar-header {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #ffffff !important;
+}
+
+.lcrm-booking-calendar header button,
+.lcrm-booking-calendar nav button {
+  background: #242424 !important;
+  border: 1px solid #3b494c !important;
+  color: #ffffff !important;
+  border-radius: 0.375rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.lcrm-booking-calendar header button:hover,
+.lcrm-booking-calendar nav button:hover {
+  border-color: #00e5ff !important;
+  color: #00e5ff !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
+}
+
+/* Weekday Column Headers (Mon, Tue, etc.) */
+.lcrm-booking-calendar th,
+.lcrm-booking-calendar .calendar-weekday {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #849396 !important;
+  padding: 0.75rem 0 !important;
+}
+
+/* Calendar Day Cells */
+.lcrm-booking-day {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #849396 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 0.375rem !important;
+  transition: all 0.15s ease !important;
+  cursor: default !important;
+}
+
+/* Available Calendar Day Button */
+.lcrm-booking-day-available {
+  background: rgba(0, 229, 255, 0.06) !important;
+  border: 1px solid rgba(0, 229, 255, 0.3) !important;
+  color: #00e5ff !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.lcrm-booking-day-available:hover {
+  background: #00e5ff !important;
+  color: #000000 !important;
+  border-color: #00e5ff !important;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.45) !important;
+  transform: scale(1.06) !important;
+}
+
+/* Selected Calendar Day */
+.lcrm-booking-day-selected {
+  background: #00e5ff !important;
+  color: #000000 !important;
+  border-color: #00e5ff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.6) !important;
+  transform: scale(1.06) !important;
+}
+
+/* ==========================================================================
+   TIME SLOTS COLUMN & CARDS
+   ========================================================================== */
+
+.lcrm-booking-slots {
+  background: #1c1b1b !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.5rem !important;
+  padding: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+}
+
+.lcrm-booking-slots-header {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #3b494c !important;
+  padding-bottom: 0.75rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Individual Selectable Slot */
+.lcrm-booking-slot {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  color: #e5e2e1 !important;
+  background: #242424 !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.375rem !important;
+  padding: 0.85rem 1.25rem !important;
+  text-align: center !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.lcrm-booking-slot:hover {
+  background: rgba(0, 229, 255, 0.12) !important;
+  border-color: #00e5ff !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 229, 255, 0.25) !important;
+}
+
+/* Selected Active Time Slot */
+.lcrm-booking-slot-selected {
+  background: #00e5ff !important;
+  color: #000000 !important;
+  border-color: #00e5ff !important;
+  font-weight: 800 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.45) !important;
+}
+
+/* ==========================================================================
+   PART III: LINKED INTAKE FORM ("Member Onboarding" - Step 2)
+   ========================================================================== */
+
+.lcrm-form-root {
+  background: #131313 !important;
+  color: #e5e2e1 !important;
+}
+
+/* Form Top Header */
+.lcrm-form-header {
+  border-bottom: 1px solid #3b494c !important;
+  padding-bottom: 1.25rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.lcrm-form-title {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.lcrm-form-description {
+  font-family: 'Barlow', 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  color: #bac9cc !important;
+  margin-top: 0.35rem !important;
+}
+
+/* Multi-Step Wizard Progress Bar */
+.lcrm-form-step-bar {
+  background: #242424 !important;
+  border-radius: 9999px !important;
+  height: 6px !important;
+  margin-bottom: 2rem !important;
+  overflow: hidden !important;
+}
+
+.lcrm-form-step-indicator {
+  background: #00e5ff !important;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.6) !important;
+  height: 100% !important;
+  transition: width 0.3s ease !important;
+}
+
+/* Section Blocks */
+.lcrm-form-section,
+#lcrm-section-sec-1,
+.lcrm-form-section[data-section-id="sec-1"] {
+  background: #1c1b1b !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.5rem !important;
+  padding: 1.75rem !important;
+  margin-bottom: 1.75rem !important;
+}
+
+.lcrm-form-section-title {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #00e5ff !important;
+  border-bottom: 1px solid rgba(59, 73, 76, 0.6) !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.lcrm-form-section-desc {
+  font-size: 0.85rem !important;
+  color: #bac9cc !important;
+  margin-top: -0.75rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+/* Form Fields & Grid */
+.lcrm-form-field {
+  margin-bottom: 1.25rem !important;
+}
+
+/* Labels */
+.lcrm-form-label,
+.lcrm-booking-root label,
+.lcrm-form-root label {
+  display: block !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #c3f5ff !important;
+  margin-bottom: 0.4rem !important;
+}
+
+/* Required Asterisk */
+.lcrm-form-label .text-red-500,
+.lcrm-form-label span.required,
+label .text-red-500 {
+  color: #FF3B30 !important;
+  margin-left: 0.25rem !important;
+  font-weight: 800 !important;
+}
+
+/* Inputs, Textareas & Selects */
+.lcrm-form-input,
+.lcrm-booking-root input,
+.lcrm-booking-root textarea,
+.lcrm-booking-root select,
+.lcrm-form-root input,
+.lcrm-form-root textarea,
+.lcrm-form-root select {
+  width: 100% !important;
+  background-color: #242424 !important;
+  border: 1px solid #3b494c !important;
+  color: #ffffff !important;
+  font-family: 'Barlow', 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.375rem !important;
+  outline: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.lcrm-form-input:focus,
+.lcrm-booking-root input:focus,
+.lcrm-booking-root textarea:focus,
+.lcrm-booking-root select:focus,
+.lcrm-form-root input:focus,
+.lcrm-form-root textarea:focus,
+.lcrm-form-root select:focus {
+  background-color: #1a1a1a !important;
+  border-color: #00e5ff !important;
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.25) !important;
+}
+
+.lcrm-form-input::placeholder,
+.lcrm-booking-root input::placeholder,
+.lcrm-form-root input::placeholder {
+  color: #849396 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Field Helper Text */
+.lcrm-form-help {
+  font-size: 0.75rem !important;
+  color: #849396 !important;
+  margin-top: 0.35rem !important;
+}
+
+/* ==========================================================================
+   PART IV: SPECIFIC FORM INPUT ENHANCEMENTS ("Member Onboarding")
+   ========================================================================== */
+
+/* 1. First Name (#lcrm-field-field_1792807478953_n099) */
+#lcrm-field-field_1792807478953_n099,
+[data-field-id="field_1792807478953_n099"] {
+  position: relative !important;
+}
+
+/* 2. Last Name (#lcrm-field-field_1792807479100_e6i3) */
+#lcrm-field-field_1792807479100_e6i3,
+[data-field-id="field_1792807479100_e6i3"] {
+  position: relative !important;
+}
+
+/* 3. Phone Input (#lcrm-field-field_1792807538398_urfi) */
+#lcrm-field-field_1792807538398_urfi input,
+[data-field-id="field_1792807538398_urfi"] input {
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* 4. Email Input (#lcrm-field-field_1792807538725_xmhf) */
+#lcrm-field-field_1792807538725_xmhf input,
+[data-field-id="field_1792807538725_xmhf"] input {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 5. Signature Pad (#lcrm-field-field_1792807547574_6qvj) */
+#lcrm-field-field_1792807547574_6qvj,
+[data-field-id="field_1792807547574_6qvj"] {
+  background: #1c1b1b !important;
+  border: 1px dashed #3b494c !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+}
+
+#lcrm-field-field_1792807547574_6qvj canvas,
+[data-field-id="field_1792807547574_6qvj"] canvas {
+  background-color: #242424 !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.375rem !important;
+  cursor: crosshair !important;
+}
+
+#lcrm-field-field_1792807547574_6qvj button,
+[data-field-id="field_1792807547574_6qvj"] button {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #00e5ff !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin-top: 0.5rem !important;
+}
+
+#lcrm-field-field_1792807547574_6qvj button:hover,
+[data-field-id="field_1792807547574_6qvj"] button:hover {
+  text-decoration: underline !important;
+}
+
+/* ==========================================================================
+   PART V: PRIMARY ACTIONS & CTA BUTTONS
+   ========================================================================== */
+
+.lcrm-form-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 1rem !important;
+  border-top: 1px solid #3b494c !important;
+  padding-top: 1.5rem !important;
+  margin-top: 2rem !important;
+}
+
+/* Primary Action CTA (Next Step / Confirm Booking / Submit Form) */
+.lcrm-booking-submit-btn,
+.lcrm-form-submit-btn,
+.lcrm-booking-root button[type="submit"],
+.lcrm-form-root button[type="submit"] {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  background-color: #00e5ff !important;
+  color: #000000 !important;
+  border: none !important;
+  padding: 0.85rem 2rem !important;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 8px 25px rgba(0, 229, 255, 0.35) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.lcrm-booking-submit-btn:hover,
+.lcrm-form-submit-btn:hover,
+.lcrm-booking-root button[type="submit"]:hover,
+.lcrm-form-root button[type="submit"]:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5) !important;
+}
+
+.lcrm-booking-submit-btn:active,
+.lcrm-form-submit-btn:active,
+.lcrm-booking-root button[type="submit"]:active,
+.lcrm-form-root button[type="submit"]:active {
+  transform: translateY(0) !important;
+}
+
+/* Secondary Back & Draft Buttons */
+.lcrm-form-back-btn,
+.lcrm-form-draft-btn {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  background-color: #242424 !important;
+  color: #bac9cc !important;
+  border: 1px solid #3b494c !important;
+  border-radius: 0.375rem !important;
+  padding: 0.75rem 1.5rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.lcrm-form-back-btn:hover,
+.lcrm-form-draft-btn:hover {
+  border-color: #00e5ff !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   PART VI: SUCCESS & CONFIRMATION CARDS
+   ========================================================================== */
+
+.lcrm-booking-success,
+.lcrm-form-success {
+  background: #1c1b1b !important;
+  border: 1px solid rgba(0, 229, 255, 0.4) !important;
+  border-radius: 0.75rem !important;
+  padding: 3rem 2rem !important;
+  text-align: center !important;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.15) !important;
+}
+
+.lcrm-booking-success h2,
+.lcrm-form-success h2,
+.lcrm-booking-success h3,
+.lcrm-form-success h3 {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #ffffff !important;
+}
+
+.lcrm-booking-success p,
+.lcrm-form-success p {
+  color: #bac9cc !important;
+  font-size: 1rem !important;
+  max-width: 500px !important;
+  margin: 0.75rem auto 1.5rem auto !important;
+}
+
+.lcrm-booking-success a,
+.lcrm-form-success a {
+  color: #00e5ff !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  text-decoration: underline !important;
+}
+
+/* ==========================================================================
+   PART VII: RESPONSIVE OPTIMIZATIONS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .lcrm-booking-root {
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  .lcrm-booking-sidebar {
+    border-right: none !important;
+    border-bottom: 1px solid #3b494c !important;
+    padding: 1.5rem !important;
+  }
+
+  .lcrm-booking-main {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .lcrm-booking-title {
+    font-size: 1.85rem !important;
+  }
+
+  .lcrm-form-actions {
+    flex-direction: column-reverse !important;
+    width: 100% !important;
+  }
+
+  .lcrm-booking-submit-btn,
+  .lcrm-form-submit-btn,
+  .lcrm-form-back-btn,
+  .lcrm-form-draft-btn {
+    width: 100% !important;
+  }
+}
