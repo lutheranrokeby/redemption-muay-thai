@@ -4,6 +4,7 @@ import defaultContent from '../../content.json';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const NETLIFY_BUILD_HOOK_URL = import.meta.env.VITE_NETLIFY_BUILD_HOOK_URL || '';
+const SITE_ID = import.meta.env.VITE_SITE_ID || 'redemptionMuayThai';
 
 export const isSupabaseConfigured = () => {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_URL.startsWith('http'));
@@ -47,14 +48,14 @@ export const saveSiteContent = async (contentData) => {
           'Prefer': 'resolution=merge-duplicates'
         },
         body: JSON.stringify({
-          id: 'main_content',
+          id: SITE_ID,
           data: contentData,
           updated_at: new Date().toISOString()
         })
       });
       if (res.ok) {
         savedToSupabase = true;
-        console.log('✅ Successfully saved row to Supabase site_content table!');
+        console.log(`✅ Successfully saved row to Supabase site_content table for ${SITE_ID}!`);
       } else {
         const errText = await res.text();
         console.error('Supabase save error status:', res.status, errText);

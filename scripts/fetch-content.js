@@ -4,9 +4,10 @@ import path from 'path';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || '';
+const SITE_ID = process.env.VITE_SITE_ID || 'redemptionMuayThai';
 
 async function fetchLatestContent() {
-  console.log('⚡ [Build Step] Checking Supabase for latest site content...');
+  console.log(`⚡ [Build Step] Checking Supabase for latest site content (${SITE_ID})...`);
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_URL.startsWith('http')) {
     console.log('ℹ️ [Build Step] Supabase env variables not detected. Using local content.json.');
@@ -14,7 +15,7 @@ async function fetchLatestContent() {
   }
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.main_content&select=data`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/site_content?id=eq.${SITE_ID}&select=data`, {
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
@@ -69,7 +70,7 @@ async function fetchLatestContent() {
         };
 
         fs.writeFileSync(contentFilePath, JSON.stringify(mergedContent, null, 2));
-        console.log('🎉 [Build Step] Successfully fetched and merged latest content from Supabase!');
+        console.log(`🎉 [Build Step] Successfully fetched and merged latest content from Supabase for ${SITE_ID}!`);
         return;
       }
     }

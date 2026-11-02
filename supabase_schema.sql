@@ -5,7 +5,7 @@
 
 -- 1. Create site_content table for JSON key-value store (Hero, Welcome, Footer, Contact)
 CREATE TABLE IF NOT EXISTS public.site_content (
-    id TEXT PRIMARY KEY DEFAULT 'main_content',
+    id TEXT PRIMARY KEY DEFAULT 'redemptionMuayThai',
     data JSONB NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

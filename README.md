@@ -46,4 +46,4 @@ npm run build
 
 1. Run `supabase_schema.sql` in your Supabase SQL Editor.
 2. Connect this GitHub repository to **Netlify.com**.
-3. Set environment variables in Netlify (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_NETLIFY_BUILD_HOOK_URL`).
+3. Set environment variables in Netlify (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_NETLIFY_BUILD_HOOK_URL`, and optionally `VITE_SITE_ID` which defaults to `redemptionMuayThai`).
