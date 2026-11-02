@@ -18,8 +18,8 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
   // Listen for Lutheran CRM Form messages (Resize & Scroll)
   useEffect(() => {
     const handleMessage = (e) => {
-      if (!e.data || e.data.templateId !== '5cab2f02-5c42-4ce3-8551-5f1e313d503b') return;
-      const el = document.getElementById('lcrm-form-5cab2f02');
+      if (!e.data || e.data.templateId !== '6cb8f48e-fd70-4bdf-a4e8-11fa868f7435') return;
+      const el = document.getElementById('lcrm-form-6cb8f48e');
       if (e.data.type === 'LCRM_FORM_RESIZE' && el && e.data.height) {
         el.style.height = (e.data.height + 4) + 'px';
       } else if (e.data.type === 'LCRM_FORM_SCROLL' && typeof e.data.deltaY === 'number') {
@@ -29,7 +29,7 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
 
     window.addEventListener('message', handleMessage);
 
-    const el = document.getElementById('lcrm-form-5cab2f02');
+    const el = document.getElementById('lcrm-form-6cb8f48e');
     const handleLoad = () => {
       try {
         el?.contentWindow?.postMessage({ type: 'LCRM_REQUEST_FORM_RESIZE' }, '*');
@@ -85,8 +85,8 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
 
             <div className="min-h-[680px]">
               <iframe
-                id="lcrm-form-5cab2f02"
-                src="https://lutheran.netlify.app/portal/forms/5cab2f02-5c42-4ce3-8551-5f1e313d503b?embed=true"
+                id="lcrm-form-6cb8f48e"
+                src="https://lutheran.netlify.app/portal/forms/6cb8f48e-fd70-4bdf-a4e8-11fa868f7435?embed=true"
                 width="100%"
                 height="680"
                 scrolling="no"
@@ -101,7 +101,7 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
                   colorScheme: 'normal'
                 }}
                 loading="lazy"
-                title="New Form Template"
+                title="Contact Us"
                 onLoad={(e) => {
                   try {
                     e.target.contentWindow?.postMessage({ type: 'LCRM_REQUEST_FORM_RESIZE' }, '*');
