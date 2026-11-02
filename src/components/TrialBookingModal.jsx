@@ -7,6 +7,42 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
   useEffect(() => {
     if (!isOpen) return;
     setIframeLoading(true);
+
+    const handleMessage = (e) => {
+      if (!e.data || (e.data.token && e.data.token !== 'book_75f9c97b-675b-47aa-80b2-ab5e2ce061d9_365812d04d')) return;
+      const el = document.getElementById('lcrm-booking-75f9c97b');
+      if ((e.data.type === 'LCRM_BOOKING_RESIZE' || e.data.type === 'lcrm-booking-resize') && el && e.data.height) {
+        el.style.height = (e.data.height + 4) + 'px';
+      } else if (e.data.type === 'LCRM_BOOKING_SCROLL' && typeof e.data.deltaY === 'number') {
+        const container = document.getElementById('lcrm-booking-container');
+        if (container && container.scrollHeight > container.clientHeight) {
+          container.scrollBy({ top: e.data.deltaY, left: 0, behavior: 'auto' });
+        } else {
+          window.scrollBy({ top: e.data.deltaY, left: 0, behavior: 'auto' });
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    const el = document.getElementById('lcrm-booking-75f9c97b');
+    const handleLoad = () => {
+      setIframeLoading(false);
+      try {
+        el?.contentWindow?.postMessage({ type: 'LCRM_REQUEST_BOOKING_RESIZE' }, '*');
+      } catch (err) {}
+    };
+
+    if (el) {
+      el.addEventListener('load', handleLoad);
+    }
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      if (el) {
+        el.removeEventListener('load', handleLoad);
+      }
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -62,19 +98,7 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
         </div>
 
         {/* Drawer Body: Embedded Widget + Athletic Loading Skeleton */}
-        <div className="flex-1 flex-grow w-full h-full relative min-h-0 bg-background overflow-hidden">
-          <style>{`
-            #3pKErThGxL28ZK4Ir8if_1788231703501 {
-              width: 100% !important;
-              height: 100% !important;
-              max-height: 100% !important;
-              position: absolute !important;
-              top: 0 !important;
-              left: 0 !important;
-              right: 0 !important;
-              bottom: 0 !important;
-            }
-          `}</style>
+        <div id="lcrm-booking-container" className="flex-1 flex-grow w-full relative min-h-0 bg-background overflow-y-auto">
           
           {/* Loading Skeleton & Spinner Overlay */}
           {iframeLoading && (
@@ -109,16 +133,32 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
             </div>
           )}
 
-          {/* Embedded GoHighLevel Calendar Iframe */}
+          {/* Embedded Lutheran CRM Booking Iframe */}
           <iframe
-            src="https://api.leadconnectorhq.com/widget/group/3pKErThGxL28ZK4Ir8if"
-            allow="payment"
-            onLoad={() => setIframeLoading(false)}
-            className="absolute inset-0 w-full h-full border-0 block"
-            style={{ width: '100%', height: '100%', maxHeight: '100%', border: 'none' }}
-            id="3pKErThGxL28ZK4Ir8if_1788231703501"
-            title="Redemption Muay Thai Trial Class Booking"
-            scrolling="yes"
+            id="lcrm-booking-75f9c97b"
+            src="https://lutheran.netlify.app/portal/book/book_75f9c97b-675b-47aa-80b2-ab5e2ce061d9_365812d04d?embed=true"
+            width="100%"
+            height="700"
+            scrolling="auto"
+            allowTransparency="true"
+            style={{
+              border: 'none',
+              width: '100%',
+              maxWidth: '100%',
+              display: 'block',
+              background: 'transparent',
+              backgroundColor: 'transparent',
+              colorScheme: 'normal'
+            }}
+            loading="lazy"
+            allow="camera; clipboard-write"
+            title="Free Trial Class booking"
+            onLoad={(e) => {
+              setIframeLoading(false);
+              try {
+                e.target.contentWindow?.postMessage({ type: 'LCRM_REQUEST_BOOKING_RESIZE' }, '*');
+              } catch (err) {}
+            }}
           ></iframe>
 
         </div>
