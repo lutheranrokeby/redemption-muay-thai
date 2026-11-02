@@ -15,17 +15,37 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
   const mapSearchQuery = contact.mapQuery || contact.address || 'Warana, Sunshine Coast QLD 4575';
   const googleMapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapSearchQuery)}&output=embed`;
 
-  // Dynamically load GoHighLevel LeadConnector Form Embed Script
+  // Listen for Lutheran CRM Form messages (Resize & Scroll)
   useEffect(() => {
-    const scriptId = 'ghl-form-script';
-    let script = document.getElementById(scriptId);
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://link.msgsndr.com/js/form_embed.js';
-      script.async = true;
-      document.body.appendChild(script);
+    const handleMessage = (e) => {
+      if (!e.data || e.data.templateId !== '5cab2f02-5c42-4ce3-8551-5f1e313d503b') return;
+      const el = document.getElementById('lcrm-form-5cab2f02');
+      if (e.data.type === 'LCRM_FORM_RESIZE' && el && e.data.height) {
+        el.style.height = (e.data.height + 4) + 'px';
+      } else if (e.data.type === 'LCRM_FORM_SCROLL' && typeof e.data.deltaY === 'number') {
+        window.scrollBy({ top: e.data.deltaY, left: 0, behavior: 'auto' });
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    const el = document.getElementById('lcrm-form-5cab2f02');
+    const handleLoad = () => {
+      try {
+        el?.contentWindow?.postMessage({ type: 'LCRM_REQUEST_FORM_RESIZE' }, '*');
+      } catch (err) {}
+    };
+
+    if (el) {
+      el.addEventListener('load', handleLoad);
     }
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      if (el) {
+        el.removeEventListener('load', handleLoad);
+      }
+    };
   }, []);
 
   return (
@@ -63,24 +83,30 @@ export default function ContactPage({ data, onContactChange, onImageUpload, onPa
               Send Us A Message
             </h3>
 
-            <div className="min-h-[745px]">
+            <div className="min-h-[680px]">
               <iframe
-                src="https://api.leadconnectorhq.com/widget/form/SA4A67tEfgN64XYvmrWC"
-                style={{ width: '100%', minHeight: '745px', border: 'none', borderRadius: '8px' }}
-                id="inline-SA4A67tEfgN64XYvmrWC" 
-                data-layout="{'id':'INLINE'}"
-                data-trigger-type="alwaysShow"
-                data-trigger-value=""
-                data-activation-type="alwaysActivated"
-                data-activation-value=""
-                data-deactivation-value=""
-                data-form-name="Form 1"
-                data-height="745"
-                data-layout-iframe-id="inline-SA4A67tEfgN64XYvmrWC"
-                data-form-id="SA4A67tEfgN64XYvmrWC"
-                data-cookie-consent="true"
-                data-cookie-consent-provider="auto"
-                title="Redemption Muay Thai Contact Form"
+                id="lcrm-form-5cab2f02"
+                src="https://lutheran.netlify.app/portal/forms/5cab2f02-5c42-4ce3-8551-5f1e313d503b?embed=true"
+                width="100%"
+                height="680"
+                scrolling="no"
+                allowTransparency="true"
+                style={{
+                  border: 'none',
+                  width: '100%',
+                  overflow: 'hidden',
+                  display: 'block',
+                  background: 'transparent',
+                  backgroundColor: 'transparent',
+                  colorScheme: 'normal'
+                }}
+                loading="lazy"
+                title="New Form Template"
+                onLoad={(e) => {
+                  try {
+                    e.target.contentWindow?.postMessage({ type: 'LCRM_REQUEST_FORM_RESIZE' }, '*');
+                  } catch (err) {}
+                }}
               ></iframe>
             </div>
           </div>
