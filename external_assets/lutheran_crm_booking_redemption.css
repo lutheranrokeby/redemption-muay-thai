@@ -1,13 +1,19 @@
 /* ==========================================================================
-   REDEMPTION MUAY THAI - LUTHERAN CRM PUBLIC BOOKING PAGE & INTAKE FORM THEME
-   Brand Palette: Dark Athletic (#131313, #1c1b1b, #201f1f), Electric Cyan (#00e5ff), Fight Red (#FF3B30)
-   Typography: Barlow Condensed (Headings/CTAs), JetBrains Mono (Meta/Labels), Inter/Barlow (Body)
+   REDEMPTION MUAY THAI - LUTHERAN CRM PUBLIC BOOKING PAGE & WAIVER INTAKE THEME
+   Brand Palette: Dark Athletic (#131313, #1c1b1b, #242424), Electric Cyan (#00e5ff), Fight Red (#FF3B30)
+   Typography: Barlow Condensed (Headings/CTAs), JetBrains Mono (Meta/Labels/Code), Inter/Barlow (Body)
+   Booking Page: Free Trial Class booking (Scheduled Classes / Rostered Sessions)
+   Linked Intake Form: Waiver - under construction (Multi-Step Wizard)
    ========================================================================== */
 
-/* 1. Google Web Fonts Import */
+/* --------------------------------------------------------------------------
+   1. Google Fonts Import
+   -------------------------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
 
-/* 2. Global CSS Variables & Root Containers */
+/* --------------------------------------------------------------------------
+   2. Global Theme Variables & Container Styling
+   -------------------------------------------------------------------------- */
 :root,
 .lcrm-booking-root,
 .lcrm-form-root {
@@ -25,9 +31,9 @@
   --lcrm-radius: 0.5rem !important;
   --lcrm-danger: #FF3B30 !important;
   --lcrm-glow: 0 0 25px rgba(0, 229, 255, 0.35) !important;
-  --lcrm-font-display: 'Barlow Condensed', -apple-system, sans-serif !important;
+  --lcrm-font-display: 'Barlow Condensed', sans-serif !important;
   --lcrm-font-mono: 'JetBrains Mono', monospace !important;
-  --lcrm-font-body: 'Barlow', 'Inter', -apple-system, sans-serif !important;
+  --lcrm-font-body: 'Barlow', 'Inter', sans-serif !important;
 
   background-color: #131313 !important;
   color: #e5e2e1 !important;
@@ -36,7 +42,7 @@
   box-sizing: border-box !important;
 }
 
-/* Root Booking Page Layout */
+/* Root container reset */
 .lcrm-booking-root {
   background: #131313 !important;
   color: #e5e2e1 !important;
@@ -46,10 +52,9 @@
   overflow: hidden !important;
 }
 
-/* ==========================================================================
-   PART I: BOOKING PAGE - SIDEBAR & HEADER BRANDING
-   ========================================================================== */
-
+/* --------------------------------------------------------------------------
+   3. Booking Page Sidebar & Header Branding
+   -------------------------------------------------------------------------- */
 .lcrm-booking-sidebar {
   background: linear-gradient(180deg, #1c1b1b 0%, #151515 100%) !important;
   border-right: 1px solid #3b494c !important;
@@ -90,7 +95,7 @@
   margin-bottom: 1.5rem !important;
 }
 
-/* Session Meta Pills (Duration, Location, Timezone) */
+/* Meta badges / pills (Duration, Location, Timezone) */
 .lcrm-booking-meta {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -111,16 +116,33 @@
   border-radius: 9999px !important;
 }
 
-/* ==========================================================================
-   PART II: BOOKING PAGE - MAIN WORKSPACE, CALENDAR & TIME SLOTS
-   ========================================================================== */
+/* Step Bar & Dedicated Page Containers */
+.lcrm-booking-step-bar {
+  background: #242424 !important;
+  border-radius: 9999px !important;
+  height: 6px !important;
+  margin-bottom: 1.5rem !important;
+  overflow: hidden !important;
+}
 
+.lcrm-booking-page {
+  animation: lcrmFadeIn 0.25s ease-out !important;
+}
+
+@keyframes lcrmFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   4. Booking Workspace: Calendar & Scheduled Class Slots
+   -------------------------------------------------------------------------- */
 .lcrm-booking-main {
   background: #131313 !important;
   padding: 2rem !important;
 }
 
-/* Month Calendar Grid Wrapper */
+/* Calendar month container */
 .lcrm-booking-calendar {
   background: #1c1b1b !important;
   border: 1px solid #3b494c !important;
@@ -128,7 +150,7 @@
   padding: 1.5rem !important;
 }
 
-/* Calendar Month / Year Nav Title & Arrows */
+/* Month navigation header */
 .lcrm-booking-calendar header,
 .lcrm-booking-calendar .calendar-header {
   font-family: 'Barlow Condensed', sans-serif !important;
@@ -155,7 +177,7 @@
   box-shadow: 0 0 10px rgba(0, 229, 255, 0.3) !important;
 }
 
-/* Weekday Column Headers (Mon, Tue, etc.) */
+/* Weekday header cells */
 .lcrm-booking-calendar th,
 .lcrm-booking-calendar .calendar-weekday {
   font-family: 'JetBrains Mono', monospace !important;
@@ -167,7 +189,7 @@
   padding: 0.75rem 0 !important;
 }
 
-/* Calendar Day Cells */
+/* Day cell default */
 .lcrm-booking-day {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.9rem !important;
@@ -180,7 +202,7 @@
   cursor: default !important;
 }
 
-/* Available Calendar Day Button */
+/* Available day with scheduled classes */
 .lcrm-booking-day-available {
   background: rgba(0, 229, 255, 0.06) !important;
   border: 1px solid rgba(0, 229, 255, 0.3) !important;
@@ -197,7 +219,7 @@
   transform: scale(1.06) !important;
 }
 
-/* Selected Calendar Day */
+/* Selected active day */
 .lcrm-booking-day-selected {
   background: #00e5ff !important;
   color: #000000 !important;
@@ -207,10 +229,7 @@
   transform: scale(1.06) !important;
 }
 
-/* ==========================================================================
-   TIME SLOTS COLUMN & CARDS
-   ========================================================================== */
-
+/* Class sessions / time slots column */
 .lcrm-booking-slots {
   background: #1c1b1b !important;
   border: 1px solid #3b494c !important;
@@ -233,7 +252,7 @@
   margin-bottom: 0.5rem !important;
 }
 
-/* Individual Selectable Slot */
+/* Individual rostered session slot */
 .lcrm-booking-slot {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.9rem !important;
@@ -257,7 +276,7 @@
   box-shadow: 0 4px 15px rgba(0, 229, 255, 0.25) !important;
 }
 
-/* Selected Active Time Slot */
+/* Selected rostered session */
 .lcrm-booking-slot-selected {
   background: #00e5ff !important;
   color: #000000 !important;
@@ -267,16 +286,14 @@
   box-shadow: 0 0 20px rgba(0, 229, 255, 0.45) !important;
 }
 
-/* ==========================================================================
-   PART III: LINKED INTAKE FORM ("Member Onboarding" - Step 2)
-   ========================================================================== */
-
+/* --------------------------------------------------------------------------
+   5. Linked Intake Form: "Waiver - under construction" (Step 2 Wizard)
+   -------------------------------------------------------------------------- */
 .lcrm-form-root {
   background: #131313 !important;
   color: #e5e2e1 !important;
 }
 
-/* Form Top Header */
 .lcrm-form-header {
   border-bottom: 1px solid #3b494c !important;
   padding-bottom: 1.25rem !important;
@@ -300,26 +317,33 @@
   margin-top: 0.35rem !important;
 }
 
-/* Multi-Step Wizard Progress Bar */
+/* Multi-Step Wizard Step Bar */
 .lcrm-form-step-bar {
   background: #242424 !important;
   border-radius: 9999px !important;
   height: 6px !important;
   margin-bottom: 2rem !important;
   overflow: hidden !important;
+  display: flex !important;
+  gap: 4px !important;
 }
 
 .lcrm-form-step-indicator {
   background: #00e5ff !important;
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.6) !important;
   height: 100% !important;
-  transition: width 0.3s ease !important;
+  flex: 1 !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+  border-radius: 9999px !important;
 }
 
-/* Section Blocks */
+/* Section Containers (Step 1 & Step 2) */
 .lcrm-form-section,
 #lcrm-section-sec-1,
-.lcrm-form-section[data-section-id="sec-1"] {
+#lcrm-section-sec-1793604026096,
+.lcrm-form-section[data-section-id="sec-1"],
+.lcrm-form-section[data-section-id="sec-1793604026096"] {
   background: #1c1b1b !important;
   border: 1px solid #3b494c !important;
   border-radius: 0.5rem !important;
@@ -347,12 +371,33 @@
   margin-bottom: 1.25rem !important;
 }
 
-/* Form Fields & Grid */
+/* Field Container */
 .lcrm-form-field {
   margin-bottom: 1.25rem !important;
 }
 
-/* Labels */
+/* Section Header Form Fields ("Student Details", "Parent/Guardian Details") */
+.lcrm-form-field[data-field-type="section_header"],
+#lcrm-field-field_1793603695972_55zc,
+#lcrm-field-field_1793603785907_i1p6 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1rem !important;
+  padding-top: 0.75rem !important;
+  border-top: 1px dashed rgba(59, 73, 76, 0.8) !important;
+}
+
+.lcrm-form-field[data-field-type="section_header"] .lcrm-form-label,
+#lcrm-field-field_1793603695972_55zc .lcrm-form-label,
+#lcrm-field-field_1793603785907_i1p6 .lcrm-form-label {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #c3f5ff !important;
+}
+
+/* Field Labels */
 .lcrm-form-label,
 .lcrm-booking-root label,
 .lcrm-form-root label {
@@ -366,7 +411,7 @@
   margin-bottom: 0.4rem !important;
 }
 
-/* Required Asterisk */
+/* Required Indicator (*) */
 .lcrm-form-label .text-red-500,
 .lcrm-form-label span.required,
 label .text-red-500 {
@@ -375,7 +420,7 @@ label .text-red-500 {
   font-weight: 800 !important;
 }
 
-/* Inputs, Textareas & Selects */
+/* Form Controls (Inputs, Selects, Textareas) */
 .lcrm-form-input,
 .lcrm-booking-root input,
 .lcrm-booking-root textarea,
@@ -396,6 +441,23 @@ label .text-red-500 {
   box-sizing: border-box !important;
 }
 
+/* Select Dropdowns */
+.lcrm-form-input[type="select"],
+select.lcrm-form-input,
+.lcrm-form-root select {
+  background-color: #242424 !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+}
+
+select.lcrm-form-input option,
+.lcrm-form-root select option {
+  background-color: #1c1b1b !important;
+  color: #ffffff !important;
+  padding: 0.5rem !important;
+}
+
+/* Control Focus State */
 .lcrm-form-input:focus,
 .lcrm-booking-root input:focus,
 .lcrm-booking-root textarea:focus,
@@ -415,81 +477,36 @@ label .text-red-500 {
   font-size: 0.85rem !important;
 }
 
-/* Field Helper Text */
 .lcrm-form-help {
   font-size: 0.75rem !important;
   color: #849396 !important;
   margin-top: 0.35rem !important;
 }
 
-/* ==========================================================================
-   PART IV: SPECIFIC FORM INPUT ENHANCEMENTS ("Member Onboarding")
-   ========================================================================== */
-
-/* 1. First Name (#lcrm-field-field_1792807478953_n099) */
-#lcrm-field-field_1792807478953_n099,
-[data-field-id="field_1792807478953_n099"] {
-  position: relative !important;
+/* Specific Field Targeting */
+/* 1. Self or Child Selector */
+#lcrm-field-field_1793603560584_xgx9 select,
+[data-field-id="field_1793603560584_xgx9"] select {
+  font-weight: 500 !important;
+  border-color: rgba(0, 229, 255, 0.4) !important;
 }
 
-/* 2. Last Name (#lcrm-field-field_1792807479100_e6i3) */
-#lcrm-field-field_1792807479100_e6i3,
-[data-field-id="field_1792807479100_e6i3"] {
-  position: relative !important;
+/* 2. Email Address Input */
+#lcrm-field-field_1793603710941_xvsv input,
+[data-field-id="field_1793603710941_xvsv"] input {
+  font-family: 'JetBrains Mono', monospace !important;
 }
 
-/* 3. Phone Input (#lcrm-field-field_1792807538398_urfi) */
-#lcrm-field-field_1792807538398_urfi input,
-[data-field-id="field_1792807538398_urfi"] input {
+/* 3. Phone Number Input */
+#lcrm-field-field_1793603712592_xwty input,
+[data-field-id="field_1793603712592_xwty"] input {
   font-family: 'JetBrains Mono', monospace !important;
   letter-spacing: 0.05em !important;
 }
 
-/* 4. Email Input (#lcrm-field-field_1792807538725_xmhf) */
-#lcrm-field-field_1792807538725_xmhf input,
-[data-field-id="field_1792807538725_xmhf"] input {
-  font-family: 'JetBrains Mono', monospace !important;
-}
-
-/* 5. Signature Pad (#lcrm-field-field_1792807547574_6qvj) */
-#lcrm-field-field_1792807547574_6qvj,
-[data-field-id="field_1792807547574_6qvj"] {
-  background: #1c1b1b !important;
-  border: 1px dashed #3b494c !important;
-  border-radius: 0.5rem !important;
-  padding: 1rem !important;
-}
-
-#lcrm-field-field_1792807547574_6qvj canvas,
-[data-field-id="field_1792807547574_6qvj"] canvas {
-  background-color: #242424 !important;
-  border: 1px solid #3b494c !important;
-  border-radius: 0.375rem !important;
-  cursor: crosshair !important;
-}
-
-#lcrm-field-field_1792807547574_6qvj button,
-[data-field-id="field_1792807547574_6qvj"] button {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.75rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
-  color: #00e5ff !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-  margin-top: 0.5rem !important;
-}
-
-#lcrm-field-field_1792807547574_6qvj button:hover,
-[data-field-id="field_1792807547574_6qvj"] button:hover {
-  text-decoration: underline !important;
-}
-
-/* ==========================================================================
-   PART V: PRIMARY ACTIONS & CTA BUTTONS
-   ========================================================================== */
-
+/* --------------------------------------------------------------------------
+   6. Primary CTAs & Footer Action Buttons
+   -------------------------------------------------------------------------- */
 .lcrm-form-actions {
   display: flex !important;
   align-items: center !important;
@@ -500,7 +517,7 @@ label .text-red-500 {
   margin-top: 2rem !important;
 }
 
-/* Primary Action CTA (Next Step / Confirm Booking / Submit Form) */
+/* Primary CTA Button (Next Step, Confirm Booking, Submit) */
 .lcrm-booking-submit-btn,
 .lcrm-form-submit-btn,
 .lcrm-booking-root button[type="submit"],
@@ -541,7 +558,7 @@ label .text-red-500 {
   transform: translateY(0) !important;
 }
 
-/* Secondary Back & Draft Buttons */
+/* Secondary Navigation Buttons (Back & Draft) */
 .lcrm-form-back-btn,
 .lcrm-form-draft-btn {
   font-family: 'Barlow Condensed', sans-serif !important;
@@ -564,10 +581,9 @@ label .text-red-500 {
   color: #ffffff !important;
 }
 
-/* ==========================================================================
-   PART VI: SUCCESS & CONFIRMATION CARDS
-   ========================================================================== */
-
+/* --------------------------------------------------------------------------
+   7. Confirmation & Success Cards
+   -------------------------------------------------------------------------- */
 .lcrm-booking-success,
 .lcrm-form-success {
   background: #1c1b1b !important;
@@ -608,10 +624,9 @@ label .text-red-500 {
   text-decoration: underline !important;
 }
 
-/* ==========================================================================
-   PART VII: RESPONSIVE OPTIMIZATIONS
-   ========================================================================== */
-
+/* --------------------------------------------------------------------------
+   8. Mobile & Responsive Refinements
+   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .lcrm-booking-root {
     display: flex !important;
