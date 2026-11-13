@@ -3,12 +3,12 @@
     "titleLine1": "Your Journey to",
     "titleCyan": "Strength and Spirit",
     "titleLine2": "Begins Here",
-    "bgImage": "/uploads/1788226795269_uncalrx.mp4",
+    "bgImage": "https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788238598243_Uncalrx2.mp4",
     "cta1Text": "Start Your Journey",
     "cta1Url": "/contact",
     "cta2Text": "Meet Our Coaches",
     "cta2Url": "/coaches",
-    "bgMediaMobile": "/uploads/1788226803558_alrx.mp4"
+    "bgMediaMobile": "https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788238883205_hero_background_encoded_portrait.mp4"
   },
   "welcome": {
     "title": "The Way of Redemption",
@@ -145,7 +145,7 @@
     "privatePrice": "$100",
     "privateRate": "per hour session",
     "hidePrivateRate": false,
-    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
+    "image": "https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788509309302_Gemini_Generated_Image_u1r8mvu1r8mvu1r8.jpg"
   },
   "coachesList": [
     {
@@ -162,7 +162,7 @@
       "privatePrice": "$100",
       "privateRate": "per hour session",
       "hidePrivateRate": false,
-      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw"
+      "image": "https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788509309302_Gemini_Generated_Image_u1r8mvu1r8mvu1r8.jpg"
     },
     {
       "id": "coach-2",

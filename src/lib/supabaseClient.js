@@ -82,7 +82,7 @@ export const saveSiteContent = async (contentData) => {
 export const uploadImageFile = async (file) => {
   if (isSupabaseConfigured()) {
     try {
-      const filename = `img_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+      const filename = `${SITE_ID}/img_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
       const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/uploads/${filename}`, {
         method: 'POST',
         headers: {

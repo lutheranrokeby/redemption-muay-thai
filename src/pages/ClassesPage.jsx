@@ -8,7 +8,7 @@ export default function ClassesPage({ data, onAddClass, onDeleteClass, onClassCh
     title: '',
     tag: 'ALL LEVELS',
     description: '',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw'
+    image: 'https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788509309302_Gemini_Generated_Image_u1r8mvu1r8mvu1r8.jpg'
   });
 
   const handleCreate = () => {
@@ -19,7 +19,7 @@ export default function ClassesPage({ data, onAddClass, onDeleteClass, onClassCh
       title: '',
       tag: 'ALL LEVELS',
       description: '',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEBBX6RDYlRrDuztpkknBmhpVuuaHnH2Lx-UNivxv40QBlw8j715ZwVeaROrY07ASz_N15X3JOtl9b_aT3h1STuelpSBghAd7vt_HR33x90dvBTHnqgmdTUN0WcRbnBkkxTi_rrJZvhiw4Q3hjgjjN2woWAMinzUvfc5i7nX_eJbDgu1K7jXcVrX6hgTSnWd3gq7Kvjtg-6IYoEUmYdxuMXHYAPX8Pw79ZPgauTyhaPYqjrY9huVaUUw'
+      image: 'https://pujagnzbdygoreffrwud.supabase.co/storage/v1/object/public/uploads/img_1788509309302_Gemini_Generated_Image_u1r8mvu1r8mvu1r8.jpg'
     });
   };
 
