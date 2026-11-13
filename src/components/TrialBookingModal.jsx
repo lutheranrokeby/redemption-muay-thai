@@ -9,8 +9,8 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
     setIframeLoading(true);
 
     const handleMessage = (e) => {
-      if (!e.data || (e.data.token && e.data.token !== 'book_75f9c97b-675b-47aa-80b2-ab5e2ce061d9_365812d04d')) return;
-      const el = document.getElementById('lcrm-booking-75f9c97b');
+      if (!e.data || (e.data.token && e.data.token !== 'book_69fff975-883d-43ef-8659-9fdd66a771f1_e60dc90b96')) return;
+      const el = document.getElementById('lcrm-booking-69fff975');
       if ((e.data.type === 'LCRM_BOOKING_RESIZE' || e.data.type === 'lcrm-booking-resize') && el && e.data.height) {
         el.style.height = (e.data.height + 4) + 'px';
       } else if (e.data.type === 'LCRM_BOOKING_SCROLL' && typeof e.data.deltaY === 'number') {
@@ -25,7 +25,7 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
 
     window.addEventListener('message', handleMessage);
 
-    const el = document.getElementById('lcrm-booking-75f9c97b');
+    const el = document.getElementById('lcrm-booking-69fff975');
     const handleLoad = () => {
       setIframeLoading(false);
       try {
@@ -135,15 +135,15 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
 
           {/* Embedded Lutheran CRM Booking Iframe */}
           <iframe
-            id="lcrm-booking-75f9c97b"
-            src="https://lutheran.netlify.app/portal/book/book_75f9c97b-675b-47aa-80b2-ab5e2ce061d9_365812d04d?embed=true"
-            width="100%"
+            id="lcrm-booking-69fff975"
+            src="https://lutheran.netlify.app/portal/book/book_69fff975-883d-43ef-8659-9fdd66a771f1_e60dc90b96?embed=true"
+            width="1080px"
             height="700"
             scrolling="auto"
             allowTransparency="true"
             style={{
               border: 'none',
-              width: '100%',
+              width: '1080px',
               maxWidth: '100%',
               display: 'block',
               background: 'transparent',
@@ -152,7 +152,7 @@ export default function TrialBookingModal({ isOpen, onClose, data, onChange, isA
             }}
             loading="lazy"
             allow="camera; clipboard-write"
-            title="Free Trial Class booking"
+            title="Trial Class Booking"
             onLoad={(e) => {
               setIframeLoading(false);
               try {
